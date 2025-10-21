@@ -121,10 +121,10 @@
     const worksheet = document.getElementById("worksheet");
 
     sections.forEach((section, sIndex) => {
-      const sectionDiv = document.createElement("div");
-      sectionDiv.className = "section";
-
       section.questions.forEach((question, qIndex) => {
+        const sectionDiv = document.createElement("div");
+        sectionDiv.className = "section";
+
         const leftCol = document.createElement("div");
         leftCol.className = "column";
         const label = document.createElement("label");
@@ -156,21 +156,27 @@
         fileInput.id = `file-${sIndex}-${qIndex}`;
         rightCol.appendChild(fileInput);
 
+        const clearBtn = document.createElement("button");
+        clearBtn.textContent = "Clear Canvas";
+        clearBtn.type = "button";
+        clearBtn.id = `clear-canvas-${sIndex}-${qIndex}`;
+        rightCol.appendChild(clearBtn);
+
         sectionDiv.appendChild(leftCol);
         sectionDiv.appendChild(rightCol);
-
         worksheet.appendChild(sectionDiv);
 
-        setupCanvas(canvas.id, `color-${sIndex}-${qIndex}`, `eraser-${sIndex}-${qIndex}`, fileInput.id);
+        setupCanvas(canvas.id, `color-${sIndex}-${qIndex}`, `eraser-${sIndex}-${qIndex}`, fileInput.id, clearBtn.id);
       });
     });
 
-    function setupCanvas(canvasId, colorId, eraserId, fileId) {
+    function setupCanvas(canvasId, colorId, eraserId, fileId, clearId) {
       const canvas = document.getElementById(canvasId);
       const ctx = canvas.getContext("2d");
       const colorPicker = document.getElementById(colorId);
       const eraserToggle = document.getElementById(eraserId);
       const fileInput = document.getElementById(fileId);
+      const clearBtn = document.getElementById(clearId);
       let drawing = false;
 
       canvas.addEventListener("mousedown", () => {
@@ -217,6 +223,10 @@
           img.src = evt.target.result;
         };
         reader.readAsDataURL(file);
+      });
+
+      clearBtn.addEventListener("click", () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
       });
     }
   </script>
