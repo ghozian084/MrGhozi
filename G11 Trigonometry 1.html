@@ -44,6 +44,7 @@
       border: 1px solid #ccc;
       margin-top: 10px;
       display: block;
+      cursor: crosshair;
     }
     .tools {
       margin-top: 10px;
@@ -67,6 +68,9 @@
     button:hover {
       background-color: #2980b9;
     }
+    .eraser-cursor {
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><rect width="32" height="32" fill="white" stroke="black" stroke-width="2"/></svg>') 16 16, auto;
+    }
   </style>
 </head>
 <body>
@@ -74,44 +78,99 @@
   <h1>Trigonometry Worksheet</h1>
   <h2>Topic: Angles Between 0° and 90°</h2>
 
-  <div class="section">
-    <div class="column">
-      <label>1. If sin a = 4/5, find cos a and tan a:</label>
-      <textarea placeholder="Your answer here..."></textarea>
-    </div>
-    <div class="column">
-      <canvas id="canvas1" width="300" height="200"></canvas>
-      <div class="tools">
-        <label>Color: <input type="color" id="color1" value="#2c3e50"></label>
-        <label><input type="checkbox" id="eraser1"> Eraser</label>
-      </div>
-      <input type="file" accept="image/*">
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="column">
-      <label>2. If cos b = 3/5, find sin b and tan b:</label>
-      <textarea placeholder="Your answer here..."></textarea>
-    </div>
-    <div class="column">
-      <canvas id="canvas2" width="300" height="200"></canvas>
-      <div class="tools">
-        <label>Color: <input type="color" id="color2" value="#2c3e50"></label>
-        <label><input type="checkbox" id="eraser2"> Eraser</label>
-      </div>
-      <input type="file" accept="image/*">
-    </div>
-  </div>
+  <div id="worksheet"></div>
 
   <button onclick="window.print()">🖨️ Print Your Worksheet</button>
 
   <script>
-    function setupCanvas(canvasId, colorId, eraserId) {
+    const sections = [
+      {
+        title: "Part A – Warm-Up",
+        questions: [
+          "1. If sin a = 4/5, find cos a and tan a:",
+          "2. If cos b = 3/5, find sin b and tan b:",
+          "3. Triangle with opposite = 7 and hypotenuse = 25. Find sin x, cos x, tan x:"
+        ]
+      },
+      {
+        title: "Part B – GenAI Exploration",
+        questions: [
+          "What did GenAI show you when you asked about sin a = 4/5?",
+          "Write down the steps GenAI used to find cos a and tan a:",
+          "List the 3 problems GenAI gave you and your answers:"
+        ]
+      },
+      {
+        title: "Part C – Group Challenge",
+        questions: [
+          "Write your 5 quiz questions created with GenAI:",
+          "Answers to the quiz from another group:"
+        ]
+      },
+      {
+        title: "Part D – Reflection",
+        questions: [
+          "1. What did you learn about sin, cos, and tan?",
+          "2. How did GenAI help you understand the topic?",
+          "3. What part of the lesson did you enjoy the most?",
+          "4. What do you still find challenging?"
+        ]
+      }
+    ];
+
+    const worksheet = document.getElementById("worksheet");
+
+    sections.forEach((section, sIndex) => {
+      const sectionDiv = document.createElement("div");
+      sectionDiv.className = "section";
+
+      section.questions.forEach((question, qIndex) => {
+        const leftCol = document.createElement("div");
+        leftCol.className = "column";
+        const label = document.createElement("label");
+        label.textContent = question;
+        const textarea = document.createElement("textarea");
+        textarea.placeholder = "Your answer here...";
+        leftCol.appendChild(label);
+        leftCol.appendChild(textarea);
+
+        const rightCol = document.createElement("div");
+        rightCol.className = "column";
+        const canvas = document.createElement("canvas");
+        canvas.width = 300;
+        canvas.height = 200;
+        canvas.id = `canvas-${sIndex}-${qIndex}`;
+        rightCol.appendChild(canvas);
+
+        const tools = document.createElement("div");
+        tools.className = "tools";
+        tools.innerHTML = `
+          <label>Color: <input type="color" id="color-${sIndex}-${qIndex}" value="#2c3e50"></label>
+          <label><input type="checkbox" id="eraser-${sIndex}-${qIndex}"> Eraser</label>
+        `;
+        rightCol.appendChild(tools);
+
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/*";
+        fileInput.id = `file-${sIndex}-${qIndex}`;
+        rightCol.appendChild(fileInput);
+
+        sectionDiv.appendChild(leftCol);
+        sectionDiv.appendChild(rightCol);
+
+        worksheet.appendChild(sectionDiv);
+
+        setupCanvas(canvas.id, `color-${sIndex}-${qIndex}`, `eraser-${sIndex}-${qIndex}`, fileInput.id);
+      });
+    });
+
+    function setupCanvas(canvasId, colorId, eraserId, fileId) {
       const canvas = document.getElementById(canvasId);
       const ctx = canvas.getContext("2d");
       const colorPicker = document.getElementById(colorId);
       const eraserToggle = document.getElementById(eraserId);
+      const fileInput = document.getElementById(fileId);
       let drawing = false;
 
       canvas.addEventListener("mousedown", () => {
@@ -135,18 +194,31 @@
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
-        ctx.lineWidth = 2;
+        ctx.lineWidth = eraserToggle.checked ? 20 : 2;
         ctx.lineCap = "round";
         ctx.strokeStyle = eraserToggle.checked ? "#ffffff" : colorPicker.value;
+        canvas.classList.toggle("eraser-cursor", eraserToggle.checked);
         ctx.lineTo(x, y);
         ctx.stroke();
         ctx.beginPath();
         ctx.moveTo(x, y);
       });
-    }
 
-    setupCanvas("canvas1", "color1", "eraser1");
-    setupCanvas("canvas2", "color2", "eraser2");
+      fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const img = new Image();
+          img.onload = function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          };
+          img.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
   </script>
 
 </body>
