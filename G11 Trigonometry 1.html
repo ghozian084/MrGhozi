@@ -230,6 +230,49 @@
       });
     }
   </script>
+<div class="section">
+  <h3>📐 Lesson: Rotating Line OP and Quadrants</h3>
+  <p>When an angle is measured from the positive x-axis, the rotating line OP moves <strong>counterclockwise</strong> for positive angles and <strong>clockwise</strong> for negative angles.</p>
+
+  <ul>
+    <li><strong>Quadrant I:</strong> 0° to 90°</li>
+    <li><strong>Quadrant II:</strong> 90° to 180°</li>
+    <li><strong>Quadrant III:</strong> 180° to 270°</li>
+    <li><strong>Quadrant IV:</strong> 270° to 360°</li>
+  </ul>
+
+  <p>To find the <strong>acute angle</strong> between OP and the x-axis, subtract the nearest multiple of 90° from the given angle:</p>
+
+  <ul>
+    <li><strong>a. 100°</strong> → Quadrant II → Acute angle = 180° − 100° = <strong>80°</strong></li>
+    <li><strong>b. −100°</strong> → Equivalent to 360° − 100° = 260° → Quadrant III → Acute angle = 260° − 180° = <strong>80°</strong></li>
+    <li><strong>c. 310°</strong> → Quadrant IV → Acute angle = 360° − 310° = <strong>50°</strong></li>
+    <li><strong>d. −150°</strong> → Equivalent to 360° − 150° = 210° → Quadrant III → Acute angle = 210° − 180° = <strong>30°</strong></li>
+  </ul>
+
+  <p>🧠 <strong>Tip:</strong> Always convert negative angles to their positive equivalents by adding 360°, then determine the quadrant and acute angle.</p>
+</div>
+
+<div class="section">
+  <div class="column">
+    <label>Draw diagrams for angles a–d showing quadrant, rotation direction, and acute angle:</label>
+    <textarea placeholder="Describe your diagrams or observations here..."></textarea>
+  </div>
+  <div class="column">
+    <canvas id="canvas-op" width="300" height="200"></canvas>
+    <div class="tools">
+      <label>Color: <input type="color" id="color-op" value="#2c3e50"></label>
+      <label><input type="checkbox" id="eraser-op"> Eraser</label>
+    </div>
+    <input type="file" accept="image/*" id="file-op">
+    <button id="clear-canvas-op">Clear Canvas</button>
+  </div>
+</div>
+
+<script>
+  setupCanvas("canvas-op", "color-op", "eraser-op", "file-op", "clear-canvas-op");
+</script>
 
 </body>
 </html>
+
