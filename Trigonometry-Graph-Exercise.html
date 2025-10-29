@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trigonometry Worksheet & Quiz</title>
+    <!-- Load Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use the Inter font family -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f6;
+        }
+        canvas {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        /* Custom styles for number inputs */
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* Tailwind's prose class for styling the worksheet text */
+        .prose {
+            color: #374151; /* gray-700 */
+        }
+        .prose ol > li::marker {
+            color: #4f46e5; /* indigo-600 */
+            font-weight: 600;
+        }
+        .prose code {
+            color: #be123c; /* pink-700 */
+            background-color: #fce7f3; /* pink-100 */
+            padding: 0.2em 0.4em;
+            border-radius: 0.25rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-purple-800 mb-8">
+            Trigonometry Worksheet & Quiz
+        </h1>
+
+        <!-- Container for Quiz and Worksheet -->
+        <div class="flex flex-col gap-8">
+            
+            <!-- Graph Quiz -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-green-700 mb-4">What's the Equation?</h2>
+                <p class="mb-4 text-gray-600">
+                    A new graph is shown below. Can you find the equation <code class="bg-gray-200 p-1 rounded">y = a f(b(x-c)) + d</code>?
+                </p>
+                
+                <!-- Quiz Canvas -->
+                <canvas id="quizCanvas" width="800" height="400" class="w-full h-auto border border-gray-300 mb-4"></canvas>
+
+                <!-- Quiz Answer Form -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                    <!-- Quiz Function Type -->
+                    <div class="md:col-span-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Function</label>
+                        <div class="flex gap-4 p-2 bg-gray-100 rounded-lg">
+                            <label class="flex items-center">
+                                <input type="radio" id="func_sin_ans" name="funcType_ans" value="sin" class="text-green-600 focus:ring-green-500" checked>
+                                <span class="ml-2">sin(x)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" id="func_cos_ans" name="funcType_ans" value="cos" class="text-green-600 focus:ring-green-500">
+                                <span class="ml-2">cos(x)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Inputs -->
+                    <div class="md:col-span-2 grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="a_ans" class="block text-sm font-medium text-gray-700">a =</label>
+                            <input type="number" id="a_ans" step="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                        </div>
+                        <div>
+                            <label for="b_ans" class="block text-sm font-medium text-gray-700">b =</label>
+                            <input type="number" id="b_ans" step="0.5" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                        </div>
+                        <div>
+                            <label for="c_ans" class="block text-sm font-medium text-gray-700">c = (in degrees)</label>
+                            <input type="number" id="c_ans" step="45" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                        </div>
+                        <div>
+                            <label for="d_ans" class="block text-sm font-medium text-gray-700">d =</label>
+                            <input type="number" id="d_ans" step="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz Buttons & Message -->
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button id="newQuestionBtn" class="w-full sm:w-1/2 bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-blue-700 transition duration-200">
+                        New Question
+                    </button>
+                    <button id="checkAnswerBtn" class="w-full sm:w-1/2 bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-700 transition duration-200">
+                        Check Answer
+                    </button>
+                </div>
+                <div id="quizMessage" class="mt-4 p-3 rounded-lg text-center font-medium">&nbsp;</div>
+            </div>
+
+            <!-- Worksheet Activity -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-purple-700 mb-4">Worksheet Activity</h2>
+                <div class="prose max-w-none">
+                    <p>Follow these steps. You will need to use the <strong>Graph Explorer</strong> (in the other file) to discover the answers and build your understanding.</p>
+                    <ol class="list-decimal pl-5 space-y-3">
+                        <li>
+                            <strong>Step 1: The 'a' value (Amplitude)</strong>
+                            <br>
+                            In the Graph Explorer, set <code>b=1</code>, <code>c=0</code>, <code>d=0</code>. Now, change the 'a' value from 1 to 2, then to 3. What happens? Try -1 and -2. 'a' controls the vertical stretch (height) of the graph, known as the <strong>amplitude</strong>. If 'a' is negative, it also flips the graph over the x-axis.
+                        </li>
+                        <li>
+                            <strong>Step 2: The 'd' value (Vertical Shift)</strong>
+                            <br>
+                            Set <code>a=1</code>, <code>b=1</code>, <code>c=0</code>. Now, change 'd' from 0 to 2. What happens to the whole graph? Try -2. 'd' moves the entire graph up or down. This is the <strong>vertical shift</strong>, and the line <code>y=d</code> is the new "midline" of the graph.
+                        </li>
+                        <li>
+                            <strong>Step 3: The 'b' value (Period)</strong>
+                            <br>
+                            Set <code>a=1</code>, <code>c=0</code>, <code>d=0</code>. The normal graph (where <code>b=1</code>) completes one full cycle in 360° (or 2&pi;). Now, change 'b' to 2. How long does it take to complete a cycle? (Answer: 180°). What if <code>b=0.5</code>? (Answer: 720°). 'b' controls the horizontal stretch or shrink. The <strong>period</strong> (length of one cycle) is <code>360° / b</code>.
+                        </li>
+                        <li>
+                            <strong>Step 4: The 'c' value (Phase Shift)</strong>
+                            <br>
+                            Set <code>a=1</code>, <code>b=1</code>, <code>d=0</code>. Now, change 'c' from 0 to 90. Which way did the graph move? (Answer: Right by 90°). What about <code>c=-90</code>? (Answer: Left by 90°). 'c' controls the horizontal shift, known as the <strong>phase shift</strong>.
+                        </li>
+                        <li>
+                            <strong>Step 5: Combine & Create!</strong>
+                            <br>
+                            Try to create your own graph in the Explorer. Can you create the equation <code>y = 2 * sin(0.5 * (x - 90°)) + 1</code>? Set the sliders and see if it matches what you expect.
+                        </li>
+                         <li>
+                            <strong>Step 6: Test Your Knowledge</strong>
+                            <br>
+                            Once you feel confident, use the <strong>What's the Equation?</strong> quiz above. Click "New Question" and try to find the correct parameters for the graph shown. Good luck!
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // === COMMON CANVAS SETUP ===
+            const scaleY = 40; // 40px per 1 unit on y-axis
+            const unitX = 60;  // 60px per pi/2 unit on x-axis
+            let originX, originY;
+            let canvasWidth, canvasHeight;
+
+            // === QUIZ SETUP ===
+            const quizCanvas = document.getElementById('quizCanvas');
+            const quizCtx = quizCanvas.getContext('2d');
+            const newQuestionBtn = document.getElementById('newQuestionBtn');
+            const checkAnswerBtn = document.getElementById('checkAnswerBtn');
+            const quizMessage = document.getElementById('quizMessage');
+            let currentQuizParams = {};
+
+            // === DRAWING FUNCTIONS ===
+
+            /**
+             * Draws the cartesian grid with dashed lines and axis labels (including pi)
+             */
+            function drawTrigGrid(ctx) {
+                canvasWidth = ctx.canvas.width;
+                canvasHeight = ctx.canvas.height;
+                originX = canvasWidth / 2;
+                originY = canvasHeight / 2;
+
+                ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+                ctx.strokeStyle = '#ddd';
+                ctx.fillStyle = '#555';
+                ctx.font = '12px Inter';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                // --- Draw Dashed Grid ---
+                ctx.setLineDash([4, 4]);
+                
+                // Horizontal dashed lines
+                for (let y = originY + scaleY; y < canvasHeight; y += scaleY) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(canvasWidth, y);
+                    ctx.stroke();
+                }
+                for (let y = originY - scaleY; y > 0; y -= scaleY) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(canvasWidth, y);
+                    ctx.stroke();
+                }
+
+                // Vertical dashed lines
+                for (let x = originX + unitX; x < canvasWidth; x += unitX) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, canvasHeight);
+                    ctx.stroke();
+                }
+                for (let x = originX - unitX; x > 0; x -= unitX) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, canvasHeight);
+                    ctx.stroke();
+                }
+
+                // --- Draw Solid Axes ---
+                ctx.setLineDash([]);
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2;
+
+                // X-Axis
+                ctx.beginPath();
+                ctx.moveTo(0, originY);
+                ctx.lineTo(canvasWidth, originY);
+                ctx.stroke();
+
+                // Y-Axis
+                ctx.beginPath();
+                ctx.moveTo(originX, 0);
+                ctx.lineTo(originX, canvasHeight);
+                ctx.stroke();
+
+                // --- Draw Axis Labels ---
+                // Y-Axis labels (Integers)
+                for (let i = 1; (originY - i * scaleY) > 0; i++) {
+                    ctx.fillText(i, originX - 15, originY - i * scaleY);
+                    ctx.fillText(-i, originX - 15, originY + i * scaleY);
+                }
+
+                // X-Axis labels (Pi units)
+                const piLabels = ["\u03C0/2", "\u03C0", "3\u03C0/2", "2\u03C0", "5\u03C0/2", "3\u03C0"];
+                for (let i = 1; (originX + i * unitX) < canvasWidth; i++) {
+                    ctx.fillText(piLabels[i-1], originX + i * unitX, originY + 15);
+                    ctx.fillText("-" + piLabels[i-1], originX - i * unitX, originY + 15);
+                }
+            }
+
+            /**
+             * Draws a trigonometric function on the given context
+             */
+            function drawFunction(ctx, params, color, lineWidth = 3) {
+                const { a, b, c_rad, d, funcType } = params;
+                
+                ctx.strokeStyle = color;
+                ctx.lineWidth = lineWidth;
+                ctx.beginPath();
+
+                for (let px = 0; px <= canvasWidth; px++) {
+                    // Convert pixel coordinate back to radian value
+                    const x_rad = (px - originX) / unitX * (Math.PI / 2);
+                    
+                    let y_val;
+                    if (funcType === 'sin') {
+                        y_val = a * Math.sin(b * (x_rad - c_rad)) + d;
+                    } else {
+                        y_val = a * Math.cos(b * (x_rad - c_rad)) + d;
+                    }
+
+                    // Convert function value to pixel coordinate
+                    const py = originY - y_val * scaleY;
+
+                    if (px === 0) {
+                        ctx.moveTo(px, py);
+                    } else {
+                        ctx.lineTo(px, py);
+                    }
+                }
+                ctx.stroke();
+            }
+
+            // === QUIZ FUNCTIONS ===
+
+            /**
+             * Generates a new quiz question
+             */
+            function newQuestion() {
+                // Generate random simple parameters
+                const a = (Math.floor(Math.random() * 3) + 1) * (Math.random() < 0.5 ? 1 : -1); // +/- 1, 2, 3
+                const b = [0.5, 1, 2][Math.floor(Math.random() * 3)]; // 0.5, 1, 2
+                const c_deg = [-180, -90, 0, 90, 180][Math.floor(Math.random() * 5)]; // multiples of 90
+                const c_rad = c_deg * (Math.PI / 180);
+                const d = Math.floor(Math.random() * 5) - 2; // -2, -1, 0, 1, 2
+                const funcType = Math.random() < 0.5 ? 'sin' : 'cos';
+
+                currentQuizParams = { a, b, c_deg, d, funcType };
+
+                // Draw the quiz graph
+                drawTrigGrid(quizCtx);
+                drawFunction(quizCtx, {
+                    a, b, c_rad, d, funcType
+                }, '#15803d', 3);
+
+                // Clear fields and message
+                document.getElementById('a_ans').value = '';
+                document.getElementById('b_ans').value = '';
+                document.getElementById('c_ans').value = '';
+                document.getElementById('d_ans').value = '';
+                document.getElementById(funcType === 'sin' ? 'func_sin_ans' : 'func_cos_ans').checked = true;
+                quizMessage.textContent = 'New question generated. Good luck!';
+                quizMessage.className = 'mt-4 p-3 rounded-lg text-center font-medium bg-blue-100 text-blue-800';
+            }
+
+            /**
+             * Checks the student's answer
+             */
+            function checkAnswer() {
+                const a_ans = parseFloat(document.getElementById('a_ans').value);
+                const b_ans = parseFloat(document.getElementById('b_ans').value);
+                const c_ans = parseFloat(document.getElementById('c_ans').value);
+                const d_ans = parseFloat(document.getElementById('d_ans').value);
+                const funcType_ans = document.getElementById('func_sin_ans').checked ? 'sin' : 'cos';
+
+                const { a, b, c_deg, d, funcType } = currentQuizParams;
+
+                let correct = true;
+                let messages = [];
+
+                if (a_ans !== a) {
+                    correct = false;
+                    messages.push(`'a' is incorrect (Answer: ${a})`);
+                }
+                if (b_ans !== b) {
+                    correct = false;
+                    messages.push(`'b' is incorrect (Answer: ${b})`);
+                }
+                if (c_ans !== c_deg) {
+                    // Note: This is a simple check. c=90 and c=-270 could be equivalent.
+                    // For this quiz, we expect the exact generated value.
+                    correct = false;
+                    messages.push(`'c' is incorrect (Answer: ${c_deg})`);
+                }
+                if (d_ans !== d) {
+                    correct = false;
+                    messages.push(`'d' is incorrect (Answer: ${d})`);
+                }
+                if (funcType_ans !== funcType) {
+                    correct = false;
+                    messages.push(`Function type is incorrect (Answer: ${funcType})`);
+                }
+
+                if (correct) {
+                    quizMessage.textContent = 'Correct! All parameters are right. Well done!';
+                    quizMessage.className = 'mt-4 p-3 rounded-lg text-center font-medium bg-green-100 text-green-800';
+                } else {
+                    quizMessage.textContent = 'Not quite. Check your values: ' + messages.join('; ');
+                    quizMessage.className = 'mt-4 p-3 rounded-lg text-center font-medium bg-red-100 text-red-800';
+                }
+            }
+
+
+            // === INITIALIZATION ===
+            
+            // Add event listeners to quiz buttons
+            newQuestionBtn.addEventListener('click', newQuestion);
+            checkAnswerBtn.addEventListener('click', checkAnswer);
+
+            // Initial draw
+            newQuestion();
+        });
+    </script>
+</body>
+</html>
+
