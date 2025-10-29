@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trigonometry Graph Explorer</title>
+    <!-- Load Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use the Inter font family -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f6;
+        }
+        canvas {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        /* Custom styles for number inputs */
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-blue-800 mb-8">
+            Trigonometry Graph Explorer
+        </h1>
+
+        <!-- Column 1: Graph Explorer -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-semibold text-blue-700 mb-4">Graph Explorer</h2>
+            <p class="mb-4 text-gray-600">
+                Use the controls to see how <code class="bg-gray-200 p-1 rounded">a, b, c,</code> and <code class="bg-gray-200 p-1 rounded">d</code> transform the graph.
+            </p>
+
+            <!-- Explorer Controls -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                <!-- Function Type -->
+                <div class="md:col-span-1">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Function</label>
+                    <div class="flex gap-4 p-2 bg-gray-100 rounded-lg">
+                        <label class="flex items-center">
+                            <input type="radio" id="func_sin" name="funcType" value="sin" class="text-blue-600 focus:ring-blue-500" checked>
+                            <span class="ml-2">sin(x)</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" id="func_cos" name="funcType" value="cos" class="text-blue-600 focus:ring-blue-500">
+                            <span class="ml-2">cos(x)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Sliders -->
+                <div class="md:col-span-2 grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="a_slider" class="block text-sm font-medium text-gray-700">a (Amplitude)</label>
+                        <input type="number" id="a_slider" step="1" value="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="b_slider" class="block text-sm font-medium text-gray-700">b (Period)</label>
+                        <input type="number" id="b_slider" step="0.5" value="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="c_slider" class="block text-sm font-medium text-gray-700">c (Phase Shift °)</label>
+                        <input type="number" id="c_slider" step="45" value="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="d_slider" class="block text-sm font-medium text-gray-700">d (Vertical Shift)</label>
+                        <input type="number" id="d_slider" step="1" value="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Equation Display -->
+            <div class="my-4 p-3 bg-blue-50 rounded-lg text-center">
+                <span class="text-lg font-mono text-blue-900" id="equationDisplay">
+                    y = 1 * sin(1 * (x - 0°) + 0)
+                </span>
+            </div>
+
+            <!-- Explorer Canvas -->
+            <canvas id="graphCanvas" width="800" height="400" class="w-full h-auto border border-gray-300"></canvas>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // === COMMON CANVAS SETUP ===
+            const scaleY = 40; // 40px per 1 unit on y-axis
+            const unitX = 60;  // 60px per pi/2 unit on x-axis
+            let originX, originY;
+            let canvasWidth, canvasHeight;
+
+            // === EXPLORER SETUP ===
+            const graphCanvas = document.getElementById('graphCanvas');
+            const graphCtx = graphCanvas.getContext('2d');
+            const a_slider = document.getElementById('a_slider');
+            const b_slider = document.getElementById('b_slider');
+            const c_slider = document.getElementById('c_slider');
+            const d_slider = document.getElementById('d_slider');
+            const funcSin = document.getElementById('func_sin');
+            const funcCos = document.getElementById('func_cos');
+            const equationDisplay = document.getElementById('equationDisplay');
+            const explorerControls = [a_slider, b_slider, c_slider, d_slider, funcSin, funcCos];
+
+            // === DRAWING FUNCTIONS ===
+
+            /**
+             * Draws the cartesian grid with dashed lines and axis labels (including pi)
+             */
+            function drawTrigGrid(ctx) {
+                canvasWidth = ctx.canvas.width;
+                canvasHeight = ctx.canvas.height;
+                originX = canvasWidth / 2;
+                originY = canvasHeight / 2;
+
+                ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+                ctx.strokeStyle = '#ddd';
+                ctx.fillStyle = '#555';
+                ctx.font = '12px Inter';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                // --- Draw Dashed Grid ---
+                ctx.setLineDash([4, 4]);
+                
+                // Horizontal dashed lines
+                for (let y = originY + scaleY; y < canvasHeight; y += scaleY) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(canvasWidth, y);
+                    ctx.stroke();
+                }
+                for (let y = originY - scaleY; y > 0; y -= scaleY) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(canvasWidth, y);
+                    ctx.stroke();
+                }
+
+                // Vertical dashed lines
+                for (let x = originX + unitX; x < canvasWidth; x += unitX) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, canvasHeight);
+                    ctx.stroke();
+                }
+                for (let x = originX - unitX; x > 0; x -= unitX) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, canvasHeight);
+                    ctx.stroke();
+                }
+
+                // --- Draw Solid Axes ---
+                ctx.setLineDash([]);
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2;
+
+                // X-Axis
+                ctx.beginPath();
+                ctx.moveTo(0, originY);
+                ctx.lineTo(canvasWidth, originY);
+                ctx.stroke();
+
+                // Y-Axis
+                ctx.beginPath();
+                ctx.moveTo(originX, 0);
+                ctx.lineTo(originX, canvasHeight);
+                ctx.stroke();
+
+                // --- Draw Axis Labels ---
+                // Y-Axis labels (Integers)
+                for (let i = 1; (originY - i * scaleY) > 0; i++) {
+                    ctx.fillText(i, originX - 15, originY - i * scaleY);
+                    ctx.fillText(-i, originX - 15, originY + i * scaleY);
+                }
+
+                // X-Axis labels (Pi units)
+                const piLabels = ["\u03C0/2", "\u03C0", "3\u03C0/2", "2\u03C0", "5\u03C0/2", "3\u03C0"];
+                for (let i = 1; (originX + i * unitX) < canvasWidth; i++) {
+                    ctx.fillText(piLabels[i-1], originX + i * unitX, originY + 15);
+                    ctx.fillText("-" + piLabels[i-1], originX - i * unitX, originY + 15);
+                }
+            }
+
+            /**
+             * Draws a trigonometric function on the given context
+             */
+            function drawFunction(ctx, params, color, lineWidth = 3) {
+                const { a, b, c_rad, d, funcType } = params;
+                
+                ctx.strokeStyle = color;
+                ctx.lineWidth = lineWidth;
+                ctx.beginPath();
+
+                for (let px = 0; px <= canvasWidth; px++) {
+                    // Convert pixel coordinate back to radian value
+                    const x_rad = (px - originX) / unitX * (Math.PI / 2);
+                    
+                    let y_val;
+                    if (funcType === 'sin') {
+                        y_val = a * Math.sin(b * (x_rad - c_rad)) + d;
+                    } else {
+                        y_val = a * Math.cos(b * (x_rad - c_rad)) + d;
+                    }
+
+                    // Convert function value to pixel coordinate
+                    const py = originY - y_val * scaleY;
+
+                    if (px === 0) {
+                        ctx.moveTo(px, py);
+                    } else {
+                        ctx.lineTo(px, py);
+                    }
+                }
+                ctx.stroke();
+            }
+
+            /**
+             * Main function to update the explorer graph
+             */
+            function drawExplorerGraph() {
+                const a = parseFloat(a_slider.value) || 0;
+                const b = parseFloat(b_slider.value) || 1;
+                const c_deg = parseFloat(c_slider.value) || 0;
+                const c_rad = c_deg * (Math.PI / 180);
+                const d = parseFloat(d_slider.value) || 0;
+                const funcType = funcSin.checked ? 'sin' : 'cos';
+
+                // Update equation display
+                equationDisplay.textContent = `y = ${a} * ${funcType}(${b} * (x - ${c_deg}°) + ${d})`;
+
+                // Redraw grid
+                drawTrigGrid(graphCtx);
+
+                // Draw reference graph (y = sin(x) or y = cos(x))
+                drawFunction(graphCtx, {
+                    a: 1, b: 1, c_rad: 0, d: 0, funcType: funcType
+                }, 'rgba(150, 150, 150, 0.5)', 2);
+
+                // Draw transformed graph
+                drawFunction(graphCtx, {
+                    a, b, c_rad, d, funcType
+                }, '#1d4ed8', 3);
+            }
+
+            // === INITIALIZATION ===
+            
+            // Add event listeners to explorer controls
+            explorerControls.forEach(control => {
+                control.addEventListener('input', drawExplorerGraph);
+            });
+
+            // Initial draw
+            drawExplorerGraph();
+        });
+    </script>
+</body>
+</html>
+
