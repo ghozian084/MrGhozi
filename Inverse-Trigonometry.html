@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Inverse Trigonometry Slides</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        html {
+            height: 100%;
+        }
+        .slide {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .slide.active {
+            display: block;
+            opacity: 1;
+        }
+        .interactive-input {
+            transition: all 0.3s ease;
+        }
+        .interactive-input:focus {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+        .slide-enter {
+            animation: slideIn 0.6s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .pulse-correct {
+            animation: pulseCorrect 0.8s ease;
+        }
+        .shake-incorrect {
+            animation: shake 0.6s ease;
+        }
+        @keyframes pulseCorrect {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div id="app" class="min-h-full"><!-- Header with Progress -->
+   <header class="p-6 shadow-lg">
+    <div class="max-w-4xl mx-auto">
+     <h1 id="main-title" class="text-4xl font-bold text-center mb-2"></h1>
+     <p id="subtitle" class="text-xl text-center mb-4"></p><!-- Progress Bar -->
+     <div class="w-full rounded-full h-3 mb-4">
+      <div id="progress-bar" class="progress-bar h-3 rounded-full"></div>
+     </div>
+     <div class="text-center"><span id="slide-counter" class="text-lg font-semibold">Slide 1 of 8</span>
+     </div>
+    </div>
+   </header><!-- Slide Container -->
+   <main class="flex-1 p-6">
+    <div class="max-w-4xl mx-auto"><!-- Slide 1: Introduction -->
+     <div class="slide active" id="slide-1">
+      <div class="text-center p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">🎯 Welcome to Inverse Trigonometry!</h2>
+       <p class="text-xl mb-8">Let's explore special angles and their inverse trigonometric values step by step.</p>
+       <div class="p-6 rounded-xl mb-8">
+        <h3 class="text-2xl font-bold mb-4">📚 What You'll Learn:</h3>
+        <ul class="text-lg space-y-3 text-left max-w-2xl mx-auto">
+         <li>✅ Special angles: 0°, 30°, 45°, 60°, 90°</li>
+         <li>✅ Trigonometric values for these angles</li>
+         <li>✅ Inverse trigonometry concepts</li>
+         <li>✅ Interactive calculations</li>
+         <li>✅ Practice exercises</li>
+        </ul>
+       </div>
+       <div class="p-6 rounded-xl">
+        <p class="text-lg mb-4">🚀 <strong>Interactive Learning:</strong> You'll input numbers and see results on every slide!</p>
+        <p class="text-base">Ready to start your journey? Click Next to begin!</p>
+       </div>
+      </div>
+     </div><!-- Slide 2: Special Angles Introduction -->
+     <div class="slide" id="slide-2">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">📐 Understanding Special Angles</h2>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <div>
+         <p class="text-lg mb-6">Special angles have exact trigonometric values. Let's explore them:</p>
+         <div class="space-y-4">
+          <div class="p-4 rounded-lg border-2">
+           <div class="text-xl font-bold">
+            0° = \(0\) radians
+           </div>
+          </div>
+          <div class="p-4 rounded-lg border-2">
+           <div class="text-xl font-bold">
+            30° = \(\frac{\pi}{6}\) radians
+           </div>
+          </div>
+          <div class="p-4 rounded-lg border-2">
+           <div class="text-xl font-bold">
+            45° = \(\frac{\pi}{4}\) radians
+           </div>
+          </div>
+          <div class="p-4 rounded-lg border-2">
+           <div class="text-xl font-bold">
+            60° = \(\frac{\pi}{3}\) radians
+           </div>
+          </div>
+          <div class="p-4 rounded-lg border-2">
+           <div class="text-xl font-bold">
+            90° = \(\frac{\pi}{2}\) radians
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">🧮 Try Converting!</h3>
+         <p class="mb-4">Convert degrees to radians:</p>
+         <div class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-2">Enter angle in degrees:</label> <input type="number" id="degree-input" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 30">
+          </div><button onclick="convertToRadians()" class="w-full py-3 rounded-lg font-bold text-lg transition-all">Convert to Radians</button>
+          <div id="conversion-result" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Slide 3: Trigonometric Values Table -->
+     <div class="slide" id="slide-3">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">📊 Trigonometric Values Table</h2>
+       <div class="overflow-x-auto mb-8">
+        <table class="w-full border-collapse">
+         <thead>
+          <tr>
+           <th class="border-2 p-4 text-lg">Angle</th>
+           <th class="border-2 p-4 text-lg">\(\sin\theta\)</th>
+           <th class="border-2 p-4 text-lg">\(\cos\theta\)</th>
+           <th class="border-2 p-4 text-lg">\(\tan\theta\)</th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td class="border-2 p-4 text-center font-semibold">0°</td>
+           <td class="border-2 p-4 text-center">\(0\)</td>
+           <td class="border-2 p-4 text-center">\(1\)</td>
+           <td class="border-2 p-4 text-center">\(0\)</td>
+          </tr>
+          <tr>
+           <td class="border-2 p-4 text-center font-semibold">30°</td>
+           <td class="border-2 p-4 text-center">\(\frac{1}{2}\)</td>
+           <td class="border-2 p-4 text-center">\(\frac{\sqrt{3}}{2}\)</td>
+           <td class="border-2 p-4 text-center">\(\frac{\sqrt{3}}{3}\)</td>
+          </tr>
+          <tr>
+           <td class="border-2 p-4 text-center font-semibold">45°</td>
+           <td class="border-2 p-4 text-center">\(\frac{\sqrt{2}}{2}\)</td>
+           <td class="border-2 p-4 text-center">\(\frac{\sqrt{2}}{2}\)</td>
+           <td class="border-2 p-4 text-center">\(1\)</td>
+          </tr>
+          <tr>
+           <td class="border-2 p-4 text-center font-semibold">60°</td>
+           <td class="border-2 p-4 text-center">\(\frac{\sqrt{3}}{2}\)</td>
+           <td class="border-2 p-4 text-center">\(\frac{1}{2}\)</td>
+           <td class="border-2 p-4 text-center">\(\sqrt{3}\)</td>
+          </tr>
+          <tr>
+           <td class="border-2 p-4 text-center font-semibold">90°</td>
+           <td class="border-2 p-4 text-center">\(1\)</td>
+           <td class="border-2 p-4 text-center">\(0\)</td>
+           <td class="border-2 p-4 text-center">undefined</td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+       <div class="p-6 rounded-xl">
+        <h3 class="text-2xl font-bold mb-4">🎯 Test Your Knowledge!</h3>
+        <p class="mb-4">Enter an angle to see its trigonometric values:</p>
+        <div class="grid md:grid-cols-2 gap-6">
+         <div><label class="block text-sm font-semibold mb-2">Select angle (degrees):</label> <select id="angle-select" class="interactive-input w-full p-3 border-2 rounded-lg text-lg"> <option value="">Choose an angle...</option> <option value="0">0°</option> <option value="30">30°</option> <option value="45">45°</option> <option value="60">60°</option> <option value="90">90°</option> </select> <button onclick="showTrigValues()" class="w-full mt-4 py-3 rounded-lg font-bold text-lg transition-all">Show Values</button>
+         </div>
+         <div id="trig-values-result" class="p-4 rounded-lg min-h-32"></div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Slide 4: What is Inverse Trigonometry -->
+     <div class="slide" id="slide-4">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">🔄 What is Inverse Trigonometry?</h2>
+       <div class="grid md:grid-cols-2 gap-8 mb-8">
+        <div>
+         <p class="text-lg mb-6">Inverse trigonometric functions work backwards - they find the angle when given the trigonometric value.</p>
+         <div class="space-y-6">
+          <div class="p-4 rounded-lg border-2">
+           <h3 class="text-xl font-bold mb-2">\(\arcsin(x)\)</h3>
+           <p class="mb-2">If \(\sin\theta = x\), then \(\theta = \arcsin(x)\)</p>
+           <p class="text-sm">Range: \([-90°, 90°]\)</p>
+           <p class="text-sm">Domain: \([-1, 1]\)</p>
+          </div>
+          <div class="p-4 rounded-lg border-2">
+           <h3 class="text-xl font-bold mb-2">\(\arccos(x)\)</h3>
+           <p class="mb-2">If \(\cos\theta = x\), then \(\theta = \arccos(x)\)</p>
+           <p class="text-sm">Range: \([0°, 180°]\)</p>
+           <p class="text-sm">Domain: \([-1, 1]\)</p>
+          </div>
+          <div class="p-4 rounded-lg border-2">
+           <h3 class="text-xl font-bold mb-2">\(\arctan(x)\)</h3>
+           <p class="mb-2">If \(\tan\theta = x\), then \(\theta = \arctan(x)\)</p>
+           <p class="text-sm">Range: \((-90°, 90°)\)</p>
+           <p class="text-sm">Domain: All real numbers</p>
+          </div>
+         </div>
+        </div>
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">🧪 Try an Example!</h3>
+         <p class="mb-4">Let's find: What angle has \(\sin\theta = \frac{1}{2}\)?</p>
+         <div class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-2">Enter your answer (in degrees):</label> <input type="number" id="inverse-example" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Your answer...">
+          </div><button onclick="checkInverseExample()" class="w-full py-3 rounded-lg font-bold text-lg transition-all">Check Answer</button>
+          <div id="inverse-example-result" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+         <div class="mt-6 p-4 rounded-lg">
+          <p class="text-sm"><strong>Hint:</strong> Look at the table from the previous slide!</p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Slide 5: Arcsin Calculator -->
+     <div class="slide" id="slide-5">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">📐 Interactive Arcsin Calculator</h2>
+       <div class="grid md:grid-cols-2 gap-8">
+        <div>
+         <h3 class="text-2xl font-bold mb-4">\(\arcsin(x)\) - Arcsine Function</h3>
+         <p class="text-lg mb-6">The arcsine function finds the angle whose sine is the given value.</p>
+         <div class="p-4 rounded-lg border-2 mb-6">
+          <h4 class="font-bold mb-2">Key Points:</h4>
+          <ul class="space-y-2">
+           <li>• Input must be between -1 and 1</li>
+           <li>• Output is between -90° and 90°</li>
+           <li>• \(\arcsin(\frac{1}{2}) = 30°\)</li>
+           <li>• \(\arcsin(\frac{\sqrt{2}}{2}) = 45°\)</li>
+           <li>• \(\arcsin(\frac{\sqrt{3}}{2}) = 60°\)</li>
+          </ul>
+         </div>
+        </div>
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">🧮 Try Different Values!</h3>
+         <div class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-2">Enter value for arcsin (between -1 and 1):</label> <input type="number" id="arcsin-input" step="0.01" min="-1" max="1" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 0.5">
+          </div><button onclick="calculateArcsin()" class="w-full py-3 rounded-lg font-bold text-lg transition-all">Calculate \(\arcsin\)</button>
+          <div id="arcsin-result" class="p-4 rounded-lg min-h-24"></div>
+         </div>
+         <div class="mt-6 p-4 rounded-lg">
+          <h4 class="font-bold mb-2">💡 Try These Values:</h4>
+          <div class="grid grid-cols-2 gap-2"><button onclick="setArcsineValue(0.5)" class="p-2 rounded border text-sm">0.5</button> <button onclick="setArcsineValue(0.707)" class="p-2 rounded border text-sm">0.707</button> <button onclick="setArcsineValue(0.866)" class="p-2 rounded border text-sm">0.866</button> <button onclick="setArcsineValue(1)" class="p-2 rounded border text-sm">1</button>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Slide 6: Arccos Calculator -->
+     <div class="slide" id="slide-6">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">📐 Interactive Arccos Calculator</h2>
+       <div class="grid md:grid-cols-2 gap-8">
+        <div>
+         <h3 class="text-2xl font-bold mb-4">\(\arccos(x)\) - Arccosine Function</h3>
+         <p class="text-lg mb-6">The arccosine function finds the angle whose cosine is the given value.</p>
+         <div class="p-4 rounded-lg border-2 mb-6">
+          <h4 class="font-bold mb-2">Key Points:</h4>
+          <ul class="space-y-2">
+           <li>• Input must be between -1 and 1</li>
+           <li>• Output is between 0° and 180°</li>
+           <li>• \(\arccos(\frac{\sqrt{3}}{2}) = 30°\)</li>
+           <li>• \(\arccos(\frac{\sqrt{2}}{2}) = 45°\)</li>
+           <li>• \(\arccos(\frac{1}{2}) = 60°\)</li>
+           <li>• \(\arccos(0) = 90°\)</li>
+          </ul>
+         </div>
+        </div>
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">🧮 Try Different Values!</h3>
+         <div class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-2">Enter value for arccos (between -1 and 1):</label> <input type="number" id="arccos-input" step="0.01" min="-1" max="1" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 0.5">
+          </div><button onclick="calculateArccos()" class="w-full py-3 rounded-lg font-bold text-lg transition-all">Calculate \(\arccos\)</button>
+          <div id="arccos-result" class="p-4 rounded-lg min-h-24"></div>
+         </div>
+         <div class="mt-6 p-4 rounded-lg">
+          <h4 class="font-bold mb-2">💡 Try These Values:</h4>
+          <div class="grid grid-cols-2 gap-2"><button onclick="setArccosValue(0.866)" class="p-2 rounded border text-sm">0.866</button> <button onclick="setArccosValue(0.707)" class="p-2 rounded border text-sm">0.707</button> <button onclick="setArccosValue(0.5)" class="p-2 rounded border text-sm">0.5</button> <button onclick="setArccosValue(0)" class="p-2 rounded border text-sm">0</button>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Slide 7: Arctan Calculator -->
+     <div class="slide" id="slide-7">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">📐 Interactive Arctan Calculator</h2>
+       <div class="grid md:grid-cols-2 gap-8">
+        <div>
+         <h3 class="text-2xl font-bold mb-4">\(\arctan(x)\) - Arctangent Function</h3>
+         <p class="text-lg mb-6">The arctangent function finds the angle whose tangent is the given value.</p>
+         <div class="p-4 rounded-lg border-2 mb-6">
+          <h4 class="font-bold mb-2">Key Points:</h4>
+          <ul class="space-y-2">
+           <li>• Input can be any real number</li>
+           <li>• Output is between -90° and 90°</li>
+           <li>• \(\arctan(\frac{\sqrt{3}}{3}) = 30°\)</li>
+           <li>• \(\arctan(1) = 45°\)</li>
+           <li>• \(\arctan(\sqrt{3}) = 60°\)</li>
+          </ul>
+         </div>
+        </div>
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">🧮 Try Different Values!</h3>
+         <div class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-2">Enter value for arctan (any number):</label> <input type="number" id="arctan-input" step="0.01" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 1">
+          </div><button onclick="calculateArctan()" class="w-full py-3 rounded-lg font-bold text-lg transition-all">Calculate \(\arctan\)</button>
+          <div id="arctan-result" class="p-4 rounded-lg min-h-24"></div>
+         </div>
+         <div class="mt-6 p-4 rounded-lg">
+          <h4 class="font-bold mb-2">💡 Try These Values:</h4>
+          <div class="grid grid-cols-2 gap-2"><button onclick="setArctanValue(0.577)" class="p-2 rounded border text-sm">0.577</button> <button onclick="setArctanValue(1)" class="p-2 rounded border text-sm">1</button> <button onclick="setArctanValue(1.732)" class="p-2 rounded border text-sm">1.732</button> <button onclick="setArctanValue(0)" class="p-2 rounded border text-sm">0</button>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Slide 8: Final Quiz -->
+     <div class="slide" id="slide-8">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">🎯 Final Challenge Quiz</h2>
+       <div class="space-y-8"><!-- Question 1 -->
+        <div class="p-6 rounded-xl border-2">
+         <p class="text-xl font-semibold mb-4">Question 1: Calculate \(\arcsin(\frac{1}{2})\)</p>
+         <div class="grid md:grid-cols-2 gap-4">
+          <div><input type="number" id="quiz1-input" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Enter answer in degrees"> <button onclick="checkQuizAnswer(1, 30)" class="w-full mt-2 py-2 rounded-lg font-bold">Check Answer</button>
+          </div>
+          <div id="quiz1-feedback" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div><!-- Question 2 -->
+        <div class="p-6 rounded-xl border-2">
+         <p class="text-xl font-semibold mb-4">Question 2: Calculate \(\arccos(\frac{\sqrt{2}}{2})\)</p>
+         <div class="grid md:grid-cols-2 gap-4">
+          <div><input type="number" id="quiz2-input" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Enter answer in degrees"> <button onclick="checkQuizAnswer(2, 45)" class="w-full mt-2 py-2 rounded-lg font-bold">Check Answer</button>
+          </div>
+          <div id="quiz2-feedback" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div><!-- Question 3 -->
+        <div class="p-6 rounded-xl border-2">
+         <p class="text-xl font-semibold mb-4">Question 3: Calculate \(\arctan(\sqrt{3})\)</p>
+         <div class="grid md:grid-cols-2 gap-4">
+          <div><input type="number" id="quiz3-input" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Enter answer in degrees"> <button onclick="checkQuizAnswer(3, 60)" class="w-full mt-2 py-2 rounded-lg font-bold">Check Answer</button>
+          </div>
+          <div id="quiz3-feedback" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div>
+        <div id="final-quiz-score" class="text-center p-6 rounded-xl hidden">
+         <h3 class="text-2xl font-bold mb-2">🎉 Quiz Complete!</h3>
+         <p class="text-xl" id="quiz-score-display">Score: 0/3</p>
+         <p class="mt-4">Great job learning inverse trigonometry!</p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </main><!-- Navigation -->
+   <footer class="p-6 border-t-2">
+    <div class="max-w-4xl mx-auto flex justify-between items-center"><button id="prev-btn" onclick="previousSlide()" class="px-6 py-3 rounded-lg font-bold text-lg transition-all disabled:opacity-50" disabled> <span id="prev-button-text">← Previous</span> </button>
+     <div class="flex space-x-2"><span class="w-3 h-3 rounded-full slide-dot" data-slide="1"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="2"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="3"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="4"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="5"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="6"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="7"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="8"></span>
+     </div><button id="next-btn" onclick="nextSlide()" class="px-6 py-3 rounded-lg font-bold text-lg transition-all"> <span id="next-button-text">Next →</span> </button>
+    </div>
+   </footer>
+  </div>
+  <script>
+        const defaultConfig = {
+            background_color: "#f0f9ff",
+            surface_color: "#ffffff", 
+            text_color: "#1e293b",
+            primary_action_color: "#3b82f6",
+            secondary_action_color: "#60a5fa",
+            main_title: "Interactive Inverse Trigonometry",
+            subtitle: "Learn step by step with hands-on practice",
+            next_button_text: "Next →",
+            prev_button_text: "← Previous",
+            font_family: "system-ui",
+            font_size: 16
+        };
+
+        let currentSlide = 1;
+        const totalSlides = 8;
+        let quizScore = 0;
+        let quizAnswered = new Set();
+
+        function updateSlide() {
+            // Hide all slides
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show current slide
+            const activeSlide = document.getElementById(`slide-${currentSlide}`);
+            activeSlide.classList.add('active');
+            activeSlide.classList.add('slide-enter');
+            
+            // Update progress bar
+            const progress = (currentSlide / totalSlides) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            
+            // Update slide counter
+            document.getElementById('slide-counter').textContent = `Slide ${currentSlide} of ${totalSlides}`;
+            
+            // Update navigation buttons
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').textContent = currentSlide === totalSlides ? 'Finish' : document.getElementById('next-button-text').textContent;
+            
+            // Update slide dots
+            document.querySelectorAll('.slide-dot').forEach((dot, index) => {
+                if (index + 1 === currentSlide) {
+                    dot.style.backgroundColor = defaultConfig.primary_action_color;
+                } else {
+                    dot.style.backgroundColor = defaultConfig.secondary_action_color;
+                }
+            });
+            
+            // Re-render MathJax for new slide
+            if (window.MathJax) {
+                MathJax.typesetPromise([activeSlide]);
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        // Interactive Functions
+        function convertToRadians() {
+            const degrees = parseFloat(document.getElementById('degree-input').value);
+            const resultDiv = document.getElementById('conversion-result');
+            
+            if (isNaN(degrees)) {
+                resultDiv.innerHTML = '<p class="font-semibold">⚠️ Please enter a valid number</p>';
+                return;
+            }
+            
+            const radians = degrees * (Math.PI / 180);
+            const fraction = getRadianFraction(degrees);
+            
+            resultDiv.innerHTML = `
+                <p class="font-bold text-lg mb-2">Result:</p>
+                <p>${degrees}° = ${radians.toFixed(4)} radians</p>
+                ${fraction ? `<p class="text-sm mt-2">Exact: ${fraction}</p>` : ''}
+            `;
+            resultDiv.classList.add('pulse-correct');
+            setTimeout(() => resultDiv.classList.remove('pulse-correct'), 800);
+        }
+
+        function getRadianFraction(degrees) {
+            const fractions = {
+                0: '0',
+                30: '\\(\\frac{\\pi}{6}\\)',
+                45: '\\(\\frac{\\pi}{4}\\)',
+                60: '\\(\\frac{\\pi}{3}\\)',
+                90: '\\(\\frac{\\pi}{2}\\)',
+                180: '\\(\\pi\\)'
+            };
+            return fractions[degrees] || null;
+        }
+
+        function showTrigValues() {
+            const angle = document.getElementById('angle-select').value;
+            const resultDiv = document.getElementById('trig-values-result');
+            
+            if (!angle) {
+                resultDiv.innerHTML = '<p class="font-semibold">⚠️ Please select an angle</p>';
+                return;
+            }
+            
+            const values = {
+                0: { sin: '0', cos: '1', tan: '0' },
+                30: { sin: '\\(\\frac{1}{2}\\)', cos: '\\(\\frac{\\sqrt{3}}{2}\\)', tan: '\\(\\frac{\\sqrt{3}}{3}\\)' },
+                45: { sin: '\\(\\frac{\\sqrt{2}}{2}\\)', cos: '\\(\\frac{\\sqrt{2}}{2}\\)', tan: '1' },
+                60: { sin: '\\(\\frac{\\sqrt{3}}{2}\\)', cos: '\\(\\frac{1}{2}\\)', tan: '\\(\\sqrt{3}\\)' },
+                90: { sin: '1', cos: '0', tan: 'undefined' }
+            };
+            
+            const val = values[angle];
+            resultDiv.innerHTML = `
+                <p class="font-bold text-lg mb-2">For ${angle}°:</p>
+                <p>\\(\\sin(${angle}°) = ${val.sin}\\)</p>
+                <p>\\(\\cos(${angle}°) = ${val.cos}\\)</p>
+                <p>\\(\\tan(${angle}°) = ${val.tan}\\)</p>
+            `;
+            
+            if (window.MathJax) {
+                MathJax.typesetPromise([resultDiv]);
+            }
+            resultDiv.classList.add('pulse-correct');
+            setTimeout(() => resultDiv.classList.remove('pulse-correct'), 800);
+        }
+
+        function checkInverseExample() {
+            const answer = parseFloat(document.getElementById('inverse-example').value);
+            const resultDiv = document.getElementById('inverse-example-result');
+            
+            if (isNaN(answer)) {
+                resultDiv.innerHTML = '<p class="font-semibold">⚠️ Please enter a number</p>';
+                return;
+            }
+            
+            if (answer === 30) {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">✅ Correct! \\(\\arcsin(\\frac{1}{2}) = 30°\\)</p>';
+                resultDiv.classList.add('pulse-correct');
+            } else {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">❌ Try again! Hint: Look for which angle has sine = 1/2</p>';
+                resultDiv.classList.add('shake-incorrect');
+            }
+            
+            if (window.MathJax) {
+                MathJax.typesetPromise([resultDiv]);
+            }
+            setTimeout(() => {
+                resultDiv.classList.remove('pulse-correct', 'shake-incorrect');
+            }, 800);
+        }
+
+        function calculateArcsin() {
+            const input = parseFloat(document.getElementById('arcsin-input').value);
+            const resultDiv = document.getElementById('arcsin-result');
+            
+            if (isNaN(input) || input < -1 || input > 1) {
+                resultDiv.innerHTML = '<p class="font-semibold">⚠️ Please enter a value between -1 and 1</p>';
+                return;
+            }
+            
+            const radians = Math.asin(input);
+            const degrees = radians * (180 / Math.PI);
+            
+            resultDiv.innerHTML = `
+                <p class="font-bold text-lg mb-2">Result:</p>
+                <p>\\(\\arcsin(${input.toFixed(3)}) = ${degrees.toFixed(2)}°\\)</p>
+                <p class="text-sm mt-2">or ${radians.toFixed(4)} radians</p>
+            `;
+            
+            if (window.MathJax) {
+                MathJax.typesetPromise([resultDiv]);
+            }
+            resultDiv.classList.add('pulse-correct');
+            setTimeout(() => resultDiv.classList.remove('pulse-correct'), 800);
+        }
+
+        function setArcsineValue(value) {
+            document.getElementById('arcsin-input').value = value;
+            calculateArcsin();
+        }
+
+        function calculateArccos() {
+            const input = parseFloat(document.getElementById('arccos-input').value);
+            const resultDiv = document.getElementById('arccos-result');
+            
+            if (isNaN(input) || input < -1 || input > 1) {
+                resultDiv.innerHTML = '<p class="font-semibold">⚠️ Please enter a value between -1 and 1</p>';
+                return;
+            }
+            
+            const radians = Math.acos(input);
+            const degrees = radians * (180 / Math.PI);
+            
+            resultDiv.innerHTML = `
+                <p class="font-bold text-lg mb-2">Result:</p>
+                <p>\\(\\arccos(${input.toFixed(3)}) = ${degrees.toFixed(2)}°\\)</p>
+                <p class="text-sm mt-2">or ${radians.toFixed(4)} radians</p>
+            `;
+            
+            if (window.MathJax) {
+                MathJax.typesetPromise([resultDiv]);
+            }
+            resultDiv.classList.add('pulse-correct');
+            setTimeout(() => resultDiv.classList.remove('pulse-correct'), 800);
+        }
+
+        function setArccosValue(value) {
+            document.getElementById('arccos-input').value = value;
+            calculateArccos();
+        }
+
+        function calculateArctan() {
+            const input = parseFloat(document.getElementById('arctan-input').value);
+            const resultDiv = document.getElementById('arctan-result');
+            
+            if (isNaN(input)) {
+                resultDiv.innerHTML = '<p class="font-semibold">⚠️ Please enter a valid number</p>';
+                return;
+            }
+            
+            const radians = Math.atan(input);
+            const degrees = radians * (180 / Math.PI);
+            
+            resultDiv.innerHTML = `
+                <p class="font-bold text-lg mb-2">Result:</p>
+                <p>\\(\\arctan(${input.toFixed(3)}) = ${degrees.toFixed(2)}°\\)</p>
+                <p class="text-sm mt-2">or ${radians.toFixed(4)} radians</p>
+            `;
+            
+            if (window.MathJax) {
+                MathJax.typesetPromise([resultDiv]);
+            }
+            resultDiv.classList.add('pulse-correct');
+            setTimeout(() => resultDiv.classList.remove('pulse-correct'), 800);
+        }
+
+        function setArctanValue(value) {
+            document.getElementById('arctan-input').value = value;
+            calculateArctan();
+        }
+
+        function checkQuizAnswer(questionNum, correctAnswer) {
+            if (quizAnswered.has(questionNum)) return;
+            
+            const input = parseFloat(document.getElementById(`quiz${questionNum}-input`).value);
+            const feedbackDiv = document.getElementById(`quiz${questionNum}-feedback`);
+            
+            if (isNaN(input)) {
+                feedbackDiv.innerHTML = '<p class="font-semibold">⚠️ Please enter a number</p>';
+                return;
+            }
+            
+            quizAnswered.add(questionNum);
+            
+            if (Math.abs(input - correctAnswer) < 1) {
+                quizScore++;
+                feedbackDiv.innerHTML = '<p class="font-bold text-lg">✅ Correct!</p>';
+                feedbackDiv.classList.add('pulse-correct');
+            } else {
+                feedbackDiv.innerHTML = `<p class="font-bold text-lg">❌ Incorrect. Answer: ${correctAnswer}°</p>`;
+                feedbackDiv.classList.add('shake-incorrect');
+            }
+            
+            if (quizAnswered.size === 3) {
+                const finalDiv = document.getElementById('final-quiz-score');
+                document.getElementById('quiz-score-display').textContent = `Score: ${quizScore}/3`;
+                finalDiv.classList.remove('hidden');
+            }
+            
+            setTimeout(() => {
+                feedbackDiv.classList.remove('pulse-correct', 'shake-incorrect');
+            }, 800);
+        }
+
+        async function onConfigChange(config) {
+            const baseSize = config.font_size || defaultConfig.font_size;
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseFontStack = 'system-ui, -apple-system, sans-serif';
+            
+            document.body.style.backgroundColor = config.background_color || defaultConfig.background_color;
+            document.body.style.color = config.text_color || defaultConfig.text_color;
+            document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            document.body.style.fontSize = `${baseSize}px`;
+            
+            document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
+            document.getElementById('main-title').style.fontSize = `${baseSize * 2}px`;
+            
+            document.getElementById('subtitle').textContent = config.subtitle || defaultConfig.subtitle;
+            document.getElementById('subtitle').style.fontSize = `${baseSize * 1.25}px`;
+            
+            document.getElementById('next-button-text').textContent = config.next_button_text || defaultConfig.next_button_text;
+            document.getElementById('prev-button-text').textContent = config.prev_button_text || defaultConfig.prev_button_text;
+            
+            const slides = document.querySelectorAll('.slide > div');
+            slides.forEach(slide => {
+                slide.style.backgroundColor = config.surface_color || defaultConfig.surface_color;
+            });
+            
+            const header = document.querySelector('header');
+            header.style.backgroundColor = config.surface_color || defaultConfig.surface_color;
+            
+            const footer = document.querySelector('footer');
+            footer.style.backgroundColor = config.surface_color || defaultConfig.surface_color;
+            footer.style.borderColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+            
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.backgroundColor = config.primary_action_color || defaultConfig.primary_action_color;
+            
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.style.backgroundColor = config.primary_action_color || defaultConfig.primary_action_color;
+                btn.style.color = config.surface_color || defaultConfig.surface_color;
+            });
+            
+            const inputs = document.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.style.borderColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+                input.style.backgroundColor = config.surface_color || defaultConfig.surface_color;
+                input.style.color = config.text_color || defaultConfig.text_color;
+            });
+            
+            updateSlide();
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig: defaultConfig,
+                onConfigChange: onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [
+                        {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => {
+                                config.background_color = value;
+                                window.elementSdk.setConfig({ background_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.surface_color || defaultConfig.surface_color,
+                            set: (value) => {
+                                config.surface_color = value;
+                                window.elementSdk.setConfig({ surface_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => {
+                                config.text_color = value;
+                                window.elementSdk.setConfig({ text_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                            set: (value) => {
+                                config.primary_action_color = value;
+                                window.elementSdk.setConfig({ primary_action_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+                            set: (value) => {
+                                config.secondary_action_color = value;
+                                window.elementSdk.setConfig({ secondary_action_color: value });
+                            }
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: {
+                        get: () => config.font_family || defaultConfig.font_family,
+                        set: (value) => {
+                            config.font_family = value;
+                            window.elementSdk.setConfig({ font_family: value });
+                        }
+                    },
+                    fontSizeable: {
+                        get: () => config.font_size || defaultConfig.font_size,
+                        set: (value) => {
+                            config.font_size = value;
+                            window.elementSdk.setConfig({ font_size: value });
+                        }
+                    }
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["main_title", config.main_title || defaultConfig.main_title],
+                    ["subtitle", config.subtitle || defaultConfig.subtitle],
+                    ["next_button_text", config.next_button_text || defaultConfig.next_button_text],
+                    ["prev_button_text", config.prev_button_text || defaultConfig.prev_button_text]
+                ])
+            });
+            
+            onConfigChange(window.elementSdk.config);
+        } else {
+            onConfigChange(defaultConfig);
+        }
+
+        // Initialize first slide
+        updateSlide();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99885b7fc49b3541',t:'MTc2MjEzNjA1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
