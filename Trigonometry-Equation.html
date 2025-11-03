@@ -1,0 +1,1059 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trigonometric Equations Solver</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        html {
+            height: 100%;
+        }
+        .slide {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .slide.active {
+            display: block;
+            opacity: 1;
+        }
+        .interactive-input {
+            transition: all 0.3s ease;
+        }
+        .interactive-input:focus {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+        .slide-enter {
+            animation: slideIn 0.6s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .pulse-correct {
+            animation: pulseCorrect 0.8s ease;
+        }
+        .shake-incorrect {
+            animation: shake 0.6s ease;
+        }
+        @keyframes pulseCorrect {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        .step-box {
+            border-left: 4px solid;
+            padding-left: 1rem;
+            margin: 1rem 0;
+        }
+        .equation-box {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div id="app" class="min-h-full"><!-- Header with Progress -->
+   <header class="p-6 shadow-lg">
+    <div class="max-w-6xl mx-auto">
+     <h1 id="main-title" class="text-4xl font-bold text-center mb-2"></h1>
+     <p id="subtitle" class="text-xl text-center mb-4"></p><!-- Progress Bar -->
+     <div class="w-full rounded-full h-3 mb-4">
+      <div id="progress-bar" class="progress-bar h-3 rounded-full"></div>
+     </div>
+     <div class="text-center"><span id="slide-counter" class="text-lg font-semibold">Slide 1 of 12</span>
+     </div>
+    </div>
+   </header><!-- Slide Container -->
+   <main class="flex-1 p-6">
+    <div class="max-w-6xl mx-auto"><!-- Slide 1: Introduction -->
+     <div class="slide active" id="slide-1">
+      <div class="text-center p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">🎯 Master Trigonometric Equations!</h2>
+       <p class="text-xl mb-8">Learn to solve different types of trigonometric equations step by step with interactive practice.</p>
+       <div class="grid md:grid-cols-2 gap-8 mb-8">
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">📚 What You'll Learn:</h3>
+         <ul class="text-lg space-y-3 text-left">
+          <li>✅ Basic trigonometric equations</li>
+          <li>✅ Quadratic trigonometric equations</li>
+          <li>✅ Multiple angle equations</li>
+          <li>✅ Sum and difference equations</li>
+          <li>✅ Mixed trigonometric equations</li>
+          <li>✅ Step-by-step solving strategies</li>
+         </ul>
+        </div>
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">🧮 Interactive Features:</h3>
+         <ul class="text-lg space-y-3 text-left">
+          <li>🎯 Step-by-step solutions</li>
+          <li>📝 Practice problems on each slide</li>
+          <li>✨ Instant feedback</li>
+          <li>🔄 Multiple solution methods</li>
+          <li>📊 Progress tracking</li>
+          <li>🎉 Interactive examples</li>
+         </ul>
+        </div>
+       </div>
+       <div class="p-6 rounded-xl">
+        <p class="text-lg mb-4">🚀 <strong>Ready to become a trigonometric equation expert?</strong></p>
+        <p class="text-base">Each slide will teach you a new type of equation with hands-on practice!</p>
+       </div>
+      </div>
+     </div><!-- Slide 2: Basic Sine Equations -->
+     <div class="slide" id="slide-2">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">📐 Type 1: Basic Sine Equations</h2>
+       <div class="grid md:grid-cols-2 gap-8">
+        <div>
+         <h3 class="text-2xl font-bold mb-4">General Form: \(\sin x = a\)</h3>
+         <div class="step-box">
+          <h4 class="text-xl font-bold mb-3">📋 Step-by-Step Method:</h4>
+          <ol class="space-y-3 text-lg">
+           <li><strong>Step 1:</strong> Check if \(|a| \leq 1\)</li>
+           <li><strong>Step 2:</strong> Find reference angle: \(\alpha = \arcsin|a|\)</li>
+           <li><strong>Step 3:</strong> Determine quadrants where sine has the correct sign</li>
+           <li><strong>Step 4:</strong> Write general solutions</li>
+          </ol>
+         </div>
+         <div class="equation-box">
+          <h4 class="font-bold mb-2">Example: \(\sin x = \frac{1}{2}\)</h4>
+          <p><strong>Step 1:</strong> \(|\frac{1}{2}| = 0.5 \leq 1\) ✓</p>
+          <p><strong>Step 2:</strong> \(\alpha = \arcsin(\frac{1}{2}) = 30°\)</p>
+          <p><strong>Step 3:</strong> Sine is positive in Q1 and Q2</p>
+          <p><strong>Step 4:</strong> \(x = 30° + 360°k\) or \(x = 150° + 360°k\)</p>
+         </div>
+        </div>
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">🧮 Practice Problem</h3>
+         <p class="text-lg mb-4">Solve: \(\sin x = \frac{\sqrt{3}}{2}\)</p>
+         <div class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-2">Enter the reference angle (in degrees):</label> <input type="number" id="sine-ref-angle" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 60">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Enter first solution (0° to 360°):</label> <input type="number" id="sine-sol1" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="First angle">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Enter second solution (0° to 360°):</label> <input type="number" id="sine-sol2" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Second angle">
+          </div><button onclick="checkSineEquation()" id="check-sine" class="w-full py-3 rounded-lg font-bold text-lg transition-all"></button>
+          <div id="sine-result" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Slide 3: Basic Cosine Equations -->
+     <div class="slide" id="slide-3">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">📐 Type 2: Basic Cosine Equations</h2>
+       <div class="grid md:grid-cols-2 gap-8">
+        <div>
+         <h3 class="text-2xl font-bold mb-4">General Form: \(\cos x = a\)</h3>
+         <div class="step-box">
+          <h4 class="text-xl font-bold mb-3">📋 Step-by-Step Method:</h4>
+          <ol class="space-y-3 text-lg">
+           <li><strong>Step 1:</strong> Check if \(|a| \leq 1\)</li>
+           <li><strong>Step 2:</strong> Find reference angle: \(\alpha = \arccos|a|\)</li>
+           <li><strong>Step 3:</strong> Determine quadrants where cosine has the correct sign</li>
+           <li><strong>Step 4:</strong> Write general solutions</li>
+          </ol>
+         </div>
+         <div class="equation-box">
+          <h4 class="font-bold mb-2">Example: \(\cos x = -\frac{1}{2}\)</h4>
+          <p><strong>Step 1:</strong> \(|-\frac{1}{2}| = 0.5 \leq 1\) ✓</p>
+          <p><strong>Step 2:</strong> \(\alpha = \arccos(\frac{1}{2}) = 60°\)</p>
+          <p><strong>Step 3:</strong> Cosine is negative in Q2 and Q3</p>
+          <p><strong>Step 4:</strong> \(x = 120° + 360°k\) or \(x = 240° + 360°k\)</p>
+         </div>
+        </div>
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">🧮 Practice Problem</h3>
+         <p class="text-lg mb-4">Solve: \(\cos x = \frac{\sqrt{2}}{2}\)</p>
+         <div class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-2">Enter the reference angle (in degrees):</label> <input type="number" id="cosine-ref-angle" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 45">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Enter first solution (0° to 360°):</label> <input type="number" id="cosine-sol1" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="First angle">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Enter second solution (0° to 360°):</label> <input type="number" id="cosine-sol2" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Second angle">
+          </div><button onclick="checkCosineEquation()" id="check-cosine" class="w-full py-3 rounded-lg font-bold text-lg transition-all"></button>
+          <div id="cosine-result" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Slide 4: Basic Tangent Equations -->
+     <div class="slide" id="slide-4">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">📐 Type 3: Basic Tangent Equations</h2>
+       <div class="grid md:grid-cols-2 gap-8">
+        <div>
+         <h3 class="text-2xl font-bold mb-4">General Form: \(\tan x = a\)</h3>
+         <div class="step-box">
+          <h4 class="text-xl font-bold mb-3">📋 Step-by-Step Method:</h4>
+          <ol class="space-y-3 text-lg">
+           <li><strong>Step 1:</strong> Find reference angle: \(\alpha = \arctan|a|\)</li>
+           <li><strong>Step 2:</strong> Determine quadrants where tangent has the correct sign</li>
+           <li><strong>Step 3:</strong> Use period of 180° for tangent</li>
+           <li><strong>Step 4:</strong> Write general solution</li>
+          </ol>
+         </div>
+         <div class="equation-box">
+          <h4 class="font-bold mb-2">Example: \(\tan x = \sqrt{3}\)</h4>
+          <p><strong>Step 1:</strong> \(\alpha = \arctan(\sqrt{3}) = 60°\)</p>
+          <p><strong>Step 2:</strong> Tangent is positive in Q1 and Q3</p>
+          <p><strong>Step 3:</strong> Period = 180°</p>
+          <p><strong>Step 4:</strong> \(x = 60° + 180°k\)</p>
+          <p class="mt-2"><strong>Solutions:</strong> \(x = 60°, 240°, ...\)</p>
+         </div>
+        </div>
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">🧮 Practice Problem</h3>
+         <p class="text-lg mb-4">Solve: \(\tan x = -1\)</p>
+         <div class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-2">Enter the reference angle (in degrees):</label> <input type="number" id="tangent-ref-angle" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 45">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Enter first solution (0° to 360°):</label> <input type="number" id="tangent-sol1" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="First angle">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Enter second solution (0° to 360°):</label> <input type="number" id="tangent-sol2" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Second angle">
+          </div><button onclick="checkTangentEquation()" id="check-tangent" class="w-full py-3 rounded-lg font-bold text-lg transition-all"></button>
+          <div id="tangent-result" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Slide 5: Quadratic Trigonometric Equations -->
+     <div class="slide" id="slide-5">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">🔢 Type 4: Quadratic Trigonometric Equations</h2>
+       <div class="grid md:grid-cols-2 gap-8">
+        <div>
+         <h3 class="text-2xl font-bold mb-4">General Form: \(a\sin^2 x + b\sin x + c = 0\)</h3>
+         <div class="step-box">
+          <h4 class="text-xl font-bold mb-3">📋 Step-by-Step Method:</h4>
+          <ol class="space-y-3 text-lg">
+           <li><strong>Step 1:</strong> Let \(u = \sin x\) (or \(\cos x\), \(\tan x\))</li>
+           <li><strong>Step 2:</strong> Solve quadratic: \(au^2 + bu + c = 0\)</li>
+           <li><strong>Step 3:</strong> Find values of \(u\)</li>
+           <li><strong>Step 4:</strong> Solve basic trig equations for each \(u\)</li>
+           <li><strong>Step 5:</strong> Check validity of solutions</li>
+          </ol>
+         </div>
+         <div class="equation-box">
+          <h4 class="font-bold mb-2">Example: \(2\sin^2 x - \sin x - 1 = 0\)</h4>
+          <p><strong>Step 1:</strong> Let \(u = \sin x\)</p>
+          <p><strong>Step 2:</strong> \(2u^2 - u - 1 = 0\)</p>
+          <p><strong>Step 3:</strong> \((2u + 1)(u - 1) = 0\)</p>
+          <p><strong>Step 4:</strong> \(u = -\frac{1}{2}\) or \(u = 1\)</p>
+          <p><strong>Step 5:</strong> \(\sin x = -\frac{1}{2}\) or \(\sin x = 1\)</p>
+         </div>
+        </div>
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">🧮 Practice Problem</h3>
+         <p class="text-lg mb-4">Solve: \(\cos^2 x - \cos x = 0\)</p>
+         <div class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-2">Factor the equation. What are the two factors?</label> <input type="text" id="quad-factor1" class="interactive-input w-full p-3 border-2 rounded-lg text-lg mb-2" placeholder="First factor (e.g., cos x)"> <input type="text" id="quad-factor2" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Second factor">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">What are the values of cos x?</label> <input type="number" id="quad-val1" class="interactive-input w-full p-3 border-2 rounded-lg text-lg mb-2" placeholder="First value"> <input type="number" id="quad-val2" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Second value">
+          </div><button onclick="checkQuadraticEquation()" id="check-quadratic" class="w-full py-3 rounded-lg font-bold text-lg transition-all"></button>
+          <div id="quadratic-result" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Slide 6: Double Angle Equations -->
+     <div class="slide" id="slide-6">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">🔄 Type 5: Double Angle Equations</h2>
+       <div class="grid md:grid-cols-2 gap-8">
+        <div>
+         <h3 class="text-2xl font-bold mb-4">Forms: \(\sin 2x = a\), \(\cos 2x = a\), \(\tan 2x = a\)</h3>
+         <div class="step-box">
+          <h4 class="text-xl font-bold mb-3">📋 Step-by-Step Method:</h4>
+          <ol class="space-y-3 text-lg">
+           <li><strong>Step 1:</strong> Solve for the double angle: \(2x = \text{solutions}\)</li>
+           <li><strong>Step 2:</strong> Divide by 2 to get \(x\)</li>
+           <li><strong>Step 3:</strong> Consider the period of the double angle</li>
+           <li><strong>Step 4:</strong> List all solutions in the given interval</li>
+          </ol>
+         </div>
+         <div class="equation-box">
+          <h4 class="font-bold mb-2">Example: \(\sin 2x = \frac{1}{2}\)</h4>
+          <p><strong>Step 1:</strong> \(2x = 30° + 360°k\) or \(2x = 150° + 360°k\)</p>
+          <p><strong>Step 2:</strong> \(x = 15° + 180°k\) or \(x = 75° + 180°k\)</p>
+          <p><strong>Step 3:</strong> For \([0°, 360°)\):</p>
+          <p><strong>Step 4:</strong> \(x = 15°, 75°, 195°, 255°\)</p>
+         </div>
+        </div>
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">🧮 Practice Problem</h3>
+         <p class="text-lg mb-4">Solve: \(\cos 2x = -\frac{\sqrt{2}}{2}\) for \([0°, 360°)\)</p>
+         <div class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-2">First, solve for 2x. Enter the reference angle:</label> <input type="number" id="double-ref" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Reference angle for cos = √2/2">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Enter the four solutions for x (separated by commas):</label> <input type="text" id="double-solutions" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 67.5, 112.5, 247.5, 292.5">
+          </div><button onclick="checkDoubleAngleEquation()" id="check-double" class="w-full py-3 rounded-lg font-bold text-lg transition-all"></button>
+          <div id="double-result" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Slide 7: Half Angle Equations -->
+     <div class="slide" id="slide-7">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">➗ Type 6: Half Angle Equations</h2>
+       <div class="grid md:grid-cols-2 gap-8">
+        <div>
+         <h3 class="text-2xl font-bold mb-4">Forms: \(\sin \frac{x}{2} = a\), \(\cos \frac{x}{2} = a\), \(\tan \frac{x}{2} = a\)</h3>
+         <div class="step-box">
+          <h4 class="text-xl font-bold mb-3">📋 Step-by-Step Method:</h4>
+          <ol class="space-y-3 text-lg">
+           <li><strong>Step 1:</strong> Solve for the half angle: \(\frac{x}{2} = \text{solutions}\)</li>
+           <li><strong>Step 2:</strong> Multiply by 2 to get \(x\)</li>
+           <li><strong>Step 3:</strong> Consider the extended period</li>
+           <li><strong>Step 4:</strong> List all solutions in the given interval</li>
+          </ol>
+         </div>
+         <div class="equation-box">
+          <h4 class="font-bold mb-2">Example: \(\sin \frac{x}{2} = \frac{\sqrt{3}}{2}\)</h4>
+          <p><strong>Step 1:</strong> \(\frac{x}{2} = 60° + 360°k\) or \(\frac{x}{2} = 120° + 360°k\)</p>
+          <p><strong>Step 2:</strong> \(x = 120° + 720°k\) or \(x = 240° + 720°k\)</p>
+          <p><strong>Step 3:</strong> Period is now 720°</p>
+          <p><strong>Step 4:</strong> For \([0°, 720°)\): \(x = 120°, 240°\)</p>
+         </div>
+        </div>
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">🧮 Practice Problem</h3>
+         <p class="text-lg mb-4">Solve: \(\cos \frac{x}{2} = \frac{1}{2}\) for \([0°, 720°)\)</p>
+         <div class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-2">What angle has cosine = 1/2?</label> <input type="number" id="half-ref" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Reference angle">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Enter solutions for x/2 in [0°, 360°):</label> <input type="text" id="half-intermediate" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 60, 300">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Enter final solutions for x:</label> <input type="text" id="half-solutions" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 120, 600">
+          </div><button onclick="checkHalfAngleEquation()" id="check-half" class="w-full py-3 rounded-lg font-bold text-lg transition-all"></button>
+          <div id="half-result" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Slide 8: Sum and Difference Equations -->
+     <div class="slide" id="slide-8">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">➕ Type 7: Sum and Difference Equations</h2>
+       <div class="grid md:grid-cols-2 gap-8">
+        <div>
+         <h3 class="text-2xl font-bold mb-4">Forms: \(\sin(x + a) = b\), \(\cos(x - a) = b\)</h3>
+         <div class="step-box">
+          <h4 class="text-xl font-bold mb-3">📋 Step-by-Step Method:</h4>
+          <ol class="space-y-3 text-lg">
+           <li><strong>Step 1:</strong> Solve for the compound angle: \((x + a) = \text{solutions}\)</li>
+           <li><strong>Step 2:</strong> Isolate \(x\) by subtracting/adding \(a\)</li>
+           <li><strong>Step 3:</strong> Apply the appropriate period</li>
+           <li><strong>Step 4:</strong> List solutions in the given interval</li>
+          </ol>
+         </div>
+         <div class="equation-box">
+          <h4 class="font-bold mb-2">Example: \(\sin(x + 30°) = \frac{1}{2}\)</h4>
+          <p><strong>Step 1:</strong> \(x + 30° = 30° + 360°k\) or \(x + 30° = 150° + 360°k\)</p>
+          <p><strong>Step 2:</strong> \(x = 0° + 360°k\) or \(x = 120° + 360°k\)</p>
+          <p><strong>Step 3:</strong> Period = 360°</p>
+          <p><strong>Step 4:</strong> For \([0°, 360°)\): \(x = 0°, 120°\)</p>
+         </div>
+        </div>
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">🧮 Practice Problem</h3>
+         <p class="text-lg mb-4">Solve: \(\cos(x - 45°) = \frac{\sqrt{2}}{2}\) for \([0°, 360°)\)</p>
+         <div class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-2">What angle has cosine = √2/2?</label> <input type="number" id="sum-ref" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Reference angle">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Solve for (x - 45°). Enter the two values:</label> <input type="text" id="sum-intermediate" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 45, 315">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Enter final solutions for x:</label> <input type="text" id="sum-solutions" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 90, 360">
+          </div><button onclick="checkSumDifferenceEquation()" id="check-sum" class="w-full py-3 rounded-lg font-bold text-lg transition-all"></button>
+          <div id="sum-result" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Slide 9: Product-to-Sum Equations -->
+     <div class="slide" id="slide-9">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">✖️ Type 8: Product-to-Sum Equations</h2>
+       <div class="grid md:grid-cols-2 gap-8">
+        <div>
+         <h3 class="text-2xl font-bold mb-4">Forms: \(\sin A \cos B = c\), \(\cos A \sin B = c\)</h3>
+         <div class="step-box">
+          <h4 class="text-xl font-bold mb-3">📋 Product-to-Sum Formulas:</h4>
+          <div class="space-y-2 text-lg">
+           <p>\(\sin A \cos B = \frac{1}{2}[\sin(A+B) + \sin(A-B)]\)</p>
+           <p>\(\cos A \sin B = \frac{1}{2}[\sin(A+B) - \sin(A-B)]\)</p>
+           <p>\(\cos A \cos B = \frac{1}{2}[\cos(A+B) + \cos(A-B)]\)</p>
+           <p>\(\sin A \sin B = \frac{1}{2}[\cos(A-B) - \cos(A+B)]\)</p>
+          </div>
+         </div>
+         <div class="equation-box">
+          <h4 class="font-bold mb-2">Example: \(\sin 3x \cos x = \frac{1}{2}\)</h4>
+          <p><strong>Step 1:</strong> Use formula: \(\sin 3x \cos x = \frac{1}{2}[\sin 4x + \sin 2x]\)</p>
+          <p><strong>Step 2:</strong> \(\frac{1}{2}[\sin 4x + \sin 2x] = \frac{1}{2}\)</p>
+          <p><strong>Step 3:</strong> \(\sin 4x + \sin 2x = 1\)</p>
+          <p><strong>Step 4:</strong> Solve the resulting equation</p>
+         </div>
+        </div>
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">🧮 Practice Problem</h3>
+         <p class="text-lg mb-4">Convert to sum form: \(\cos 5x \cos 2x\)</p>
+         <div class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-2">What is A + B?</label> <input type="text" id="product-sum" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 7x">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">What is A - B?</label> <input type="text" id="product-diff" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 3x">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Write the complete sum form:</label> <input type="text" id="product-result" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="1/2[cos(...) + cos(...)]">
+          </div><button onclick="checkProductToSumEquation()" id="check-product" class="w-full py-3 rounded-lg font-bold text-lg transition-all"></button>
+          <div id="product-result-div" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Slide 10: Mixed Trigonometric Equations -->
+     <div class="slide" id="slide-10">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">🔀 Type 9: Mixed Trigonometric Equations</h2>
+       <div class="grid md:grid-cols-2 gap-8">
+        <div>
+         <h3 class="text-2xl font-bold mb-4">Forms: Equations with multiple trig functions</h3>
+         <div class="step-box">
+          <h4 class="text-xl font-bold mb-3">📋 Strategy Selection:</h4>
+          <ol class="space-y-3 text-lg">
+           <li><strong>Strategy 1:</strong> Use Pythagorean identities</li>
+           <li><strong>Strategy 2:</strong> Factor common terms</li>
+           <li><strong>Strategy 3:</strong> Convert to single function</li>
+           <li><strong>Strategy 4:</strong> Use substitution</li>
+          </ol>
+         </div>
+         <div class="equation-box">
+          <h4 class="font-bold mb-2">Example: \(\sin x + \cos x = 1\)</h4>
+          <p><strong>Method:</strong> Square both sides</p>
+          <p><strong>Step 1:</strong> \((\sin x + \cos x)^2 = 1\)</p>
+          <p><strong>Step 2:</strong> \(\sin^2 x + 2\sin x \cos x + \cos^2 x = 1\)</p>
+          <p><strong>Step 3:</strong> \(1 + 2\sin x \cos x = 1\)</p>
+          <p><strong>Step 4:</strong> \(\sin x \cos x = 0\)</p>
+          <p><strong>Step 5:</strong> \(\sin x = 0\) or \(\cos x = 0\)</p>
+         </div>
+        </div>
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">🧮 Practice Problem</h3>
+         <p class="text-lg mb-4">Solve: \(\sin^2 x + \cos^2 x = \sin x\)</p>
+         <div class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-2">Use the Pythagorean identity. What does sin²x + cos²x equal?</label> <input type="number" id="mixed-identity" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Enter the value">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Simplify the equation. What does sin x equal?</label> <input type="number" id="mixed-simplified" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Value of sin x">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Enter the solutions for x in [0°, 360°):</label> <input type="text" id="mixed-solutions" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 90">
+          </div><button onclick="checkMixedEquation()" id="check-mixed" class="w-full py-3 rounded-lg font-bold text-lg transition-all"></button>
+          <div id="mixed-result" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Slide 11: Advanced Techniques -->
+     <div class="slide" id="slide-11">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">🎯 Advanced Solving Techniques</h2>
+       <div class="grid md:grid-cols-2 gap-8">
+        <div>
+         <h3 class="text-2xl font-bold mb-4">🔧 Key Strategies Summary</h3>
+         <div class="space-y-4">
+          <div class="step-box">
+           <h4 class="font-bold mb-2">1. Substitution Method</h4>
+           <p>Use \(u = \sin x\), \(u = \cos x\), or \(u = \tan x\) for quadratic forms</p>
+          </div>
+          <div class="step-box">
+           <h4 class="font-bold mb-2">2. Factoring</h4>
+           <p>Factor out common trigonometric functions</p>
+          </div>
+          <div class="step-box">
+           <h4 class="font-bold mb-2">3. Identities</h4>
+           <p>Use Pythagorean, double angle, and sum formulas</p>
+          </div>
+          <div class="step-box">
+           <h4 class="font-bold mb-2">4. Graphical Analysis</h4>
+           <p>Visualize intersections and periods</p>
+          </div>
+         </div>
+        </div>
+        <div class="p-6 rounded-xl">
+         <h3 class="text-2xl font-bold mb-4">🧮 Challenge Problem</h3>
+         <p class="text-lg mb-4">Solve: \(2\sin^2 x - 3\sin x + 1 = 0\)</p>
+         <div class="space-y-4">
+          <div><label class="block text-sm font-semibold mb-2">Let u = sin x. Write the quadratic equation:</label> <input type="text" id="advanced-quad" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 2u² - 3u + 1 = 0">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Factor the quadratic:</label> <input type="text" id="advanced-factor" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., (2u - 1)(u - 1) = 0">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Values of u (sin x):</label> <input type="text" id="advanced-values" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 0.5, 1">
+          </div>
+          <div><label class="block text-sm font-semibold mb-2">Final solutions for x in [0°, 360°):</label> <input type="text" id="advanced-solutions" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="e.g., 30, 90, 150">
+          </div><button onclick="checkAdvancedEquation()" id="check-advanced" class="w-full py-3 rounded-lg font-bold text-lg transition-all"></button>
+          <div id="advanced-result" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Slide 12: Final Challenge Quiz -->
+     <div class="slide" id="slide-12">
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h2 class="text-3xl font-bold mb-6">🏆 Final Challenge Quiz</h2>
+       <div class="space-y-8"><!-- Question 1 -->
+        <div class="p-6 rounded-xl border-2">
+         <p class="text-xl font-semibold mb-4">Question 1: Solve \(\sin x = -\frac{\sqrt{3}}{2}\) for \([0°, 360°)\)</p>
+         <div class="grid md:grid-cols-2 gap-4">
+          <div><input type="text" id="final-quiz1" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Enter solutions (e.g., 240, 300)"> <button onclick="checkFinalQuiz(1, '240,300')" class="w-full mt-2 py-2 rounded-lg font-bold">Check Answer</button>
+          </div>
+          <div id="final-feedback1" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div><!-- Question 2 -->
+        <div class="p-6 rounded-xl border-2">
+         <p class="text-xl font-semibold mb-4">Question 2: Solve \(\tan^2 x - 1 = 0\) for \([0°, 360°)\)</p>
+         <div class="grid md:grid-cols-2 gap-4">
+          <div><input type="text" id="final-quiz2" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Enter solutions"> <button onclick="checkFinalQuiz(2, '45,135,225,315')" class="w-full mt-2 py-2 rounded-lg font-bold">Check Answer</button>
+          </div>
+          <div id="final-feedback2" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div><!-- Question 3 -->
+        <div class="p-6 rounded-xl border-2">
+         <p class="text-xl font-semibold mb-4">Question 3: Solve \(\sin 2x = 1\) for \([0°, 360°)\)</p>
+         <div class="grid md:grid-cols-2 gap-4">
+          <div><input type="text" id="final-quiz3" class="interactive-input w-full p-3 border-2 rounded-lg text-lg" placeholder="Enter solutions"> <button onclick="checkFinalQuiz(3, '45,225')" class="w-full mt-2 py-2 rounded-lg font-bold">Check Answer</button>
+          </div>
+          <div id="final-feedback3" class="p-4 rounded-lg min-h-16"></div>
+         </div>
+        </div>
+        <div id="final-quiz-score" class="text-center p-6 rounded-xl hidden">
+         <h3 class="text-2xl font-bold mb-2">🎉 Quiz Complete!</h3>
+         <p class="text-xl" id="final-score-display">Score: 0/3</p>
+         <p class="mt-4">Congratulations on mastering trigonometric equations!</p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </main><!-- Navigation -->
+   <footer class="p-6 border-t-2">
+    <div class="max-w-6xl mx-auto flex justify-between items-center"><button id="prev-btn" onclick="previousSlide()" class="px-6 py-3 rounded-lg font-bold text-lg transition-all disabled:opacity-50" disabled> <span id="prev-button-text">← Previous</span> </button>
+     <div class="flex space-x-2"><span class="w-3 h-3 rounded-full slide-dot" data-slide="1"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="2"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="3"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="4"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="5"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="6"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="7"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="8"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="9"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="10"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="11"></span> <span class="w-3 h-3 rounded-full slide-dot" data-slide="12"></span>
+     </div><button id="next-btn" onclick="nextSlide()" class="px-6 py-3 rounded-lg font-bold text-lg transition-all"> <span id="next-button-text">Next →</span> </button>
+    </div>
+   </footer>
+  </div>
+  <script>
+        const defaultConfig = {
+            background_color: "#f0f9ff",
+            surface_color: "#ffffff", 
+            text_color: "#1e293b",
+            primary_action_color: "#3b82f6",
+            secondary_action_color: "#60a5fa",
+            main_title: "Trigonometric Equations Solver",
+            subtitle: "Master every type of trigonometric equation step by step",
+            next_button_text: "Next →",
+            prev_button_text: "← Previous",
+            practice_button_text: "Practice Now",
+            check_answer_text: "Check Answer",
+            font_family: "system-ui",
+            font_size: 16
+        };
+
+        let currentSlide = 1;
+        const totalSlides = 12;
+        let finalQuizScore = 0;
+        let finalQuizAnswered = new Set();
+
+        function updateSlide() {
+            // Hide all slides
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show current slide
+            const activeSlide = document.getElementById(`slide-${currentSlide}`);
+            activeSlide.classList.add('active');
+            activeSlide.classList.add('slide-enter');
+            
+            // Update progress bar
+            const progress = (currentSlide / totalSlides) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            
+            // Update slide counter
+            document.getElementById('slide-counter').textContent = `Slide ${currentSlide} of ${totalSlides}`;
+            
+            // Update navigation buttons
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').textContent = currentSlide === totalSlides ? 'Finish' : document.getElementById('next-button-text').textContent;
+            
+            // Update slide dots
+            document.querySelectorAll('.slide-dot').forEach((dot, index) => {
+                if (index + 1 === currentSlide) {
+                    dot.style.backgroundColor = defaultConfig.primary_action_color;
+                } else {
+                    dot.style.backgroundColor = defaultConfig.secondary_action_color;
+                }
+            });
+            
+            // Re-render MathJax for new slide
+            if (window.MathJax) {
+                MathJax.typesetPromise([activeSlide]);
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        // Interactive Functions
+        function checkSineEquation() {
+            const refAngle = parseFloat(document.getElementById('sine-ref-angle').value);
+            const sol1 = parseFloat(document.getElementById('sine-sol1').value);
+            const sol2 = parseFloat(document.getElementById('sine-sol2').value);
+            const resultDiv = document.getElementById('sine-result');
+            
+            if (isNaN(refAngle) || isNaN(sol1) || isNaN(sol2)) {
+                resultDiv.innerHTML = '<p class="font-semibold">⚠️ Please fill in all fields</p>';
+                return;
+            }
+            
+            if (refAngle === 60 && sol1 === 60 && sol2 === 120) {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">✅ Perfect! sin x = √3/2 gives x = 60° and x = 120°</p>';
+                resultDiv.classList.add('pulse-correct');
+            } else {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">❌ Try again! Remember: √3/2 corresponds to 60°, and sine is positive in Q1 and Q2</p>';
+                resultDiv.classList.add('shake-incorrect');
+            }
+            
+            setTimeout(() => {
+                resultDiv.classList.remove('pulse-correct', 'shake-incorrect');
+            }, 800);
+        }
+
+        function checkCosineEquation() {
+            const refAngle = parseFloat(document.getElementById('cosine-ref-angle').value);
+            const sol1 = parseFloat(document.getElementById('cosine-sol1').value);
+            const sol2 = parseFloat(document.getElementById('cosine-sol2').value);
+            const resultDiv = document.getElementById('cosine-result');
+            
+            if (isNaN(refAngle) || isNaN(sol1) || isNaN(sol2)) {
+                resultDiv.innerHTML = '<p class="font-semibold">⚠️ Please fill in all fields</p>';
+                return;
+            }
+            
+            if (refAngle === 45 && sol1 === 45 && sol2 === 315) {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">✅ Excellent! cos x = √2/2 gives x = 45° and x = 315°</p>';
+                resultDiv.classList.add('pulse-correct');
+            } else {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">❌ Try again! √2/2 corresponds to 45°, and cosine is positive in Q1 and Q4</p>';
+                resultDiv.classList.add('shake-incorrect');
+            }
+            
+            setTimeout(() => {
+                resultDiv.classList.remove('pulse-correct', 'shake-incorrect');
+            }, 800);
+        }
+
+        function checkTangentEquation() {
+            const refAngle = parseFloat(document.getElementById('tangent-ref-angle').value);
+            const sol1 = parseFloat(document.getElementById('tangent-sol1').value);
+            const sol2 = parseFloat(document.getElementById('tangent-sol2').value);
+            const resultDiv = document.getElementById('tangent-result');
+            
+            if (isNaN(refAngle) || isNaN(sol1) || isNaN(sol2)) {
+                resultDiv.innerHTML = '<p class="font-semibold">⚠️ Please fill in all fields</p>';
+                return;
+            }
+            
+            if (refAngle === 45 && sol1 === 135 && sol2 === 315) {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">✅ Great! tan x = -1 gives x = 135° and x = 315°</p>';
+                resultDiv.classList.add('pulse-correct');
+            } else {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">❌ Try again! Reference angle is 45°, and tangent is negative in Q2 and Q4</p>';
+                resultDiv.classList.add('shake-incorrect');
+            }
+            
+            setTimeout(() => {
+                resultDiv.classList.remove('pulse-correct', 'shake-incorrect');
+            }, 800);
+        }
+
+        function checkQuadraticEquation() {
+            const factor1 = document.getElementById('quad-factor1').value.toLowerCase().replace(/\s/g, '');
+            const factor2 = document.getElementById('quad-factor2').value.toLowerCase().replace(/\s/g, '');
+            const val1 = parseFloat(document.getElementById('quad-val1').value);
+            const val2 = parseFloat(document.getElementById('quad-val2').value);
+            const resultDiv = document.getElementById('quadratic-result');
+            
+            const correctFactors = (factor1 === 'cosx' && factor2 === 'cosx-1') || (factor1 === 'cosx-1' && factor2 === 'cosx');
+            const correctValues = (val1 === 0 && val2 === 1) || (val1 === 1 && val2 === 0);
+            
+            if (correctFactors && correctValues) {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">✅ Perfect! cos x(cos x - 1) = 0, so cos x = 0 or cos x = 1</p>';
+                resultDiv.classList.add('pulse-correct');
+            } else {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">❌ Try again! Factor out cos x from cos²x - cos x = 0</p>';
+                resultDiv.classList.add('shake-incorrect');
+            }
+            
+            setTimeout(() => {
+                resultDiv.classList.remove('pulse-correct', 'shake-incorrect');
+            }, 800);
+        }
+
+        function checkDoubleAngleEquation() {
+            const refAngle = parseFloat(document.getElementById('double-ref').value);
+            const solutions = document.getElementById('double-solutions').value.replace(/\s/g, '').split(',').map(x => parseFloat(x)).sort((a,b) => a-b);
+            const resultDiv = document.getElementById('double-result');
+            
+            const expectedSolutions = [67.5, 112.5, 247.5, 292.5];
+            const isCorrect = solutions.length === 4 && solutions.every((sol, i) => Math.abs(sol - expectedSolutions[i]) < 1);
+            
+            if (refAngle === 45 && isCorrect) {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">✅ Excellent! cos 2x = -√2/2 gives x = 67.5°, 112.5°, 247.5°, 292.5°</p>';
+                resultDiv.classList.add('pulse-correct');
+            } else {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">❌ Try again! Reference angle is 45°, so 2x = 135°, 225°, 495°, 585°</p>';
+                resultDiv.classList.add('shake-incorrect');
+            }
+            
+            setTimeout(() => {
+                resultDiv.classList.remove('pulse-correct', 'shake-incorrect');
+            }, 800);
+        }
+
+        function checkHalfAngleEquation() {
+            const refAngle = parseFloat(document.getElementById('half-ref').value);
+            const intermediate = document.getElementById('half-intermediate').value.replace(/\s/g, '').split(',').map(x => parseFloat(x)).sort((a,b) => a-b);
+            const solutions = document.getElementById('half-solutions').value.replace(/\s/g, '').split(',').map(x => parseFloat(x)).sort((a,b) => a-b);
+            const resultDiv = document.getElementById('half-result');
+            
+            const correctIntermediate = intermediate.length === 2 && intermediate[0] === 60 && intermediate[1] === 300;
+            const correctSolutions = solutions.length === 2 && solutions[0] === 120 && solutions[1] === 600;
+            
+            if (refAngle === 60 && correctIntermediate && correctSolutions) {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">✅ Perfect! cos(x/2) = 1/2 gives x = 120° and x = 600°</p>';
+                resultDiv.classList.add('pulse-correct');
+            } else {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">❌ Try again! cos = 1/2 at 60°, so x/2 = 60°, 300°, then x = 120°, 600°</p>';
+                resultDiv.classList.add('shake-incorrect');
+            }
+            
+            setTimeout(() => {
+                resultDiv.classList.remove('pulse-correct', 'shake-incorrect');
+            }, 800);
+        }
+
+        function checkSumDifferenceEquation() {
+            const refAngle = parseFloat(document.getElementById('sum-ref').value);
+            const intermediate = document.getElementById('sum-intermediate').value.replace(/\s/g, '').split(',').map(x => parseFloat(x)).sort((a,b) => a-b);
+            const solutions = document.getElementById('sum-solutions').value.replace(/\s/g, '').split(',').map(x => parseFloat(x)).sort((a,b) => a-b);
+            const resultDiv = document.getElementById('sum-result');
+            
+            const correctIntermediate = intermediate.length === 2 && intermediate[0] === 45 && intermediate[1] === 315;
+            const correctSolutions = solutions.length === 2 && solutions[0] === 90 && solutions[1] === 360;
+            
+            if (refAngle === 45 && correctIntermediate && correctSolutions) {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">✅ Excellent! cos(x - 45°) = √2/2 gives x = 90° and x = 360°</p>';
+                resultDiv.classList.add('pulse-correct');
+            } else {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">❌ Try again! cos = √2/2 at 45°, so x - 45° = 45°, 315°</p>';
+                resultDiv.classList.add('shake-incorrect');
+            }
+            
+            setTimeout(() => {
+                resultDiv.classList.remove('pulse-correct', 'shake-incorrect');
+            }, 800);
+        }
+
+        function checkProductToSumEquation() {
+            const sum = document.getElementById('product-sum').value.toLowerCase().replace(/\s/g, '');
+            const diff = document.getElementById('product-diff').value.toLowerCase().replace(/\s/g, '');
+            const result = document.getElementById('product-result').value.toLowerCase().replace(/\s/g, '');
+            const resultDiv = document.getElementById('product-result-div');
+            
+            const correctSum = sum === '7x';
+            const correctDiff = diff === '3x';
+            const correctResult = result.includes('1/2') && result.includes('cos7x') && result.includes('cos3x');
+            
+            if (correctSum && correctDiff && correctResult) {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">✅ Perfect! cos 5x cos 2x = 1/2[cos 7x + cos 3x]</p>';
+                resultDiv.classList.add('pulse-correct');
+            } else {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">❌ Try again! A + B = 5x + 2x = 7x, A - B = 5x - 2x = 3x</p>';
+                resultDiv.classList.add('shake-incorrect');
+            }
+            
+            setTimeout(() => {
+                resultDiv.classList.remove('pulse-correct', 'shake-incorrect');
+            }, 800);
+        }
+
+        function checkMixedEquation() {
+            const identity = parseFloat(document.getElementById('mixed-identity').value);
+            const simplified = parseFloat(document.getElementById('mixed-simplified').value);
+            const solutions = document.getElementById('mixed-solutions').value.replace(/\s/g, '').split(',').map(x => parseFloat(x));
+            const resultDiv = document.getElementById('mixed-result');
+            
+            const correctIdentity = identity === 1;
+            const correctSimplified = simplified === 1;
+            const correctSolutions = solutions.length === 1 && solutions[0] === 90;
+            
+            if (correctIdentity && correctSimplified && correctSolutions) {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">✅ Excellent! sin²x + cos²x = 1, so 1 = sin x, giving x = 90°</p>';
+                resultDiv.classList.add('pulse-correct');
+            } else {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">❌ Try again! Use sin²x + cos²x = 1 to simplify</p>';
+                resultDiv.classList.add('shake-incorrect');
+            }
+            
+            setTimeout(() => {
+                resultDiv.classList.remove('pulse-correct', 'shake-incorrect');
+            }, 800);
+        }
+
+        function checkAdvancedEquation() {
+            const quad = document.getElementById('advanced-quad').value.toLowerCase().replace(/\s/g, '');
+            const factor = document.getElementById('advanced-factor').value.toLowerCase().replace(/\s/g, '');
+            const values = document.getElementById('advanced-values').value.replace(/\s/g, '').split(',').map(x => parseFloat(x)).sort();
+            const solutions = document.getElementById('advanced-solutions').value.replace(/\s/g, '').split(',').map(x => parseFloat(x)).sort((a,b) => a-b);
+            const resultDiv = document.getElementById('advanced-result');
+            
+            const correctQuad = quad.includes('2u²-3u+1=0') || quad.includes('2u^2-3u+1=0');
+            const correctFactor = factor.includes('(2u-1)') && factor.includes('(u-1)');
+            const correctValues = values.length === 2 && values[0] === 0.5 && values[1] === 1;
+            const correctSolutions = solutions.length === 3 && solutions[0] === 30 && solutions[1] === 90 && solutions[2] === 150;
+            
+            if (correctQuad && correctFactor && correctValues && correctSolutions) {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">✅ Outstanding! Complete solution: x = 30°, 90°, 150°</p>';
+                resultDiv.classList.add('pulse-correct');
+            } else {
+                resultDiv.innerHTML = '<p class="font-bold text-lg">❌ Check your work! Factor 2u² - 3u + 1 = (2u - 1)(u - 1)</p>';
+                resultDiv.classList.add('shake-incorrect');
+            }
+            
+            setTimeout(() => {
+                resultDiv.classList.remove('pulse-correct', 'shake-incorrect');
+            }, 800);
+        }
+
+        function checkFinalQuiz(questionNum, correctAnswer) {
+            if (finalQuizAnswered.has(questionNum)) return;
+            
+            const input = document.getElementById(`final-quiz${questionNum}`).value.replace(/\s/g, '');
+            const feedbackDiv = document.getElementById(`final-feedback${questionNum}`);
+            
+            if (!input) {
+                feedbackDiv.innerHTML = '<p class="font-semibold">⚠️ Please enter an answer</p>';
+                return;
+            }
+            
+            finalQuizAnswered.add(questionNum);
+            
+            const userAnswers = input.split(',').map(x => parseFloat(x)).sort((a,b) => a-b);
+            const correctAnswers = correctAnswer.split(',').map(x => parseFloat(x)).sort((a,b) => a-b);
+            
+            const isCorrect = userAnswers.length === correctAnswers.length && 
+                             userAnswers.every((ans, i) => Math.abs(ans - correctAnswers[i]) < 1);
+            
+            if (isCorrect) {
+                finalQuizScore++;
+                feedbackDiv.innerHTML = '<p class="font-bold text-lg">✅ Correct!</p>';
+                feedbackDiv.classList.add('pulse-correct');
+            } else {
+                feedbackDiv.innerHTML = `<p class="font-bold text-lg">❌ Incorrect. Answer: ${correctAnswer}</p>`;
+                feedbackDiv.classList.add('shake-incorrect');
+            }
+            
+            if (finalQuizAnswered.size === 3) {
+                const finalDiv = document.getElementById('final-quiz-score');
+                document.getElementById('final-score-display').textContent = `Score: ${finalQuizScore}/3`;
+                finalDiv.classList.remove('hidden');
+            }
+            
+            setTimeout(() => {
+                feedbackDiv.classList.remove('pulse-correct', 'shake-incorrect');
+            }, 800);
+        }
+
+        async function onConfigChange(config) {
+            const baseSize = config.font_size || defaultConfig.font_size;
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseFontStack = 'system-ui, -apple-system, sans-serif';
+            
+            document.body.style.backgroundColor = config.background_color || defaultConfig.background_color;
+            document.body.style.color = config.text_color || defaultConfig.text_color;
+            document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            document.body.style.fontSize = `${baseSize}px`;
+            
+            document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
+            document.getElementById('main-title').style.fontSize = `${baseSize * 2}px`;
+            
+            document.getElementById('subtitle').textContent = config.subtitle || defaultConfig.subtitle;
+            document.getElementById('subtitle').style.fontSize = `${baseSize * 1.25}px`;
+            
+            document.getElementById('next-button-text').textContent = config.next_button_text || defaultConfig.next_button_text;
+            document.getElementById('prev-button-text').textContent = config.prev_button_text || defaultConfig.prev_button_text;
+            
+            const checkButtons = document.querySelectorAll('[id^="check-"]');
+            checkButtons.forEach(btn => {
+                btn.textContent = config.check_answer_text || defaultConfig.check_answer_text;
+            });
+            
+            const slides = document.querySelectorAll('.slide > div');
+            slides.forEach(slide => {
+                slide.style.backgroundColor = config.surface_color || defaultConfig.surface_color;
+            });
+            
+            const header = document.querySelector('header');
+            header.style.backgroundColor = config.surface_color || defaultConfig.surface_color;
+            
+            const footer = document.querySelector('footer');
+            footer.style.backgroundColor = config.surface_color || defaultConfig.surface_color;
+            footer.style.borderColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+            
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.backgroundColor = config.primary_action_color || defaultConfig.primary_action_color;
+            
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.style.backgroundColor = config.primary_action_color || defaultConfig.primary_action_color;
+                btn.style.color = config.surface_color || defaultConfig.surface_color;
+            });
+            
+            const inputs = document.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.style.borderColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+                input.style.backgroundColor = config.surface_color || defaultConfig.surface_color;
+                input.style.color = config.text_color || defaultConfig.text_color;
+            });
+            
+            const stepBoxes = document.querySelectorAll('.step-box');
+            stepBoxes.forEach(box => {
+                box.style.borderLeftColor = config.primary_action_color || defaultConfig.primary_action_color;
+            });
+            
+            const equationBoxes = document.querySelectorAll('.equation-box');
+            equationBoxes.forEach(box => {
+                box.style.backgroundColor = config.background_color || defaultConfig.background_color;
+                box.style.border = `2px solid ${config.secondary_action_color || defaultConfig.secondary_action_color}`;
+            });
+            
+            updateSlide();
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig: defaultConfig,
+                onConfigChange: onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [
+                        {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => {
+                                config.background_color = value;
+                                window.elementSdk.setConfig({ background_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.surface_color || defaultConfig.surface_color,
+                            set: (value) => {
+                                config.surface_color = value;
+                                window.elementSdk.setConfig({ surface_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => {
+                                config.text_color = value;
+                                window.elementSdk.setConfig({ text_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                            set: (value) => {
+                                config.primary_action_color = value;
+                                window.elementSdk.setConfig({ primary_action_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+                            set: (value) => {
+                                config.secondary_action_color = value;
+                                window.elementSdk.setConfig({ secondary_action_color: value });
+                            }
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: {
+                        get: () => config.font_family || defaultConfig.font_family,
+                        set: (value) => {
+                            config.font_family = value;
+                            window.elementSdk.setConfig({ font_family: value });
+                        }
+                    },
+                    fontSizeable: {
+                        get: () => config.font_size || defaultConfig.font_size,
+                        set: (value) => {
+                            config.font_size = value;
+                            window.elementSdk.setConfig({ font_size: value });
+                        }
+                    }
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["main_title", config.main_title || defaultConfig.main_title],
+                    ["subtitle", config.subtitle || defaultConfig.subtitle],
+                    ["next_button_text", config.next_button_text || defaultConfig.next_button_text],
+                    ["prev_button_text", config.prev_button_text || defaultConfig.prev_button_text],
+                    ["practice_button_text", config.practice_button_text || defaultConfig.practice_button_text],
+                    ["check_answer_text", config.check_answer_text || defaultConfig.check_answer_text]
+                ])
+            });
+            
+            onConfigChange(window.elementSdk.config);
+        } else {
+            onConfigChange(defaultConfig);
+        }
+
+        // Initialize first slide
+        updateSlide();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'998b9ca8d1120a12',t:'MTc2MjE3MDE4NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
