@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Trigonometry Worksheet</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        .draggable {
+            cursor: grab;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+        
+        .draggable:active {
+            cursor: grabbing;
+            transform: scale(1.05);
+        }
+        
+        .drop-target {
+            transition: all 0.3s ease;
+        }
+        
+        .drop-target.drag-over {
+            background-color: #dcfce7;
+            border-color: #16a34a;
+            transform: scale(1.02);
+        }
+        
+        .katex-display {
+            margin: 0.5em 0;
+        }
+        
+        .step-content {
+            min-height: 200px;
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="min-h-full bg-gradient-to-br from-indigo-50 to-blue-100">
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+   <header class="text-center mb-8">
+    <h1 id="worksheet-title" class="text-4xl font-bold text-indigo-900 mb-4">Interactive Trigonometry Worksheet</h1>
+    <p id="instructions-text" class="text-lg text-indigo-700">Follow the steps to solve each trigonometric equation</p>
+   </header>
+   <main class="bg-white rounded-xl shadow-lg p-8"><!-- Question Header -->
+    <div class="mb-6">
+     <div class="flex justify-between items-center mb-4">
+      <h2 class="text-2xl font-semibold text-indigo-800">Question <span id="question-number">1</span> of <span id="total-questions">3</span></h2>
+      <div class="text-sm text-gray-600">
+       Step <span id="current-step">1</span> of <span id="total-steps">5</span>
+      </div>
+     </div>
+     <div class="bg-indigo-50 p-4 rounded-lg mb-4">
+      <div class="text-lg font-medium text-indigo-900 mb-2">
+       Solve:
+      </div>
+      <div id="question-title" class="text-xl text-center"></div>
+      <div class="text-center mt-2"><span class="text-sm text-indigo-700">for </span> <span id="question-range" class="text-sm"></span>
+      </div>
+     </div>
+    </div><!-- Step Content -->
+    <div id="step-content" class="step-content mb-6"><!-- Dynamic content will be inserted here -->
+    </div><!-- Navigation -->
+    <div class="flex justify-between items-center"><button id="prev-btn" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"> Previous Step </button>
+     <div class="flex space-x-2">
+      <div id="progress-dots" class="flex space-x-2"><!-- Progress dots will be generated here -->
+      </div>
+     </div><button id="next-btn" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"> Next Step </button>
+    </div>
+   </main>
+  </div>
+  <script>
+        // Configuration object for editable features
+        const defaultConfig = {
+            worksheet_title: "Interactive Trigonometry Worksheet",
+            instructions_text: "Follow the steps to solve each trigonometric equation"
+        };
+
+        // Questions data structure
+        const questions = [
+            {
+                title: "\\cos\\theta + \\sin\\theta = 5\\cos\\theta",
+                range: "0^{\\circ} \\le \\theta \\le 360^{\\circ}",
+                steps: [
+                    {
+                        type: "explanation",
+                        content: "We start with the equation. Our goal is to isolate the trigonometric terms and solve for θ.",
+                        equation: "\\cos\\theta + \\sin\\theta = 5\\cos\\theta"
+                    },
+                    {
+                        type: "interactive",
+                        content: "Subtract cos θ from both sides to isolate sin θ.",
+                        leftSide: "\\cos\\theta + \\sin\\theta",
+                        rightSide: "5\\cos\\theta",
+                        dragTerm: "\\cos\\theta",
+                        dragDisplay: "cos θ",
+                        targetEquation: "\\sin\\theta = 4\\cos\\theta"
+                    },
+                    {
+                        type: "calculation",
+                        content: "Divide both sides by cos θ (assuming cos θ ≠ 0):",
+                        equation: "\\frac{\\sin\\theta}{\\cos\\theta} = 4"
+                    },
+                    {
+                        type: "calculation",
+                        content: "This simplifies to:",
+                        equation: "\\tan\\theta = 4"
+                    },
+                    {
+                        type: "answer",
+                        content: "Find all solutions in the given range. Use θ = arctan(4) and add multiples of 180°."
+                    }
+                ],
+                solutions: [75.96, 255.96],
+                isSolved: false
+            },
+            {
+                title: "3\\sin^2\\theta + 5\\sin\\theta\\cos\\theta = 2\\cos^2\\theta",
+                range: "0^{\\circ} \\le \\theta \\le 180^{\\circ}",
+                steps: [
+                    {
+                        type: "explanation",
+                        content: "We have a quadratic trigonometric equation. We'll rearrange and use substitution.",
+                        equation: "3\\sin^2\\theta + 5\\sin\\theta\\cos\\theta = 2\\cos^2\\theta"
+                    },
+                    {
+                        type: "interactive",
+                        content: "Move all terms to the left side by subtracting 2cos²θ from both sides.",
+                        leftSide: "3\\sin^2\\theta + 5\\sin\\theta\\cos\\theta",
+                        rightSide: "2\\cos^2\\theta",
+                        dragTerm: "2\\cos^2\\theta",
+                        dragDisplay: "2cos²θ",
+                        targetEquation: "3\\sin^2\\theta + 5\\sin\\theta\\cos\\theta - 2\\cos^2\\theta = 0"
+                    },
+                    {
+                        type: "interactive",
+                        content: "Divide the entire equation by cos²θ (assuming cos θ ≠ 0).",
+                        leftSide: "3\\sin^2\\theta + 5\\sin\\theta\\cos\\theta - 2\\cos^2\\theta",
+                        rightSide: "0",
+                        dragTerm: "\\cos^2\\theta",
+                        dragDisplay: "÷ cos²θ",
+                        targetEquation: "3\\tan^2\\theta + 5\\tan\\theta - 2 = 0"
+                    },
+                    {
+                        type: "calculation",
+                        content: "This is a quadratic in tan θ. Using the quadratic formula:",
+                        equation: "\\tan\\theta = \\frac{-5 \\pm \\sqrt{25 + 24}}{6} = \\frac{-5 \\pm 7}{6}"
+                    },
+                    {
+                        type: "answer",
+                        content: "So tan θ = 1/3 or tan θ = -2. Find the angles in the given range."
+                    }
+                ],
+                solutions: [18.43, 116.57],
+                isSolved: false
+            },
+            {
+                title: "8\\sin^2\\theta + 2\\cos^2\\theta - \\cos\\theta = 6",
+                range: "0^{\\circ} \\le \\theta \\le 360^{\\circ}",
+                steps: [
+                    {
+                        type: "explanation",
+                        content: "We'll use the identity sin²θ = 1 - cos²θ to convert everything to cosine terms.",
+                        equation: "8\\sin^2\\theta + 2\\cos^2\\theta - \\cos\\theta = 6"
+                    },
+                    {
+                        type: "interactive",
+                        content: "Substitute sin²θ = 1 - cos²θ into the equation.",
+                        leftSide: "8\\sin^2\\theta + 2\\cos^2\\theta - \\cos\\theta",
+                        rightSide: "6",
+                        dragTerm: "\\sin^2\\theta",
+                        dragDisplay: "sin²θ → (1 - cos²θ)",
+                        targetEquation: "8(1 - \\cos^2\\theta) + 2\\cos^2\\theta - \\cos\\theta = 6"
+                    },
+                    {
+                        type: "calculation",
+                        content: "Expand the parentheses:",
+                        equation: "8 - 8\\cos^2\\theta + 2\\cos^2\\theta - \\cos\\theta = 6"
+                    },
+                    {
+                        type: "interactive",
+                        content: "Combine like terms and rearrange to standard form.",
+                        leftSide: "8 - 8\\cos^2\\theta + 2\\cos^2\\theta - \\cos\\theta",
+                        rightSide: "6",
+                        dragTerm: "8",
+                        dragDisplay: "Rearrange",
+                        targetEquation: "6\\cos^2\\theta + \\cos\\theta - 2 = 0"
+                    },
+                    {
+                        type: "answer",
+                        content: "Solve the quadratic equation in cos θ using the quadratic formula."
+                    }
+                ],
+                solutions: [60.00, 300.00, 131.81, 228.19],
+                isSolved: false
+            }
+        ];
+
+        // Application state
+        let currentQuestionIndex = 0;
+        let currentStepIndex = 0;
+        let dragDropCompleted = false;
+
+        // Initialize the application
+        function init() {
+            updateDisplay();
+            updateNavigation();
+            setupEventListeners();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('prev-btn').addEventListener('click', previousStep);
+            document.getElementById('next-btn').addEventListener('click', nextStep);
+        }
+
+        function updateDisplay() {
+            const question = questions[currentQuestionIndex];
+            const step = question.steps[currentStepIndex];
+
+            // Update question info
+            document.getElementById('question-number').textContent = currentQuestionIndex + 1;
+            document.getElementById('total-questions').textContent = questions.length;
+            document.getElementById('current-step').textContent = currentStepIndex + 1;
+            document.getElementById('total-steps').textContent = question.steps.length;
+
+            // Render question title and range with KaTeX
+            setTimeout(() => {
+                try {
+                    katex.render(question.title, document.getElementById('question-title'), {
+                        displayMode: true,
+                        throwOnError: false
+                    });
+                    katex.render(question.range, document.getElementById('question-range'), {
+                        displayMode: false,
+                        throwOnError: false
+                    });
+                } catch (e) {
+                    console.error('KaTeX rendering error:', e);
+                    document.getElementById('question-title').innerHTML = question.title;
+                    document.getElementById('question-range').innerHTML = question.range;
+                }
+            }, 10);
+
+            // Update step content
+            updateStepContent(step);
+            updateProgressDots();
+        }
+
+        function updateStepContent(step) {
+            const stepContent = document.getElementById('step-content');
+            
+            if (step.type === 'interactive') {
+                stepContent.innerHTML = `
+                    <div class="text-center mb-6">
+                        <p class="text-lg text-gray-700 mb-4">${step.content}</p>
+                        <div id="equation-display" class="bg-gray-50 p-6 rounded-lg border-2 border-gray-200 mb-4">
+                            <div class="text-xl mb-4">Original equation:</div>
+                            <div class="flex justify-center items-center space-x-4 mb-6">
+                                <div class="flex items-center space-x-2" id="left-side"></div>
+                                <div class="text-2xl">=</div>
+                                <div class="flex items-center space-x-2" id="right-side"></div>
+                            </div>
+                            <div class="text-lg text-indigo-700 mb-2">Drag the term to perform the operation:</div>
+                            <div class="flex justify-center">
+                                <span class="draggable bg-indigo-600 text-white px-4 py-2 rounded-full font-bold cursor-grab" 
+                                      draggable="true" id="drag-term">${step.dragDisplay}</span>
+                            </div>
+                            <div class="mt-4">
+                                <div class="drop-target w-32 h-12 border-2 border-dashed border-green-400 bg-green-50 rounded-lg flex items-center justify-center text-sm text-green-600 mx-auto" 
+                                     id="drop-target">Drop here</div>
+                            </div>
+                        </div>
+                        <div id="result-display" class="hidden">
+                            <div class="text-lg text-green-700 font-semibold mb-2">Result:</div>
+                            <div class="text-xl" id="result-equation"></div>
+                        </div>
+                    </div>
+                `;
+                
+                // Render left and right sides with KaTeX
+                setTimeout(() => {
+                    try {
+                        katex.render(step.leftSide, document.getElementById('left-side'), {
+                            displayMode: false,
+                            throwOnError: false
+                        });
+                        katex.render(step.rightSide, document.getElementById('right-side'), {
+                            displayMode: false,
+                            throwOnError: false
+                        });
+                    } catch (e) {
+                        console.error('KaTeX rendering error:', e);
+                        document.getElementById('left-side').innerHTML = step.leftSide;
+                        document.getElementById('right-side').innerHTML = step.rightSide;
+                    }
+                }, 10);
+                
+                setupDragAndDrop(step);
+            } else if (step.type === 'answer') {
+                stepContent.innerHTML = `
+                    <div class="text-center">
+                        <p class="text-lg text-gray-700 mb-6">${step.content}</p>
+                        <div class="max-w-md mx-auto">
+                            <label for="answer-input" class="block text-sm font-medium text-gray-700 mb-2">
+                                Enter your solutions (comma-separated, in degrees):
+                            </label>
+                            <input type="text" id="answer-input" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                   placeholder="e.g., 75.96, 255.96">
+                            <button id="check-answer-btn" 
+                                    class="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                                Check Answer
+                            </button>
+                            <div id="answer-feedback" class="mt-4"></div>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('check-answer-btn').addEventListener('click', checkAnswer);
+            } else {
+                stepContent.innerHTML = `
+                    <div class="text-center">
+                        <p class="text-lg text-gray-700 mb-4">${step.content}</p>
+                        ${step.equation ? `<div class="text-xl bg-blue-50 p-4 rounded-lg inline-block" id="step-equation"></div>` : ''}
+                    </div>
+                `;
+                
+                if (step.equation) {
+                    // Use setTimeout to ensure DOM is ready
+                    setTimeout(() => {
+                        try {
+                            katex.render(step.equation, document.getElementById('step-equation'), {
+                                displayMode: true,
+                                throwOnError: false
+                            });
+                        } catch (e) {
+                            console.error('KaTeX rendering error:', e);
+                            document.getElementById('step-equation').innerHTML = step.equation;
+                        }
+                    }, 10);
+                }
+            }
+        }
+
+        function setupDragAndDrop(step) {
+            const dragTerm = document.getElementById('drag-term');
+            const dropTarget = document.getElementById('drop-target');
+            
+            dragTerm.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', 'drag-operation');
+                dragTerm.style.opacity = '0.5';
+            });
+            
+            dragTerm.addEventListener('dragend', (e) => {
+                dragTerm.style.opacity = '1';
+            });
+            
+            dropTarget.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropTarget.classList.add('drag-over');
+            });
+            
+            dropTarget.addEventListener('dragleave', () => {
+                dropTarget.classList.remove('drag-over');
+            });
+            
+            dropTarget.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropTarget.classList.remove('drag-over');
+                
+                const data = e.dataTransfer.getData('text/plain');
+                if (data === 'drag-operation') {
+                    completeDragDrop(step);
+                }
+            });
+        }
+
+        function completeDragDrop(step) {
+            dragDropCompleted = true;
+            
+            // Hide the drag interface and show result
+            document.getElementById('equation-display').style.display = 'none';
+            document.getElementById('result-display').classList.remove('hidden');
+            
+            // Render the target equation with KaTeX
+            setTimeout(() => {
+                try {
+                    katex.render(step.targetEquation, document.getElementById('result-equation'), {
+                        displayMode: true,
+                        throwOnError: false
+                    });
+                } catch (e) {
+                    console.error('KaTeX rendering error:', e);
+                    document.getElementById('result-equation').innerHTML = step.targetEquation;
+                }
+            }, 10);
+            
+            // Enable next button
+            updateNavigation();
+        }
+
+        function checkAnswer() {
+            const question = questions[currentQuestionIndex];
+            const input = document.getElementById('answer-input').value.trim();
+            const feedback = document.getElementById('answer-feedback');
+            
+            if (!input) {
+                feedback.innerHTML = '<p class="text-red-600">Please enter your answer.</p>';
+                return;
+            }
+            
+            // Parse user input
+            const userAnswers = input.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+            const expectedAnswers = [...question.solutions].sort((a, b) => a - b);
+            userAnswers.sort((a, b) => a - b);
+            
+            // Check if answers match within tolerance
+            const tolerance = 0.05;
+            let correct = userAnswers.length === expectedAnswers.length;
+            
+            if (correct) {
+                for (let i = 0; i < userAnswers.length; i++) {
+                    if (Math.abs(userAnswers[i] - expectedAnswers[i]) > tolerance) {
+                        correct = false;
+                        break;
+                    }
+                }
+            }
+            
+            if (correct) {
+                feedback.innerHTML = '<p class="text-green-600 font-semibold">✓ Correct! Well done.</p>';
+                question.isSolved = true;
+                updateNavigation();
+            } else {
+                feedback.innerHTML = `<p class="text-red-600">✗ Incorrect. Expected: ${expectedAnswers.join(', ')}°</p>`;
+            }
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const question = questions[currentQuestionIndex];
+            const step = question.steps[currentStepIndex];
+            
+            // Previous button
+            prevBtn.disabled = currentQuestionIndex === 0 && currentStepIndex === 0;
+            
+            // Next button logic
+            let canProceed = true;
+            
+            if (step.type === 'interactive') {
+                canProceed = dragDropCompleted;
+            } else if (step.type === 'answer') {
+                canProceed = question.isSolved;
+            }
+            
+            nextBtn.disabled = !canProceed;
+            
+            // Update button text for last step of last question
+            if (currentQuestionIndex === questions.length - 1 && currentStepIndex === question.steps.length - 1) {
+                nextBtn.textContent = 'Complete';
+            } else {
+                nextBtn.textContent = 'Next Step';
+            }
+        }
+
+        function updateProgressDots() {
+            const progressDots = document.getElementById('progress-dots');
+            const question = questions[currentQuestionIndex];
+            
+            progressDots.innerHTML = '';
+            for (let i = 0; i < question.steps.length; i++) {
+                const dot = document.createElement('div');
+                dot.className = `w-3 h-3 rounded-full ${i === currentStepIndex ? 'bg-indigo-600' : i < currentStepIndex ? 'bg-green-500' : 'bg-gray-300'}`;
+                progressDots.appendChild(dot);
+            }
+        }
+
+        function previousStep() {
+            if (currentStepIndex > 0) {
+                currentStepIndex--;
+                dragDropCompleted = false;
+            } else if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                currentStepIndex = questions[currentQuestionIndex].steps.length - 1;
+                dragDropCompleted = false;
+            }
+            
+            updateDisplay();
+            updateNavigation();
+        }
+
+        function nextStep() {
+            const question = questions[currentQuestionIndex];
+            
+            if (currentStepIndex < question.steps.length - 1) {
+                currentStepIndex++;
+                dragDropCompleted = false;
+            } else if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                currentStepIndex = 0;
+                dragDropCompleted = false;
+            } else {
+                // Worksheet complete
+                document.getElementById('step-content').innerHTML = `
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold text-green-600 mb-4">🎉 Worksheet Complete!</h3>
+                        <p class="text-lg text-gray-700">Congratulations! You've successfully completed all trigonometry problems.</p>
+                    </div>
+                `;
+                document.getElementById('next-btn').style.display = 'none';
+                return;
+            }
+            
+            updateDisplay();
+            updateNavigation();
+        }
+
+        // Element SDK implementation
+        async function onConfigChange(config) {
+            const worksheetTitle = config.worksheet_title || defaultConfig.worksheet_title;
+            const instructionsText = config.instructions_text || defaultConfig.instructions_text;
+            
+            document.getElementById('worksheet-title').textContent = worksheetTitle;
+            document.getElementById('instructions-text').textContent = instructionsText;
+        }
+
+        function mapToCapabilities(config) {
+            return {
+                recolorables: [],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+            };
+        }
+
+        function mapToEditPanelValues(config) {
+            return new Map([
+                ["worksheet_title", config.worksheet_title || defaultConfig.worksheet_title],
+                ["instructions_text", config.instructions_text || defaultConfig.instructions_text]
+            ]);
+        }
+
+        // Initialize Element SDK
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities,
+                mapToEditPanelValues
+            });
+        }
+
+        // Start the application
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99da7ed991054e3a',t:'MTc2Mjk5NzMzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
