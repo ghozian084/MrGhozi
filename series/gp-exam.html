@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive GP Exam Problem</title>
+    
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /* Inherit previous styles */
+        :root { --primary: #8e44ad; --success: #2ecc71; --error: #e74c3c; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f3e5f5; display: flex; justify-content: center; padding: 20px; }
+        .main-card { background: white; width: 100%; max-width: 800px; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        
+        /* NEW STYLES FOR SLIDE 4 */
+        .puzzle-container {
+            background: #fafafa;
+            border: 2px dashed #ccc;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            position: relative;
+            min-height: 250px;
+        }
+
+        .puzzle-stage { display: none; animation: fadeIn 0.5s; }
+        .puzzle-stage.active { display: block; }
+
+        /* Drag/Click Tokens */
+        .token-container { display: flex; gap: 15px; justify-content: center; margin: 20px 0; }
+        .token {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 0 #6c3483;
+            transition: transform 0.1s;
+        }
+        .token:active { transform: translateY(4px); box-shadow: none; }
+        .token.selected { background: #f1c40f; color: #333; box-shadow: 0 4px 0 #d4ac0d; transform: scale(1.1); }
+        .token.used { opacity: 0.3; cursor: default; pointer-events: none; background: #999; box-shadow: none; }
+
+        /* Drop Zones */
+        .drop-zone {
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            border: 2px dashed var(--primary);
+            border-radius: 5px;
+            vertical-align: middle;
+            text-align: center;
+            line-height: 30px;
+            background: #e8daef;
+            color: var(--primary);
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .drop-zone.filled { border-style: solid; background: var(--success); color: white; border-color: var(--success); }
+
+        /* Inputs */
+        .puzzle-input {
+            width: 80px;
+            padding: 8px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .puzzle-input.correct { border-color: var(--success); background: #d5f5e3; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .success-anim { font-size: 3rem; text-align: center; animation: pop 0.5s; }
+        @keyframes pop { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+<div class="main-card">
+    <h2>4. Exam Challenge: Working Backwards</h2>
+    <p><strong>Problem:</strong> A GP has a first term of <strong>40</strong> and a Sum to Infinity of <strong>100</strong>. Find the 2nd term.</p>
+
+    <div class="puzzle-container">
+        
+        <!-- STAGE 1: BUILD FORMULA -->
+        <div id="stage-1" class="puzzle-stage active">
+            <h3>Step 1: Build the Equation</h3>
+            <p>Tap a number below, then tap the correct empty box in the formula.</p>
+            
+            <div style="font-size: 1.5rem; text-align: center; margin: 30px;">
+                $$ \frac{\text{Box A}}{1-r} = \text{Box B} $$
+                <br>
+                <!-- The Visual Formula with Clickable Zones -->
+                <div style="display: inline-flex; align-items: center; gap: 10px;">
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <div id="zone-a" class="drop-zone" onclick="placeToken('zone-a')">?</div>
+                        <div style="border-top: 2px solid black; width: 100%; margin: 5px 0;"></div>
+                        <div>$1-r$</div>
+                    </div>
+                    <span>$=$</span>
+                    <div id="zone-b" class="drop-zone" onclick="placeToken('zone-b')">?</div>
+                </div>
+            </div>
+
+            <div class="token-container">
+                <div id="token-40" class="token" onclick="selectToken(40, this)">40</div>
+                <div id="token-100" class="token" onclick="selectToken(100, this)">100</div>
+            </div>
+            <p id="s1-msg" style="text-align: center; color: #666; min-height: 20px;"></p>
+        </div>
+
+        <!-- STAGE 2: ALGEBRA -->
+        <div id="stage-2" class="puzzle-stage">
+            <h3>Step 2: Rearrange</h3>
+            <p>We established that: $\frac{40}{1-r} = 100$.</p>
+            <p>Rearrange this to find the value of $(1-r)$.</p>
+            
+            <div style="text-align: center; font-size: 1.3rem; margin: 20px;">
+                $$ 1-r = \frac{40}{100} $$
+                $$ 1-r = \dots $$
+            </div>
+            <div style="text-align: center;">
+                <input type="number" class="puzzle-input" placeholder="decimal" onkeyup="checkStage2(this)">
+            </div>
+        </div>
+
+        <!-- STAGE 3: FIND R -->
+        <div id="stage-3" class="puzzle-stage">
+            <h3>Step 3: Solve for r</h3>
+            <p>You found: $1 - r = 0.4$.</p>
+            <p>What is $r$?</p>
+            
+            <div style="text-align: center; margin: 20px;">
+                $r =$ <input type="number" class="puzzle-input" onkeyup="checkStage3(this)">
+            </div>
+        </div>
+
+        <!-- STAGE 4: FINAL ANSWER -->
+        <div id="stage-4" class="puzzle-stage">
+            <h3>Step 4: Find the 2nd Term</h3>
+            <p>Finally, calculate $u_2 = a \times r$.</p>
+            <p>($a=40, r=0.6$)</p>
+            
+            <div style="text-align: center; margin: 20px;">
+                $u_2 =$ <input type="number" class="puzzle-input" onkeyup="checkStage4(this)">
+            </div>
+            <div id="final-celebration"></div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    /* GAME STATE */
+    let selectedValue = null;
+    let placedA = false;
+    let placedB = false;
+
+    /* STAGE 1 LOGIC: SELECT & PLACE */
+    function selectToken(val, el) {
+        // Reset other tokens
+        document.querySelectorAll('.token').forEach(t => t.classList.remove('selected'));
+        
+        // Select new one if not used
+        if(!el.classList.contains('used')) {
+            selectedValue = val;
+            el.classList.add('selected');
+            document.getElementById('s1-msg').innerText = `Selected ${val}. Now click a box above.`;
+        }
+    }
+
+    function placeToken(zoneId) {
+        if (selectedValue === null) {
+            document.getElementById('s1-msg').innerText = "Please tap a number button first!";
+            return;
+        }
+
+        const zone = document.getElementById(zoneId);
+        if (zone.classList.contains('filled')) return; // Already filled
+
+        // Logic: check if correct value for correct zone
+        // Zone A (Numerator) needs 40. Zone B (Result) needs 100.
+        let correct = false;
+        if (zoneId === 'zone-a' && selectedValue === 40) correct = true;
+        if (zoneId === 'zone-b' && selectedValue === 100) correct = true;
+
+        if (correct) {
+            // Visual Update
+            zone.innerText = selectedValue;
+            zone.classList.add('filled');
+            
+            // Mark token as used
+            const tokenEl = document.getElementById('token-' + selectedValue);
+            tokenEl.classList.remove('selected');
+            tokenEl.classList.add('used');
+            
+            // Update State
+            if(zoneId === 'zone-a') placedA = true;
+            if(zoneId === 'zone-b') placedB = true;
+            selectedValue = null;
+            document.getElementById('s1-msg').innerText = "Correct!";
+
+            // Check Completion
+            if(placedA && placedB) {
+                setTimeout(() => {
+                    nextStage(1, 2);
+                }, 1000);
+            }
+        } else {
+            document.getElementById('s1-msg').innerText = "Incorrect placement. Try again.";
+            document.getElementById('s1-msg').style.color = "red";
+            setTimeout(() => { document.getElementById('s1-msg').style.color = "#666"; }, 1500);
+        }
+    }
+
+    /* STAGE TRANSITION */
+    function nextStage(current, next) {
+        document.getElementById(`stage-${current}`).classList.remove('active');
+        document.getElementById(`stage-${next}`).classList.add('active');
+        // Rerender math for the new stage
+        MathJax.typesetPromise();
+    }
+
+    /* STAGE 2 LOGIC */
+    function checkStage2(input) {
+        // Expected 0.4
+        if(parseFloat(input.value) === 0.4) {
+            input.classList.add('correct');
+            setTimeout(() => nextStage(2, 3), 800);
+        }
+    }
+
+    /* STAGE 3 LOGIC */
+    function checkStage3(input) {
+        // Expected 0.6
+        if(parseFloat(input.value) === 0.6) {
+            input.classList.add('correct');
+            setTimeout(() => nextStage(3, 4), 800);
+        }
+    }
+
+    /* STAGE 4 LOGIC */
+    function checkStage4(input) {
+        // Expected 24
+        if(parseInt(input.value) === 24) {
+            input.classList.add('correct');
+            document.getElementById('final-celebration').innerHTML = `
+                <div class="success-anim">🎉</div>
+                <p style="color:green; font-weight:bold; text-align:center;">Excellent! You solved the exam problem.</p>
+                <button onclick="location.reload()" style="padding:10px; margin-top:10px; cursor:pointer;">Reset</button>
+            `;
+        }
+    }
+</script>
+
+</body>
+</html>
