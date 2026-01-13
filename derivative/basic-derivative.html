@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus Interactive: Mastery</title>
+    
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #4834d4;
+            --accent: #686de0;
+            --success: #6ab04c;
+            --error: #eb4d4b;
+            --bg: #f9f9f9;
+            --drag: #f0932b;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Nav */
+        .nav-bar {
+            background: white; width: 100%; padding: 15px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .nav-btn {
+            padding: 8px 20px; border: 2px solid var(--primary); background: transparent; color: var(--primary); border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+        .nav-btn.active, .nav-btn:hover { background: var(--primary); color: white; }
+
+        /* Container */
+        .container { width: 95%; max-width: 900px; margin-top: 20px; padding-bottom: 50px; }
+        .section { display: none; background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); animation: fadeIn 0.4s; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-size: 1rem; }
+        .btn:hover { background: var(--accent); }
+        .feedback { font-weight: bold; margin-top: 10px; min-height: 25px; color: #555; }
+
+        /* --- 1. POWER RULE STYLES --- */
+        .visual-stage {
+            height: 180px; background: #f1f2f6; border-radius: 10px; position: relative;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3.5rem; font-family: 'Times New Roman', serif; margin-bottom: 20px; overflow: hidden;
+        }
+        /* Visual fix for the exponent in animation */
+        #vis-n {
+            position: relative; top: -30px; font-size: 0.6em; color: var(--error); transition: 0.5s;
+        }
+
+        /* Inputs */
+        .base-input { width: 60px; height: 40px; text-align: center; border: 2px solid #ccc; border-radius: 5px; font-size: 1.2rem; }
+        .super-input { width: 40px; height: 30px; text-align: center; border: 2px solid #ccc; border-radius: 5px; font-size: 0.9rem; margin-bottom: 20px; }
+        .correct { border-color: var(--success); background: #dff9fb; }
+        .wrong { border-color: var(--error); background: #ffcccc; }
+
+        /* --- 2. POLY ANIMATION STYLES --- */
+        .poly-container { display: flex; gap: 20px; justify-content: center; font-size: 2.5rem; font-family: 'Times New Roman', serif; min-height: 80px; align-items: center; }
+        .term { transition: all 0.8s ease; display: inline-flex; align-items: center; }
+
+        /* --- DRAG DROP STYLES --- */
+        .dnd-area { background: #fff8e1; border: 2px dashed var(--drag); padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center; }
+        .token { background: var(--drag); color: white; padding: 8px 15px; border-radius: 50px; cursor: grab; font-weight: bold; font-size: 1.2rem; user-select: none; margin: 0 5px; display: inline-block; }
+        
+        .drop-zone {
+            display: inline-flex; width: 45px; height: 45px; background: #dfe6e9; border: 2px inset #ccc;
+            align-items: center; justify-content: center; border-radius: 5px; vertical-align: middle;
+        }
+        .drop-zone.filled { background: var(--success); color: white; border: none; }
+
+        /* Styling for Superscript Drag Zones */
+        .superscript-wrapper {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: top;
+            margin-top: -30px; /* Lifts the whole block up */
+            margin-left: 2px;
+            transform: scale(0.85); /* Slightly smaller like real superscript */
+        }
+
+        .fraction-bar { width: 100%; height: 2px; background: black; margin: 2px 0; }
+        
+        /* Negative power lift */
+        .lift-super { vertical-align: super; font-size: 0.7em; margin-bottom: 25px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <button class="nav-btn active" onclick="showSection(1)">1. Power Rule</button>
+        <button class="nav-btn" onclick="showSection(2)">2. Addition/Subtraction</button>
+        <button class="nav-btn" onclick="showSection(3)">3. Roots (Rewrite)</button>
+        <button class="nav-btn" onclick="showSection(4)">4. Fractions (Rewrite)</button>
+    </div>
+
+    <div class="container">
+
+        <!-- SECTION 1: POWER RULE -->
+        <div id="sec-1" class="section active">
+            <h2>1. The Power Rule</h2>
+            <div class="visual-stage" id="anim-stage">
+                <span id="vis-c">3</span>
+                <span>x</span>
+                <span id="vis-n">4</span>
+            </div>
+            <div style="text-align:center;">
+                <button class="btn" onclick="playPowerAnim()">▶ Play Animation</button>
+                <button class="btn" style="background:#7f8c8d" onclick="resetPowerAnim()">Reset</button>
+            </div>
+
+            <hr style="margin: 30px 0; opacity: 0.3;">
+
+            <h3>Practice</h3>
+            <p>Find derivative: <span id="pr-prob" style="font-weight:bold; font-size:1.2rem">$$ f(x) = 2x^5 $$</span></p>
+            <div style="font-size:1.5rem">
+                $f'(x) = $ 
+                <input type="number" id="pr-coeff" class="base-input"> $x$ 
+                <input type="number" id="pr-exp" class="super-input">
+            </div>
+            <div id="pr-fb" class="feedback"></div>
+            <button class="btn" onclick="checkPowerRule()">Check</button>
+            <button class="btn" style="background:var(--success)" onclick="genPowerRule()">New Problem</button>
+        </div>
+
+        <!-- SECTION 2: ADDITION / SUBTRACTION (Restored Animation) -->
+        <div id="sec-2" class="section">
+            <h2>2. Addition & Subtraction</h2>
+            <p><strong>Concept:</strong> Constants disappear ($ \to 0 $). Powers drop down.</p>
+            
+            <div style="background:#f1f2f6; padding:30px; border-radius:10px; margin-bottom:20px;">
+                <div class="poly-container" id="poly-anim-area">
+                    <!-- JS fills this -->
+                </div>
+                <div style="text-align:center; margin-top:20px;">
+                    <button class="btn" onclick="animatePoly()">Visualize Derivative</button>
+                    <button class="btn" style="background:#7f8c8d" onclick="resetPoly()">Reset</button>
+                </div>
+            </div>
+
+            <h3>Practice</h3>
+            <p>Differentiate: <span id="sum-prob">$$ f(x) = 5x^3 + 2x - 9 $$</span></p>
+            <div style="font-size:1.3rem">
+                $f'(x) =$ <input type="number" id="sum-c1" class="base-input"> $x$ <input type="number" id="sum-e1" class="super-input"> + <input type="number" id="sum-c2" class="base-input">
+            </div>
+            <div id="sum-fb" class="feedback"></div>
+            <button class="btn" onclick="checkSum()">Check</button>
+            <button class="btn" style="background:var(--success)" onclick="genSum()">New Problem</button>
+        </div>
+
+        <!-- SECTION 3: ROOTS (High Drag & Drop) -->
+        <div id="sec-3" class="section">
+            <h2>3. Roots: Rewrite First</h2>
+            <p>Drag numbers to rewrite the root as a fractional power.</p>
+
+            <div class="dnd-area">
+                <p>Rewrite: <span id="root-prob" style="font-size:1.5rem;">$$ \sqrt[3]{x^2} $$</span></p>
+                
+                <div style="font-size: 3rem; margin: 40px 0; display:flex; align-items:flex-end; justify-content:center;">
+                    <span>x</span>
+                    <!-- Wrapper to lift the fraction high -->
+                    <div class="superscript-wrapper">
+                        <div class="drop-zone" id="dz-num" ondrop="drop(event)" ondragover="allowDrop(event)">?</div>
+                        <div class="fraction-bar"></div>
+                        <div class="drop-zone" id="dz-den" ondrop="drop(event)" ondragover="allowDrop(event)">?</div>
+                    </div>
+                </div>
+
+                <div id="root-tokens" style="margin-bottom:10px;"></div>
+                <div id="root-rewrite-fb" class="feedback"></div>
+            </div>
+
+            <!-- Derivative Input (Hidden initially) -->
+            <div id="root-deriv-step" style="display:none; background:#e0f7fa; padding:15px; border-radius:10px; border:1px dashed #00bcd4;">
+                <p id="root-deriv-prompt" style="font-weight:bold; font-size:1.1rem; color:#0097a7;">
+                    <!-- JS will fill: Now differentiate x^(a/b) -->
+                </p>
+                
+                <div style="display:flex; align-items:center; gap:5px;">
+                    $f'(x) = $ 
+                    <input type="text" id="root-ans-coeff" class="base-input" style="width:80px" placeholder="frac"> 
+                    $x$ 
+                    <input type="text" id="root-ans-exp" class="super-input" style="width:70px; margin-bottom:0;" placeholder="exp">
+                </div>
+                <button class="btn" onclick="checkRootDeriv()">Check Derivative</button>
+                <div id="root-d-fb" class="feedback"></div>
+            </div>
+
+            <button class="btn" style="background:var(--success); margin-top:20px;" onclick="genRoot()">New Problem</button>
+        </div>
+
+        <!-- SECTION 4: FRACTIONS (High Negative Power) -->
+        <div id="sec-4" class="section">
+            <h2>4. Fractions (Reciprocals)</h2>
+            <p>Move $x$ to the top and make the power negative.</p>
+
+            <div class="dnd-area" style="border-color:#4834d4; background:#eef1ff;">
+                <p>Rewrite: <span id="frac-prob" style="font-size:1.5rem;">$$ \frac{4}{x^5} $$</span></p>
+                
+                <div style="font-size: 3rem; margin: 30px 0;">
+                    <div class="drop-zone" id="dz-frac-coeff" ondrop="drop(event)" ondragover="allowDrop(event)">?</div>
+                    <span>x</span>
+                    <!-- Lifted Drop Zone -->
+                    <div class="drop-zone lift-super" id="dz-frac-exp" ondrop="drop(event)" ondragover="allowDrop(event)" style="width:40px; height:40px; font-size:1rem">?</div>
+                </div>
+
+                <div id="frac-tokens"></div>
+                <div id="frac-rewrite-fb" class="feedback"></div>
+            </div>
+
+            <div id="frac-deriv-step" style="display:none; background:#eef1ff; padding:15px; border-radius:10px; border:1px dashed #4834d4;">
+                <p><strong>Step 2:</strong> Differentiate the negative power.</p>
+                $f'(x) = $ <input type="number" id="frac-ans-coeff" class="base-input"> 
+                $x$ <input type="number" id="frac-ans-exp" class="super-input" style="margin-bottom:0">
+                <br>
+                <button class="btn" onclick="checkFracDeriv()">Check Derivative</button>
+                <div id="frac-d-fb" class="feedback"></div>
+            </div>
+
+            <button class="btn" style="background:var(--success)" onclick="genFrac()">New Problem</button>
+        </div>
+
+    </div>
+
+<script>
+    /* --- NAV --- */
+    function showSection(n) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(`sec-${n}`).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.nav-btn')[n-1].classList.add('active');
+    }
+
+    /* --- 1. POWER RULE ANIMATION --- */
+    const stage = document.getElementById('anim-stage');
+    
+    function resetPowerAnim() {
+        stage.innerHTML = `
+            <span id="vis-c" style="transition:0.5s; margin-right:10px;">3</span>
+            <span>x</span>
+            <span id="vis-n">4</span>
+        `;
+    }
+
+    function playPowerAnim() {
+        resetPowerAnim();
+        const c = document.getElementById('vis-c');
+        const n = document.getElementById('vis-n');
+        
+        // 1. Clone N to move it
+        const flyingN = n.cloneNode(true);
+        flyingN.style.position = 'absolute';
+        flyingN.id = 'flying-n';
+        
+        // Coordinates
+        const nRect = n.getBoundingClientRect();
+        const stageRect = stage.getBoundingClientRect();
+        
+        // Set initial position exactly where N is
+        flyingN.style.left = (nRect.left - stageRect.left) + 'px';
+        flyingN.style.top = (nRect.top - stageRect.top) + 'px';
+        flyingN.style.color = 'var(--error)';
+        flyingN.style.transition = 'all 1s ease';
+        stage.appendChild(flyingN);
+
+        // 2. Animate: Move Down and Left (in front of C)
+        setTimeout(() => {
+            const cRect = c.getBoundingClientRect();
+            // Move to roughly left of C
+            flyingN.style.left = (cRect.left - stageRect.left - 40) + 'px'; 
+            flyingN.style.top = (cRect.top - stageRect.top + 10) + 'px'; // Move down to baseline
+            flyingN.style.fontSize = '3.5rem'; // Grow to normal size
+        }, 100);
+
+        // 3. Show Multiplication Dot
+        setTimeout(() => {
+            flyingN.innerHTML = "4 &middot;";
+        }, 1200);
+
+        // 4. Update Exponent visual
+        setTimeout(() => {
+            n.style.transform = "scale(1.3)";
+            n.innerHTML = "4-1";
+        }, 2000);
+
+        // 5. Finalize
+        setTimeout(() => {
+            flyingN.style.opacity = '0';
+            c.innerHTML = "12";
+            c.style.color = "var(--success)";
+            n.innerHTML = "3";
+            n.style.transform = "scale(1)";
+            n.style.color = "black";
+        }, 3000);
+    }
+
+    // Power Rule Practice (Generic)
+    let prData = { c: 2, n: 5 };
+    function genPowerRule() {
+        prData.c = Math.floor(Math.random()*8)+2;
+        prData.n = Math.floor(Math.random()*8)+2;
+        document.getElementById('pr-prob').innerText = `$$ f(x) = ${prData.c}x^{${prData.n}} $$`;
+        document.querySelectorAll('#sec-1 input').forEach(i => { i.value=""; i.classList.remove('correct','wrong'); });
+        document.getElementById('pr-fb').innerText = "";
+        MathJax.typesetPromise();
+    }
+    function checkPowerRule() {
+        let uC = parseInt(document.getElementById('pr-coeff').value);
+        let uE = parseInt(document.getElementById('pr-exp').value);
+        if(uC === prData.c*prData.n && uE === prData.n-1) {
+            document.getElementById('pr-fb').innerHTML = "<span style='color:green'>Correct!</span>";
+            document.querySelectorAll('#sec-1 input').forEach(i => i.classList.add('correct'));
+        } else {
+            document.getElementById('pr-fb').innerHTML = "Check your math.";
+            document.querySelectorAll('#sec-1 input').forEach(i => i.classList.add('wrong'));
+        }
+    }
+
+    /* --- 2. ADDITION ANIMATION (Restored) --- */
+    function resetPoly() {
+        document.getElementById('poly-anim-area').innerHTML = `
+            <div id="t1" class="term"><span>4</span>x<sup style="color:red; font-size:0.6em">3</sup></div>
+            <div class="term">&nbsp;+&nbsp;</div>
+            <div id="t2" class="term"><span>2</span>x</div>
+            <div class="term">&nbsp;-&nbsp;</div>
+            <div id="t3" class="term">7</div>
+        `;
+    }
+    
+    function animatePoly() {
+        // T1: 4x^3 -> 12x^2
+        const t1 = document.getElementById('t1');
+        t1.innerHTML = `<span style="color:green; font-weight:bold; transform:scale(1.2)">12</span>x<sup style="font-size:0.6em">2</sup>`;
+        
+        // T2: 2x -> 2
+        const t2 = document.getElementById('t2');
+        t2.innerHTML = `<span style="color:green; font-weight:bold; transform:scale(1.2)">2</span>`;
+        
+        // T3: 7 -> 0
+        const t3 = document.getElementById('t3');
+        t3.style.opacity = '0';
+        setTimeout(() => t3.innerHTML = "0", 600);
+        setTimeout(() => t3.style.opacity = '0.5', 700);
+    }
+    // Practice logic (Section 2)
+    let sumData = {c1:5, e1:3, c2:2};
+    function genSum() {
+        sumData = { c1: Math.floor(Math.random()*6)+2, e1: Math.floor(Math.random()*4)+2, c2: Math.floor(Math.random()*8)+2 };
+        document.getElementById('sum-prob').innerText = `$$ f(x) = ${sumData.c1}x^{${sumData.e1}} + ${sumData.c2}x - 9 $$`;
+        document.querySelectorAll('#sec-2 input').forEach(i=>{ i.value=''; i.classList.remove('correct','wrong'); });
+        MathJax.typesetPromise();
+    }
+    function checkSum() {
+        let c1=parseInt(document.getElementById('sum-c1').value);
+        let e1=parseInt(document.getElementById('sum-e1').value);
+        let c2=parseInt(document.getElementById('sum-c2').value);
+        if(c1===sumData.c1*sumData.e1 && e1===sumData.e1-1 && c2===sumData.c2) {
+            document.getElementById('sum-fb').innerHTML="<span style='color:green'>Correct!</span>";
+        } else { document.getElementById('sum-fb').innerText="Try again."; }
+    }
+
+    /* --- 3. ROOTS DRAG & DROP --- */
+    let rootData = { a: 2, b: 3 };
+
+    function allowDrop(ev) { ev.preventDefault(); }
+    function drag(ev) { ev.dataTransfer.setData("text", ev.target.dataset.val); }
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        if(ev.target.classList.contains('drop-zone')) {
+            ev.target.innerText = data;
+            ev.target.classList.add('filled');
+            checkRootRewrite();
+        }
+    }
+
+    function genRoot() {
+        rootData.a = Math.floor(Math.random()*4)+1;
+        rootData.b = Math.floor(Math.random()*3)+2;
+        if(rootData.a==rootData.b) rootData.a++;
+        
+        let rootTex = rootData.b===2 ? `\\sqrt{x^${rootData.a}}` : `\\sqrt[${rootData.b}]{x^${rootData.a}}`;
+        document.getElementById('root-prob').innerText = `$$ ${rootTex} $$`;
+        
+        // Tokens
+        let tDiv = document.getElementById('root-tokens');
+        tDiv.innerHTML = '';
+        let opts = [rootData.a, rootData.b, rootData.a+1];
+        opts.sort(()=>Math.random()-0.5);
+        opts.forEach(v => {
+            let d = document.createElement('div');
+            d.className='token'; d.draggable=true; d.innerText=v; d.dataset.val=v; d.ondragstart=drag;
+            tDiv.appendChild(d);
+        });
+
+        // Reset
+        document.getElementById('dz-num').innerText = "?"; document.getElementById('dz-num').classList.remove('filled');
+        document.getElementById('dz-den').innerText = "?"; document.getElementById('dz-den').classList.remove('filled');
+        document.getElementById('root-deriv-step').style.display = 'none';
+        document.getElementById('root-rewrite-fb').innerText = "";
+        
+        MathJax.typesetPromise();
+    }
+
+    function checkRootRewrite() {
+        let num = document.getElementById('dz-num').innerText;
+        let den = document.getElementById('dz-den').innerText;
+        
+        if(num == rootData.a && den == rootData.b) {
+            document.getElementById('root-rewrite-fb').innerHTML = "<span style='color:green'>Correct!</span>";
+            
+            // Generate the derivative question prompt dynamically
+            const fracTex = `x^{\\frac{${rootData.a}}{${rootData.b}}}`;
+            document.getElementById('root-deriv-prompt').innerHTML = `Success! Now differentiate: $$ ${fracTex} $$`;
+            document.getElementById('root-deriv-step').style.display = 'block';
+            
+            // Clear inputs for derivative
+            document.getElementById('root-ans-coeff').value = "";
+            document.getElementById('root-ans-exp').value = "";
+            document.getElementById('root-d-fb').innerText = "";
+            
+            MathJax.typesetPromise();
+        }
+    }
+
+    function checkRootDeriv() {
+        let uC = document.getElementById('root-ans-coeff').value;
+        let uE = document.getElementById('root-ans-exp').value;
+        
+        // simple fraction check (string match or decimal eval)
+        let trueC = rootData.a / rootData.b;
+        let trueE = (rootData.a - rootData.b) / rootData.b;
+        
+        // Check coefficient (accept a/b or decimal)
+        let cOk = (uC == `${rootData.a}/${rootData.b}`) || (Math.abs(eval(uC) - trueC) < 0.01);
+        // Check exponent (accept (a-b)/b or decimal)
+        let eOk = (uE == `${rootData.a-rootData.b}/${rootData.b}`) || (Math.abs(eval(uE) - trueE) < 0.01);
+
+        const fb = document.getElementById('root-d-fb');
+        if(cOk && eOk) fb.innerHTML = "<span style='color:green'>Excellent work!</span>";
+        else fb.innerHTML = "Check your fractions again.";
+    }
+
+    /* --- 4. FRACTIONS --- */
+    let fracData = { A: 4, n: 5 };
+    
+    function genFrac() {
+        fracData.A = Math.floor(Math.random()*8)+2;
+        fracData.n = Math.floor(Math.random()*6)+2;
+        document.getElementById('frac-prob').innerText = `$$ \\frac{${fracData.A}}{x^{${fracData.n}}} $$`;
+        
+        // Tokens
+        let tDiv = document.getElementById('frac-tokens');
+        tDiv.innerHTML = '';
+        let opts = [fracData.A, fracData.n, -fracData.n];
+        opts.sort(()=>Math.random()-0.5);
+        opts.forEach(v => {
+            let d = document.createElement('div');
+            d.className='token'; d.draggable=true; d.innerText=v; d.dataset.val=v; d.ondragstart=drag;
+            tDiv.appendChild(d);
+        });
+
+        document.getElementById('dz-frac-coeff').innerText = "?"; document.getElementById('dz-frac-coeff').classList.remove('filled');
+        document.getElementById('dz-frac-exp').innerText = "?"; document.getElementById('dz-frac-exp').classList.remove('filled');
+        document.getElementById('frac-deriv-step').style.display = 'none';
+        document.getElementById('frac-rewrite-fb').innerText = "";
+        
+        MathJax.typesetPromise();
+    }
+
+    // Add listener for Fraction drop checking
+    document.getElementById('sec-4').addEventListener('drop', function() {
+        setTimeout(checkFracRewrite, 100);
+    });
+
+    function checkFracRewrite() {
+        let c = document.getElementById('dz-frac-coeff').innerText;
+        let e = document.getElementById('dz-frac-exp').innerText;
+        
+        if(c == fracData.A && e == -fracData.n) {
+            document.getElementById('frac-rewrite-fb').innerHTML = "<span style='color:green'>Correct!</span>";
+            document.getElementById('frac-deriv-step').style.display = 'block';
+            document.getElementById('frac-ans-coeff').value="";
+            document.getElementById('frac-ans-exp').value="";
+        }
+    }
+
+    function checkFracDeriv() {
+        let uC = parseInt(document.getElementById('frac-ans-coeff').value);
+        let uE = parseInt(document.getElementById('frac-ans-exp').value);
+        
+        if(uC === fracData.A * (-fracData.n) && uE === -fracData.n - 1) {
+            document.getElementById('frac-d-fb').innerHTML = "<span style='color:green'>Correct!</span>";
+        } else {
+            document.getElementById('frac-d-fb').innerText = "Multiply coefficient by power, subtract 1 from power.";
+        }
+    }
+
+    // Init
+    resetPoly();
+    genPowerRule();
+    genSum();
+    genRoot();
+    genFrac();
+
+</script>
+</body>
+</html>
