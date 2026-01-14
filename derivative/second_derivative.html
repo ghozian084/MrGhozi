@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Second Derivative Master Lab</title>
+    
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #e17055;  /* f' */
+            --second: #6c5ce7;  /* f'' */
+            --bg: #f4f6f7;
+            --card: #ffffff;
+            --success: #00b894;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* NAV */
+        .nav-bar {
+            background: white; width: 100%; padding: 15px; display: flex; justify-content: center; gap: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .nav-btn {
+            padding: 10px 20px; border: 2px solid var(--primary); background: transparent; color: var(--primary); border-radius: 25px; cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+        .nav-btn.active, .nav-btn:hover { background: var(--primary); color: white; }
+
+        /* CONTAINER */
+        .container { width: 95%; max-width: 950px; margin: 25px 0 50px 0; }
+        .section { display: none; background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); animation: fadeIn 0.4s; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; color: var(--primary); margin-top: 0; }
+        .btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1rem; }
+        .btn:hover { opacity: 0.9; }
+
+        /* --- SLIDE 1 STYLES --- */
+        .chain-container {
+            display: flex; justify-content: space-around; align-items: center; margin: 40px 0; font-size: 1.5rem;
+        }
+        .chain-box {
+            background: #ecf0f1; border: 2px solid #bdc3c7; padding: 20px; border-radius: 10px; width: 220px; text-align: center; position: relative; transition: all 0.5s;
+        }
+        .chain-box.active { transform: scale(1.1); box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-color: var(--primary); background: #fff; }
+        .arrow { font-size: 2rem; color: #bdc3c7; }
+        .func-selector { padding: 10px; font-size: 1rem; border-radius: 5px; border: 1px solid #ccc; background: #fff; }
+
+        /* --- SLIDE 2 STYLES --- */
+        .graph-wrapper { display: flex; flex-direction: column; align-items: center; position: relative; }
+        canvas { border: 1px solid #ddd; background: #fff; cursor: crosshair; }
+        
+        /* Coordinate Labels */
+        .coord-label {
+            position: absolute; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            pointer-events: none; 
+            font-size: 0.85rem; 
+            font-weight: bold;
+            color: white;
+            white-space: nowrap;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            transition: top 0.1s, left 0.1s; /* Smooth movement */
+        }
+
+        /* INFO PANEL */
+        .info-panel {
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; width: 100%; margin-top: 20px;
+        }
+        .info-card {
+            padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .card-val { font-size: 1.5rem; font-weight: bold; margin: 5px 0; display: block;}
+        .card-desc { font-size: 0.9rem; font-weight: 500; }
+
+        /* --- SLIDE 3 PHYSICS --- */
+        .car-track {
+            width: 100%; height: 60px; background: #34495e; border-radius: 5px; position: relative; margin: 20px 0; overflow: hidden;
+        }
+        .car {
+            width: 40px; height: 30px; background: #f1c40f; position: absolute; top: 15px; left: 0; border-radius: 5px; transition: left 0.1s linear;
+        }
+        .step-work-box {
+            background: #fdfdfd; border-left: 4px solid var(--primary); padding: 15px; margin-top: 20px; font-family: 'Segoe UI', sans-serif; font-size: 1rem; line-height: 1.6;
+        }
+
+        /* --- SLIDE 4 INPUTS --- */
+        .term-group { display: inline-flex; align-items: center; margin: 0 10px; vertical-align: middle; }
+        .coeff-input { width: 60px; height: 40px; text-align: center; border: 2px solid #bdc3c7; border-radius: 5px; font-size: 1.2rem; margin-right: 5px; }
+        .var-x { font-size: 1.8rem; font-family: 'Times New Roman', serif; font-style: italic; }
+        .power-input { width: 40px; height: 30px; text-align: center; border: 2px solid #bdc3c7; border-radius: 5px; font-size: 0.9rem; margin-bottom: 25px; margin-left: 2px; }
+        .correct { background: #dff9fb; border-color: var(--success); }
+        .wrong { background: #ffcccc; border-color: #e74c3c; }
+
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <button class="nav-btn active" onclick="showSection(1)">1. Concept Chain</button>
+        <button class="nav-btn" onclick="showSection(2)">2. Visualizing Concavity</button>
+        <button class="nav-btn" onclick="showSection(3)">3. Physics Step-by-Step</button>
+        <button class="nav-btn" onclick="showSection(4)">4. Practice</button>
+    </div>
+
+    <div class="container">
+
+        <!-- SECTION 1: THE CHAIN -->
+        <div id="sec-1" class="section active">
+            <h2>1. The Derivative Machine</h2>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <p>Select a function to feed into the machine:</p>
+                <select class="func-selector" id="chainSelector" onchange="resetChain()">
+                    <option value="poly">f(x) = x³ + 2x²</option>
+                    <option value="sin">f(x) = sin(x)</option>
+                    <option value="exp">f(x) = x⁴ - 2x²</option>
+                </select>
+            </div>
+
+            <div class="chain-container">
+                <div class="chain-box active" id="box-f">
+                    <strong>Original $f(x)$</strong><br><br>
+                    <span id="math-f" style="color:var(--primary); font-weight:bold;">$$ x^3 + 2x^2 $$</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="chain-box" id="box-df" style="opacity: 0.5;">
+                    <strong>1st Derivative $f'(x)$</strong>
+                    <p style="font-size:0.9rem; color:#666">Slope</p>
+                    <span id="math-df">?</span><br>
+                    <button class="btn" style="margin-top:10px; font-size:0.8rem" onclick="diffStep(1)">Differentiate</button>
+                </div>
+                <div class="arrow">→</div>
+                <div class="chain-box" id="box-ddf" style="opacity: 0.5;">
+                    <strong>2nd Derivative $f''(x)$</strong>
+                    <p style="font-size:0.9rem; color:#666">Concavity</p>
+                    <span id="math-ddf">?</span><br>
+                    <button class="btn" id="btn-ddf" disabled style="margin-top:10px; font-size:0.8rem" onclick="diffStep(2)">Differentiate</button>
+                </div>
+            </div>
+            <p id="chain-msg" style="text-align:center; color:#7f8c8d;">Click "Differentiate" to start.</p>
+        </div>
+
+        <!-- SECTION 2: CONCAVITY VISUALIZER -->
+        <div id="sec-2" class="section">
+            <h2>2. Visualizing Coordinates</h2>
+            <p>Move the slider. Observe the <strong>Coordinates $(x, y)$</strong> floating on each graph.</p>
+            
+            <div class="graph-wrapper">
+                <canvas id="concavityCanvas" width="600" height="450"></canvas>
+                
+                <!-- Floating Labels -->
+                <div id="label-f" class="coord-label" style="background:rgba(44, 62, 80, 0.9);"></div>
+                <div id="label-df" class="coord-label" style="background:rgba(225, 112, 85, 0.9);"></div>
+                <div id="label-ddf" class="coord-label" style="background:rgba(108, 92, 231, 0.9);"></div>
+
+                <input type="range" id="xSlider" min="-2.5" max="2.5" step="0.1" value="0" style="width: 400px; margin: 15px 0;" oninput="updateConcavityGraph()">
+            </div>
+            
+            <div class="info-panel">
+                <div class="info-card" style="border: 2px solid #bdc3c7;">
+                    <strong>$f(x)$ Value</strong>
+                    <span id="val-f" class="card-val" style="color:#2c3e50">0.00</span>
+                    <span id="desc-f" class="card-desc">Height</span>
+                </div>
+                <div class="info-card" style="border: 2px solid var(--accent); background:#fff5f0;">
+                    <strong>$f'(x)$ Slope</strong>
+                    <span id="val-df" class="card-val" style="color:var(--accent)">0.00</span>
+                    <span id="desc-df" class="card-desc">Stationary</span>
+                </div>
+                <div class="info-card" style="border: 2px solid var(--second); background:#f3f0ff;">
+                    <strong>$f''(x)$ Concavity</strong>
+                    <span id="val-ddf" class="card-val" style="color:var(--second)">0.00</span>
+                    <span id="desc-ddf" class="card-desc">Inflection Point</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: PHYSICS LAB -->
+        <div id="sec-3" class="section">
+            <h2>3. Physics: Step-by-Step Calculation</h2>
+            <p>Function: $s(t) = t^3 - 6t^2 + 9t$. (Time $0 \le t \le 5$)</p>
+            
+            <div class="car-track">
+                <div class="car" id="phy-car"></div>
+                <div style="position: absolute; bottom: 0; left: 0; color:white; font-size:0.8rem; padding:2px;">0m</div>
+                <div style="position: absolute; bottom: 0; right: 0; color:white; font-size:0.8rem; padding:2px;">Max</div>
+            </div>
+            
+            <div style="text-align:center;">
+                <label>Time ($t$): </label>
+                <input type="range" id="timeSlider" min="0" max="5" step="0.1" value="0" oninput="updatePhysics()" style="width: 300px;">
+                <span id="timeDisplay" style="font-weight: bold; font-size:1.2rem;">0.0s</span>
+            </div>
+
+            <div class="step-work-box" id="physics-work">
+                <!-- JS content -->
+            </div>
+        </div>
+
+        <!-- SECTION 4: PRACTICE -->
+        <div id="sec-4" class="section">
+            <h2>4. Practice (Superscript Notation)</h2>
+            <p>Find the first and second derivatives.</p>
+
+            <div style="background: #fff; padding: 15px; border: 2px solid #eee; text-align: center; margin-bottom: 30px;">
+                <span id="prob-func" style="font-size: 1.5rem; font-weight: bold;">$$ f(x) = 4x^3 + 2x^2 $$</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 30px; align-items: center;">
+                
+                <!-- Step 1 -->
+                <div style="width: 100%;">
+                    <strong style="color:var(--accent)">1. First Derivative $f'(x)$</strong><br>
+                    <div style="display:flex; align-items:center; justify-content:center; margin-top:20px; font-size:1.5rem;">
+                        $f'(x) = $ 
+                        <div class="term-group">
+                            <input type="number" id="ans-d1-c1" class="coeff-input" placeholder="C">
+                            <span class="var-x">x</span>
+                            <input type="number" id="ans-d1-e1" class="power-input" placeholder="n">
+                        </div>
+                        $+$
+                        <div class="term-group">
+                            <input type="number" id="ans-d1-c2" class="coeff-input" placeholder="C">
+                            <span class="var-x">x</span>
+                            <input type="number" id="ans-d1-e2" class="power-input" placeholder="n">
+                        </div>
+                    </div>
+                    <div id="fb-d1" style="text-align:center; height:20px; font-weight:bold; margin-top:5px;"></div>
+                </div>
+
+                <!-- Step 2 -->
+                <div style="width: 100%; border-top:1px dashed #ccc; padding-top:20px;">
+                    <strong style="color:var(--second)">2. Second Derivative $f''(x)$</strong><br>
+                    <div style="display:flex; align-items:center; justify-content:center; margin-top:20px; font-size:1.5rem;">
+                        $f''(x) = $ 
+                        <div class="term-group">
+                            <input type="number" id="ans-d2-c1" class="coeff-input" placeholder="C">
+                            <span class="var-x">x</span>
+                            <input type="number" id="ans-d2-e1" class="power-input" placeholder="n">
+                        </div>
+                        $+$
+                        <div class="term-group">
+                            <input type="number" id="ans-d2-c2" class="coeff-input" placeholder="C">
+                            <span class="var-x">x</span>
+                            <input type="number" id="ans-d2-e2" class="power-input" placeholder="0">
+                        </div>
+                    </div>
+                    <div style="text-align:center; font-size:0.8rem; color:#666;">(Note: For constant term like $12x^0$, enter power 0)</div>
+                    <div id="fb-d2" style="text-align:center; height:20px; font-weight:bold; margin-top:5px;"></div>
+                </div>
+
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn" onclick="checkPractice()">Check Answers</button>
+                <button class="btn" style="background: #95a5a6;" onclick="genPractice()">New Problem</button>
+            </div>
+        </div>
+
+    </div>
+
+<script>
+    /* --- NAVIGATION --- */
+    function showSection(n) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(`sec-${n}`).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.nav-btn')[n-1].classList.add('active');
+        if(n===2) updateConcavityGraph();
+        if(n===3) updatePhysics();
+    }
+
+    /* --- SLIDE 1: CHAIN LOGIC --- */
+    const CHAIN_DATA = {
+        'poly': { f: "x^3 + 2x^2", df: "3x^2 + 4x", ddf: "6x + 4" },
+        'sin':  { f: "\\sin(x)", df: "\\cos(x)", ddf: "-\\sin(x)" },
+        'exp':  { f: "x^4 - 2x^2", df: "4x^3 - 4x", ddf: "12x^2 - 4" }
+    };
+
+    function resetChain() {
+        const key = document.getElementById('chainSelector').value;
+        const data = CHAIN_DATA[key];
+        
+        document.getElementById('math-f').innerHTML = `$$ ${data.f} $$`;
+        document.getElementById('math-df').innerHTML = "?";
+        document.getElementById('math-ddf').innerHTML = "?";
+        
+        document.getElementById('box-df').style.opacity = "0.5";
+        document.getElementById('box-df').classList.remove('active');
+        document.getElementById('box-ddf').style.opacity = "0.5";
+        document.getElementById('box-ddf').classList.remove('active');
+        document.getElementById('btn-ddf').disabled = true;
+        document.getElementById('chain-msg').innerText = "Click Differentiate";
+        
+        MathJax.typesetPromise();
+    }
+
+    function diffStep(step) {
+        const key = document.getElementById('chainSelector').value;
+        const data = CHAIN_DATA[key];
+        if(step === 1) {
+            document.getElementById('math-df').innerHTML = `$$ ${data.df} $$`;
+            document.getElementById('box-df').style.opacity = "1";
+            document.getElementById('box-df').classList.add('active');
+            document.getElementById('btn-ddf').disabled = false;
+            document.getElementById('chain-msg').innerText = "Now find the Second Derivative";
+        } else {
+            document.getElementById('math-ddf').innerHTML = `$$ ${data.ddf} $$`;
+            document.getElementById('box-ddf').style.opacity = "1";
+            document.getElementById('box-ddf').classList.add('active');
+            document.getElementById('chain-msg').innerText = "Done!";
+        }
+        MathJax.typesetPromise();
+    }
+
+    /* --- SLIDE 2: GRAPH VISUALIZER --- */
+    const ctx = document.getElementById('concavityCanvas').getContext('2d');
+    const width = 600, height = 450;
+    const h1 = 150, h2 = 150, h3 = 150;
+    const scaleX = 40, scaleY = 15;
+    const cx = width/2;
+
+    const f = x => x*x*x - 3*x; 
+    const df = x => 3*x*x - 3; 
+    const ddf = x => 6*x;
+
+    function drawSystem(ctx, xVal) {
+        ctx.clearRect(0,0,width,height);
+        drawGraphPart(ctx, f, 0, h1, "f(x) = x³ - 3x", "#2c3e50", xVal);
+        drawGraphPart(ctx, df, h1, h2, "f'(x) = 3x² - 3", "#e17055", xVal);
+        drawGraphPart(ctx, ddf, h1+h2, h3, "f''(x) = 6x", "#6c5ce7", xVal);
+
+        // Vertical Tracer
+        const px = cx + xVal * scaleX;
+        ctx.strokeStyle = "rgba(0,0,0,0.3)"; ctx.setLineDash([5,5]); ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, height); ctx.stroke(); ctx.setLineDash([]);
+    }
+
+    function drawGraphPart(ctx, func, yOff, h, label, color, currX) {
+        const cy = yOff + h/2;
+        // Axes
+        ctx.strokeStyle = "#eee"; ctx.beginPath();
+        ctx.moveTo(0, cy); ctx.lineTo(width, cy);
+        ctx.moveTo(cx, yOff); ctx.lineTo(cx, yOff+h);
+        ctx.stroke();
+
+        ctx.fillStyle = color; ctx.font="bold 14px Arial"; ctx.fillText(label, 10, yOff+20);
+
+        ctx.strokeStyle = color; ctx.lineWidth=2; ctx.beginPath();
+        for(let i=0; i<width; i+=2) {
+            let x = (i-cx)/scaleX;
+            let y = func(x);
+            let py = cy - y*scaleY;
+            if(py < yOff) py = yOff; if(py > yOff+h) py = yOff+h;
+            if(i===0) ctx.moveTo(i, py); else ctx.lineTo(i, py);
+        }
+        ctx.stroke();
+
+        let py = cy - func(currX)*scaleY;
+        ctx.fillStyle = color; ctx.beginPath(); ctx.arc(cx+currX*scaleX, py, 5, 0, 6.28); ctx.fill();
+    }
+
+    function updateConcavityGraph() {
+        const x = parseFloat(document.getElementById('xSlider').value);
+        drawSystem(ctx, x);
+
+        const valF = f(x).toFixed(2);
+        const valDF = df(x).toFixed(2);
+        const valDDF = ddf(x).toFixed(2);
+
+        document.getElementById('val-f').innerText = valF;
+        document.getElementById('val-df').innerText = valDF;
+        document.getElementById('val-ddf').innerText = valDDF;
+
+        let slopeDesc = valDF > 0 ? "Increasing ↗" : (valDF < 0 ? "Decreasing ↘" : "Stationary");
+        document.getElementById('desc-df').innerText = slopeDesc;
+        
+        let concDesc = "";
+        if(valDDF > 0.1) concDesc = "Concave UP ∪ (Happy)";
+        else if(valDDF < -0.1) concDesc = "Concave DOWN ∩ (Sad)";
+        else concDesc = "Inflection Point";
+        document.getElementById('desc-ddf').innerText = concDesc;
+
+        // Position Labels
+        updateLabelPosition('label-f', x, f(x), 0, h1);
+        updateLabelPosition('label-df', x, df(x), h1, h2);
+        updateLabelPosition('label-ddf', x, ddf(x), h1+h2, h3);
+    }
+
+    function updateLabelPosition(id, x, y, yOff, h) {
+        const el = document.getElementById(id);
+        const px = cx + x * scaleX;
+        const cy = yOff + h/2;
+        let py = cy - y * scaleY;
+        // Clamp
+        if(py < yOff + 10) py = yOff + 10;
+        if(py > yOff + h - 25) py = yOff + h - 25;
+
+        el.style.left = (px + 10) + "px";
+        el.style.top = (py - 10) + "px";
+        el.innerText = `(${x.toFixed(1)}, ${y.toFixed(1)})`;
+    }
+
+    /* --- SLIDE 3: PHYSICS --- */
+    function updatePhysics() {
+        const t = parseFloat(document.getElementById('timeSlider').value);
+        document.getElementById('timeDisplay').innerText = t.toFixed(1) + "s";
+        const s = Math.pow(t,3) - 6*Math.pow(t,2) + 9*t;
+        const v = 3*t*t - 12*t + 9;
+        const a = 6*t - 12;
+
+        let posP = 50 + (s * 5); 
+        document.getElementById('phy-car').style.left = Math.max(0, Math.min(95, posP)) + "%";
+
+        const html = `
+            <strong>1. Position $s(t)$</strong> at $t=${t}$<br>
+            $s(${t}) = (${t})^3 - 6(${t})^2 + 9(${t}) = ${s.toFixed(2)}m$ <br><br>
+            <strong>2. Velocity $v(t) = s'(t) = 3t^2 - 12t + 9$</strong><br>
+            $v(${t}) = 3(${t})^2 - 12(${t}) + 9 = ${v.toFixed(2)}m/s$ <br><br>
+            <strong>3. Acceleration $a(t) = v'(t) = 6t - 12$</strong><br>
+            $a(${t}) = 6(${t}) - 12 = ${a.toFixed(2)}m/s^2$
+        `;
+        document.getElementById('physics-work').innerHTML = html;
+        MathJax.typesetPromise();
+    }
+
+    /* --- SLIDE 4: PRACTICE --- */
+    let pracData = {};
+
+    function genPractice() {
+        const A = Math.floor(Math.random()*4)+2;
+        const B = Math.floor(Math.random()*5)+2;
+        
+        pracData = {
+            c1: A, e1: 3, c2: B, e2: 2,
+            d1_c1: 3*A, d1_e1: 2, d1_c2: 2*B, d1_e2: 1,
+            d2_c1: 6*A, d2_e1: 1, d2_c2: 2*B, d2_e2: 0
+        };
+
+        const latex = `$$ f(x) = ${A}x^3 + ${B}x^2 $$`;
+        document.getElementById('prob-func').innerHTML = latex;
+        MathJax.typesetPromise();
+
+        document.querySelectorAll('#sec-4 input').forEach(i => { 
+            i.value = ""; 
+            i.classList.remove('correct', 'wrong');
+        });
+        document.getElementById('fb-d1').innerText = "";
+        document.getElementById('fb-d2').innerText = "";
+    }
+
+    function checkPractice() {
+        const d1c1 = parseInt(document.getElementById('ans-d1-c1').value);
+        const d1e1 = parseInt(document.getElementById('ans-d1-e1').value);
+        const d1c2 = parseInt(document.getElementById('ans-d1-c2').value);
+        const d1e2 = parseInt(document.getElementById('ans-d1-e2').value);
+
+        if(d1c1===pracData.d1_c1 && d1e1===pracData.d1_e1 && d1c2===pracData.d1_c2 && d1e2===pracData.d1_e2) {
+            document.getElementById('fb-d1').innerHTML = "<span style='color:green'>Correct!</span>";
+        } else {
+            document.getElementById('fb-d1').innerHTML = "<span style='color:red'>Check Power Rule</span>";
+        }
+
+        const d2c1 = parseInt(document.getElementById('ans-d2-c1').value);
+        const d2e1 = parseInt(document.getElementById('ans-d2-e1').value);
+        const d2c2 = parseInt(document.getElementById('ans-d2-c2').value);
+        const d2e2 = parseInt(document.getElementById('ans-d2-e2').value);
+
+        if(d2c1===pracData.d2_c1 && d2e1===pracData.d2_e1 && d2c2===pracData.d2_c2 && d2e2===0) {
+            document.getElementById('fb-d2').innerHTML = "<span style='color:green'>Correct!</span>";
+        } else {
+            document.getElementById('fb-d2').innerHTML = "<span style='color:red'>Differentiate Step 1 result</span>";
+        }
+    }
+
+    // Init
+    resetChain();
+    updateConcavityGraph();
+    updatePhysics();
+    genPractice();
+
+</script>
+</body>
+</html>
