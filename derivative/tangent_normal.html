@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tangent & Normal Lines Lab Pro</title>
+    
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #e67e22; /* Tangent Orange */
+            --normal: #8e44ad; /* Normal Purple */
+            --bg: #f4f6f7;
+            --card: #ffffff;
+            --success: #27ae60;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* --- NAV --- */
+        .nav-bar {
+            background: white; width: 100%; padding: 15px; display: flex; justify-content: center; gap: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .nav-btn {
+            padding: 10px 25px; border: 2px solid var(--primary); background: transparent; color: var(--primary); border-radius: 25px; cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+        .nav-btn.active, .nav-btn:hover { background: var(--primary); color: white; }
+
+        /* --- CONTAINER --- */
+        .container { width: 95%; max-width: 900px; margin: 25px 0 50px 0; }
+        .section { display: none; background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); animation: fadeIn 0.4s; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; color: var(--primary); margin-top: 0; }
+        .btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1rem; }
+        .btn:hover { opacity: 0.9; }
+
+        /* --- GRAPHICS --- */
+        .graph-wrapper { display: flex; flex-direction: column; align-items: center; margin: 20px 0; position: relative; }
+        canvas { background: #fff; border: 1px solid #ccc; border-radius: 4px; cursor: crosshair; }
+        
+        .legend { display: flex; gap: 15px; margin-bottom: 5px; font-size: 0.9rem; }
+        .dot { width: 12px; height: 12px; display: inline-block; margin-right: 5px; border-radius: 2px; }
+
+        /* --- CALCULATION PANEL (SLIDE 1) --- */
+        .calc-panel {
+            background: #2c3e50; color: #ecf0f1; padding: 20px; border-radius: 10px; margin-top: 20px; font-family: 'Courier New', monospace;
+        }
+        .calc-line { margin: 8px 0; border-bottom: 1px solid #34495e; padding-bottom: 5px; }
+        .highlight { color: #f1c40f; font-weight: bold; }
+
+        /* --- INPUTS --- */
+        .math-input {
+            padding: 8px; border: 2px solid #bdc3c7; border-radius: 5px; width: 100px; text-align: center; font-size: 1.1rem;
+        }
+        .math-input:focus { border-color: var(--primary); outline: none; }
+        .correct { background: #dff9fb; border-color: var(--success); color: #006266; }
+        .wrong { background: #ffcccc; border-color: #e74c3c; }
+        
+        .feedback { font-weight: bold; margin-top: 5px; height: 20px; font-size: 0.9rem; }
+
+        /* --- SLIDE 2 CONTROLS --- */
+        .choice-btn {
+            background: #ecf0f1; border: 2px solid #bdc3c7; padding: 10px; border-radius: 8px; cursor: pointer; margin: 5px; font-weight: bold;
+        }
+        .choice-btn.selected { border-color: var(--primary); background: #d6eaf8; }
+
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <button class="nav-btn active" onclick="showSection(1)">1. Learn: Step-by-Step</button>
+        <button class="nav-btn" onclick="showSection(2)">2. Practice: Find Gradient</button>
+        <button class="nav-btn" onclick="showSection(3)">3. Master: Full Problem</button>
+    </div>
+
+    <div class="container">
+
+        <!-- SECTION 1: VISUALIZATION & CALCULATION -->
+        <div id="sec-1" class="section active">
+            <h2>1. Tangent & Normal Lines</h2>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <p>The <span style="color:var(--accent); font-weight:bold;">Tangent</span> touches the curve ($m_{tan} = f'(x)$).</p>
+                    <p>The <span style="color:var(--normal); font-weight:bold;">Normal</span> is perpendicular ($m_{norm} = -1/m_{tan}$).</p>
+                </div>
+                <select id="funcSelector" onchange="updateGraph()" style="padding:5px; font-size:1rem;">
+                    <option value="x2">y = x²</option>
+                    <option value="x2-2x">y = x² - 2x</option>
+                    <option value="sin">y = 2sin(x)</option>
+                </select>
+            </div>
+
+            <div class="graph-wrapper">
+                <div class="legend">
+                    <span><span class="dot" style="background:var(--accent)"></span>Tangent Line</span>
+                    <span><span class="dot" style="background:var(--normal)"></span>Normal Line</span>
+                </div>
+                <canvas id="mainCanvas" width="600" height="300"></canvas>
+                <div style="margin-top:10px; display:flex; gap:15px; align-items:center;">
+                    <label><strong>x value:</strong></label>
+                    <input type="range" id="xSlider" min="-3" max="3" step="0.1" value="1" oninput="updateGraph()" style="width:200px;">
+                    <span id="xValDisplay" style="font-weight:bold; font-size:1.2rem;">1.0</span>
+                </div>
+            </div>
+
+            <!-- DYNAMIC CALCULATION PANEL -->
+            <div class="calc-panel">
+                <div class="calc-line">1. Function: <span id="calc-f">f(x) = x²</span></div>
+                <div class="calc-line">2. Derivative: <span id="calc-df">f'(x) = 2x</span></div>
+                <div class="calc-line">3. Substitute x = <span id="calc-x" class="highlight">1</span>:</div>
+                <div class="calc-line" style="padding-left: 20px;">
+                    Tangent Slope ($m$) = <span id="calc-sub">2(1)</span> = <span id="calc-m" class="highlight" style="color:var(--accent)">2</span>
+                </div>
+                <div class="calc-line">4. Normal Slope ($m_\perp$) = $-1/m$ = <span id="calc-norm" class="highlight" style="color:#d2b4de">-0.5</span></div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: PICK A POINT -->
+        <div id="sec-2" class="section">
+            <h2>2. You Pick the Point</h2>
+            <p>Select a curve and a point. The <span style="color:var(--accent); font-weight:bold">Tangent Line</span> is drawn for you.</p>
+            
+            <div style="text-align:center; margin-bottom:15px;">
+                <button class="choice-btn selected" onclick="setCurve(1, this)">$y = x^2$</button>
+                <button class="choice-btn" onclick="setCurve(2, this)">$y = x^2 - 4x$</button>
+                <button class="choice-btn" onclick="setCurve(3, this)">$y = x^3 - x$</button>
+            </div>
+
+            <div class="graph-wrapper">
+                <div class="legend">
+                    <span><span class="dot" style="background:var(--accent)"></span>Tangent Visualization</span>
+                </div>
+                <canvas id="practiceCanvas" width="500" height="250"></canvas>
+                <div style="margin-top:10px;">
+                    <label>Select Integer x: </label>
+                    <input type="range" id="pracSlider" min="-2" max="3" step="1" value="1" oninput="updatePracGraph()">
+                    <span id="pracXDisplay" style="font-weight:bold; font-size:1.2rem; color:var(--primary)">1</span>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; background:#f9f9f9; padding:20px; border-radius:10px;">
+                <div>
+                    <strong>Step A: Find y</strong><br>
+                    Substitute $x$ into <span id="prac-func-label">...</span><br>
+                    $y =$ <input type="text" id="inp-prac-y" class="math-input" placeholder="?">
+                    <div id="fb-prac-y" class="feedback"></div>
+                </div>
+                <div>
+                    <strong>Step B: Find Slope ($m$)</strong><br>
+                    Find $f'(x)$ and subs $x$.<br>
+                    $m =$ <input type="text" id="inp-prac-m" class="math-input" placeholder="?">
+                    <div id="fb-prac-m" class="feedback"></div>
+                </div>
+            </div>
+            <div style="text-align:center; margin-top:15px;">
+                <button class="btn" onclick="checkPractice()">Check Calculations</button>
+            </div>
+        </div>
+
+        <!-- SECTION 3: FULL EXERCISE -->
+        <div id="sec-3" class="section">
+            <h2>3. Complete Challenge</h2>
+            <p>Find the equations. You can enter fractions like <code>1/2</code> or <code>-3/4</code>.</p>
+
+            <div style="background:#fff; border:2px solid #eee; padding:20px; border-radius:10px; text-align:center; font-size:1.2rem; margin-bottom:20px;">
+                Given Curve: <span id="prob-eq" style="color:var(--primary); font-weight:bold;">$$ y = x^2 + 2x $$</span><br>
+                At the point where <span id="prob-x" style="color:var(--accent); font-weight:bold;">x = 1</span>
+            </div>
+
+            <div style="display:grid; gap:20px;">
+                <!-- Step 1 -->
+                <div style="border-left:4px solid var(--primary); padding-left:15px;">
+                    <strong>Step 1: Coordinates</strong> (Find $y_1$)<br>
+                    $y_1 =$ <input type="text" id="ans-y" class="math-input">
+                    <div id="fb-ans-y" class="feedback"></div>
+                </div>
+
+                <!-- Step 2 -->
+                <div style="border-left:4px solid var(--primary); padding-left:15px;">
+                    <strong>Step 2: Gradient</strong> (Find $m$)<br>
+                    $m =$ <input type="text" id="ans-m" class="math-input">
+                    <div id="fb-ans-m" class="feedback"></div>
+                </div>
+
+                <!-- Step 3 -->
+                <div style="border-left:4px solid var(--accent); padding-left:15px;">
+                    <strong>Step 3: Tangent Equation</strong> ($y = mx + c$)<br>
+                    $y =$ <input type="text" id="ans-tan-m" class="math-input" placeholder="m"> $x +$ <input type="text" id="ans-tan-c" class="math-input" placeholder="c">
+                    <div id="fb-ans-tan" class="feedback"></div>
+                </div>
+
+                <!-- Step 4 -->
+                <div style="border-left:4px solid var(--normal); padding-left:15px;">
+                    <strong>Step 4: Normal Equation</strong> ($y = m_{\perp}x + c$)<br>
+                    $y =$ <input type="text" id="ans-norm-m" class="math-input" placeholder="-1/m"> $x +$ <input type="text" id="ans-norm-c" class="math-input" placeholder="c">
+                    <div id="fb-ans-norm" class="feedback"></div>
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top:20px;">
+                <button class="btn" onclick="checkFinal()">Verify All</button>
+                <button class="btn" style="background:#7f8c8d" onclick="genFinal()">New Question</button>
+            </div>
+        </div>
+
+    </div>
+
+<script>
+    /* --- UTILS --- */
+    function showSection(n) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(`sec-${n}`).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.nav-btn')[n-1].classList.add('active');
+        if(n===1) updateGraph();
+        if(n===2) updatePracGraph();
+    }
+
+    function evaluateInput(str) {
+        if(!str) return NaN;
+        try {
+            if(str.includes('/')) {
+                const parts = str.split('/');
+                return parseFloat(parts[0]) / parseFloat(parts[1]);
+            }
+            return parseFloat(str);
+        } catch(e) { return NaN; }
+    }
+
+    // Function Definitions
+    const FUNC_LIB = {
+        'x2': { 
+            f: x=>x*x, df: x=>2*x, 
+            strF: "y = x^2", strDF: "2x", strSub: (x)=>`2(${x})`
+        },
+        'x2-2x': { 
+            f: x=>x*x - 2*x, df: x=>2*x - 2, 
+            strF: "y = x^2 - 2x", strDF: "2x - 2", strSub: (x)=>`2(${x}) - 2`
+        },
+        'sin': { 
+            f: x=>2*Math.sin(x), df: x=>2*Math.cos(x), 
+            strF: "y = 2sin(x)", strDF: "2cos(x)", strSub: (x)=>`2cos(${x})`
+        }
+    };
+
+    /* --- CANVAS HELPER FOR LINES --- */
+    function drawExtendedLine(ctx, x1, y1, m, color, isDashed) {
+        // Draw a line that covers the whole X width of canvas
+        // Canvas coords: cx, cy, scale
+        const scale = 40; 
+        const cx = ctx.canvas.width / 2;
+        const cy = ctx.canvas.height / 2;
+
+        // Formula: y - y1 = m(x - x1) => y = m(x - x1) + y1
+        // We calculate y for x=-10 and x=10 (simulation coords)
+        const xStart = -15; 
+        const yStart = m * (xStart - x1) + y1;
+        const xEnd = 15;
+        const yEnd = m * (xEnd - x1) + y1;
+
+        // Convert to pixels
+        const p1x = cx + xStart * scale;
+        const p1y = cy - yStart * scale;
+        const p2x = cx + xEnd * scale;
+        const p2y = cy - yEnd * scale;
+
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        if(isDashed) ctx.setLineDash([5, 5]);
+        else ctx.setLineDash([]);
+        
+        ctx.moveTo(p1x, p1y);
+        ctx.lineTo(p2x, p2y);
+        ctx.stroke();
+        ctx.setLineDash([]); // Reset
+    }
+
+    /* --- SLIDE 1: VISUALIZATION --- */
+    const cvs1 = document.getElementById('mainCanvas');
+    const ctx1 = cvs1.getContext('2d');
+    const scale = 40; const cx = 300; const cy = 150;
+
+    function drawSystem(ctx, funcObj, xVal) {
+        ctx.clearRect(0,0,ctx.canvas.width, ctx.canvas.height);
+        
+        // Axes
+        ctx.strokeStyle='#ddd'; ctx.beginPath();
+        for(let i=-10; i<10; i++){ 
+            ctx.moveTo(cx+i*scale,0); ctx.lineTo(cx+i*scale,300);
+            ctx.moveTo(0,cy+i*scale); ctx.lineTo(600,cy+i*scale);
+        }
+        ctx.stroke();
+        ctx.strokeStyle='#333'; ctx.lineWidth=2; ctx.beginPath();
+        ctx.moveTo(0,cy); ctx.lineTo(600,cy); ctx.moveTo(cx,0); ctx.lineTo(cx,300); ctx.stroke();
+
+        // Curve
+        ctx.strokeStyle='#2c3e50'; ctx.lineWidth=2; ctx.beginPath();
+        for(let px=0; px<600; px+=2) {
+            let gx = (px-cx)/scale;
+            let gy = funcObj.f(gx);
+            let py = cy - gy*scale;
+            if(px==0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+        }
+        ctx.stroke();
+
+        // Tangent & Normal Calculation
+        let yVal = funcObj.f(xVal);
+        let m = funcObj.df(xVal);
+        
+        // Draw Tangent (Orange)
+        drawExtendedLine(ctx, xVal, yVal, m, '#e67e22', false);
+
+        // Draw Normal (Purple)
+        if (Math.abs(m) > 0.001) {
+            let mNorm = -1 / m;
+            drawExtendedLine(ctx, xVal, yVal, mNorm, '#8e44ad', false);
+        } else {
+            // Vertical Normal (if slope is 0)
+            ctx.strokeStyle = '#8e44ad'; ctx.beginPath();
+            let px = cx + xVal * scale;
+            ctx.moveTo(px, 0); ctx.lineTo(px, 300); ctx.stroke();
+        }
+
+        // Point
+        let px = cx + xVal*scale; 
+        let py = cy - yVal*scale;
+        ctx.fillStyle='red'; ctx.beginPath(); ctx.arc(px,py,5,0,6.28); ctx.fill();
+    }
+
+    function updateGraph() {
+        const key = document.getElementById('funcSelector').value;
+        const x = parseFloat(document.getElementById('xSlider').value);
+        const obj = FUNC_LIB[key];
+        
+        drawSystem(ctx1, obj, x);
+        document.getElementById('xValDisplay').innerText = x.toFixed(1);
+
+        const m = obj.df(x);
+        document.getElementById('calc-f').innerText = obj.strF;
+        document.getElementById('calc-df').innerText = obj.strDF;
+        document.getElementById('calc-x').innerText = x;
+        document.getElementById('calc-sub').innerText = obj.strSub(x);
+        document.getElementById('calc-m').innerText = m.toFixed(2);
+        
+        let mNorm = (m===0) ? "undef" : (-1/m).toFixed(2);
+        document.getElementById('calc-norm').innerText = mNorm;
+    }
+
+    /* --- SLIDE 2: PRACTICE WITH VISUAL TANGENT --- */
+    let currPracCurve = 1; 
+    
+    function setCurve(n, btn) {
+        currPracCurve = n;
+        document.querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('selected'));
+        btn.classList.add('selected');
+        
+        let label = "";
+        if(n===1) label = "y = x^2";
+        if(n===2) label = "y = x^2 - 4x";
+        if(n===3) label = "y = x^3 - x";
+        document.getElementById('prac-func-label').innerText = label;
+        
+        updatePracGraph();
+    }
+
+    function updatePracGraph() {
+        const cvs2 = document.getElementById('practiceCanvas');
+        const ctx2 = cvs2.getContext('2d');
+        const x = parseInt(document.getElementById('pracSlider').value);
+        document.getElementById('pracXDisplay').innerText = x;
+        
+        // Define simple object based on selection
+        let f, df;
+        if(currPracCurve===1) { f=v=>v*v; df=v=>2*v; }
+        else if(currPracCurve===2) { f=v=>v*v-4*v; df=v=>2*v-4; }
+        else { f=v=>v*v*v-v; df=v=>3*v*v-1; }
+
+        // Draw simplified system
+        ctx2.clearRect(0,0,500,250);
+        const pcx = 250; const pcy = 125; const psc = 30; // Custom scale for practice
+        
+        // Custom drawer for Practice Canvas
+        const drawPracLine = (x1, y1, m) => {
+             const xStart = -15, xEnd = 15;
+             const yStart = m * (xStart - x1) + y1;
+             const yEnd = m * (xEnd - x1) + y1;
+             const p1x = pcx + xStart * psc;
+             const p1y = pcy - yStart * psc;
+             const p2x = pcx + xEnd * psc;
+             const p2y = pcy - yEnd * psc;
+             ctx2.strokeStyle = '#e67e22'; ctx2.lineWidth=2; ctx2.setLineDash([5,5]);
+             ctx2.beginPath(); ctx2.moveTo(p1x, p1y); ctx2.lineTo(p2x, p2y); ctx2.stroke(); ctx2.setLineDash([]);
+        };
+
+        // Axes
+        ctx2.strokeStyle='#ddd'; ctx2.beginPath(); 
+        ctx2.moveTo(0,pcy); ctx2.lineTo(500,pcy); ctx2.moveTo(pcx,0); ctx2.lineTo(pcx,250); ctx2.stroke();
+        
+        // Curve
+        ctx2.strokeStyle='#333'; ctx2.lineWidth=2; ctx2.beginPath();
+        for(let i=0; i<500; i+=2) {
+            let gx = (i-pcx)/psc;
+            let gy = f(gx);
+            let py = pcy - gy*psc;
+            if(i===0) ctx2.moveTo(i,py); else ctx2.lineTo(i,py);
+        }
+        ctx2.stroke();
+
+        // Tangent & Point
+        let y = f(x);
+        let m = df(x);
+        
+        // Draw Tangent
+        drawPracLine(x, y, m);
+
+        // Draw Point
+        let py = pcy - y*psc;
+        let px = pcx + x*psc;
+        ctx2.fillStyle='red'; ctx2.beginPath(); ctx2.arc(px,py,5,0,6.28); ctx2.fill();
+    }
+
+    function checkPractice() {
+        const x = parseInt(document.getElementById('pracSlider').value);
+        let trueY, trueM;
+
+        if(currPracCurve===1) { trueY=x*x; trueM=2*x; }
+        else if(currPracCurve===2) { trueY=x*x-4*x; trueM=2*x-4; }
+        else { trueY=x*x*x-x; trueM=3*x*x-1; }
+
+        const uY = evaluateInput(document.getElementById('inp-prac-y').value);
+        const uM = evaluateInput(document.getElementById('inp-prac-m').value);
+
+        const fbY = document.getElementById('fb-prac-y');
+        const fbM = document.getElementById('fb-prac-m');
+
+        if(Math.abs(uY - trueY) < 0.01) { fbY.innerText="Correct!"; fbY.style.color="green"; }
+        else { fbY.innerText = "Check substitution"; fbY.style.color="red"; }
+
+        if(Math.abs(uM - trueM) < 0.01) { fbM.innerText="Correct!"; fbM.style.color="green"; }
+        else { fbM.innerText = "Check derivative"; fbM.style.color="red"; }
+    }
+
+    /* --- SLIDE 3: FINAL EXERCISE --- */
+    let finalData = {};
+
+    function genFinal() {
+        const A = Math.floor(Math.random()*3)+1;
+        const B = Math.floor(Math.random()*5)-2; 
+        const k = Math.floor(Math.random()*4)-1; 
+        
+        finalData.x = k;
+        finalData.y = A*k*k + B*k;
+        finalData.m = 2*A*k + B;
+        
+        let eqStr = `y = ${A===1?'':A}x^2`;
+        if(B!==0) eqStr += (B>0 ? ` + ${B}x` : ` - ${Math.abs(B)}x`);
+
+        const latexStr = `$$ ${eqStr} $$`;
+        document.getElementById('prob-eq').innerHTML = latexStr;
+        document.getElementById('prob-x').innerHTML = `x = ${k}`;
+        
+        MathJax.typesetPromise();
+
+        document.querySelectorAll('#sec-3 input').forEach(i=>{i.value=""; i.className='math-input'});
+        document.querySelectorAll('#sec-3 .feedback').forEach(d=>d.innerText="");
+    }
+
+    function checkFinal() {
+        const uY = evaluateInput(document.getElementById('ans-y').value);
+        checkField(uY, finalData.y, 'ans-y', 'fb-ans-y');
+
+        const uM = evaluateInput(document.getElementById('ans-m').value);
+        checkField(uM, finalData.m, 'ans-m', 'fb-ans-m');
+
+        const trueTanC = finalData.y - (finalData.m * finalData.x);
+        const uTanM = evaluateInput(document.getElementById('ans-tan-m').value);
+        const uTanC = evaluateInput(document.getElementById('ans-tan-c').value);
+        
+        if(Math.abs(uTanM - finalData.m) < 0.01 && Math.abs(uTanC - trueTanC) < 0.01) {
+            markCorrect('ans-tan-m'); markCorrect('ans-tan-c');
+            document.getElementById('fb-ans-tan').innerText = "Correct!";
+        } else {
+            markWrong('ans-tan-m'); markWrong('ans-tan-c');
+        }
+
+        if(finalData.m !== 0) {
+            const trueNormM = -1 / finalData.m;
+            const trueNormC = finalData.y - (trueNormM * finalData.x);
+            
+            const uNormM = evaluateInput(document.getElementById('ans-norm-m').value);
+            const uNormC = evaluateInput(document.getElementById('ans-norm-c').value);
+
+            if(Math.abs(uNormM - trueNormM) < 0.01 && Math.abs(uNormC - trueNormC) < 0.01) {
+                markCorrect('ans-norm-m'); markCorrect('ans-norm-c');
+                document.getElementById('fb-ans-norm').innerText = "Correct!";
+            } else {
+                markWrong('ans-norm-m'); markWrong('ans-norm-c');
+            }
+        } else {
+            document.getElementById('fb-ans-norm').innerText = "Vertical Line (undef gradient)";
+        }
+    }
+
+    function checkField(val, target, elId, fbId) {
+        if(Math.abs(val - target) < 0.01) {
+            markCorrect(elId); document.getElementById(fbId).innerText = "Correct";
+        } else {
+            markWrong(elId); document.getElementById(fbId).innerText = "Try again";
+        }
+    }
+    function markCorrect(id) { document.getElementById(id).classList.add('correct'); document.getElementById(id).classList.remove('wrong'); }
+    function markWrong(id) { document.getElementById(id).classList.add('wrong'); document.getElementById(id).classList.remove('correct'); }
+
+    // Init
+    updateGraph();
+    setCurve(1, document.querySelector('.choice-btn'));
+    genFinal();
+
+</script>
+</body>
+</html>
