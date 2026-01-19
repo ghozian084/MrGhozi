@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worksheet: Tangent & Normal Squad (Compact)</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @page {
+            size: A4;
+            margin: 0; /* We handle margins in the .page class */
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #555; /* Dark background to see page boundaries on screen */
+            -webkit-print-color-adjust: exact;
+        }
+        .page {
+            width: 210mm;
+            height: 296mm; /* Fixed A4 height */
+            padding: 15mm; /* Reduced padding */
+            margin: 10mm auto;
+            background: white;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden; /* Prevents spillover */
+        }
+        
+        @media print {
+            body { background: none; }
+            .page { margin: 0; width: 100%; height: 100%; page-break-after: always; border: none; }
+            .no-print { display: none; }
+            /* Force break after first page div */
+            .page:first-of-type { page-break-after: always; }
+        }
+
+        /* Compact Header */
+        header {
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        h1 { margin: 0; font-size: 20px; color: #2c3e50; text-transform: uppercase; }
+        .meta-info { font-size: 12px; text-align: right; }
+        .input-line { display: inline-block; border-bottom: 1px solid #333; width: 130px; }
+
+        /* Compact Sections */
+        .section-title {
+            background-color: #2c3e50;
+            color: white;
+            padding: 5px 10px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .time-badge { background: #e74c3c; font-size: 11px; padding: 1px 6px; border-radius: 8px; }
+
+        /* Compact Boxes */
+        .box {
+            border: 1px solid #bdc3c7;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 4px;
+        }
+        .warning-box {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 5px;
+            font-size: 13px;
+            margin-bottom: 8px;
+            border: 1px solid #ffeeba;
+        }
+
+        /* Compact Table */
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { border: 1px solid #bdc3c7; padding: 5px; text-align: left; }
+        th { background-color: #ecf0f1; }
+        
+        /* Writing Space */
+        .answer-space {
+            border-bottom: 1px dotted #999;
+            height: 20px; /* Smaller height */
+            margin: 2px 0 10px 0;
+            width: 100%;
+        }
+        .grid-space { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px; }
+        p { margin: 5px 0; }
+
+        /* Footer Checkpoint */
+        .checkpoint {
+            border: 2px dashed #27ae60;
+            padding: 10px;
+            margin-top: 15px;
+            background-color: #f9fff9;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print" style="text-align: center; padding: 15px;">
+        <button onclick="window.print()" style="padding: 10px 20px; background: #2980b9; color: white; border: none; cursor: pointer; font-size: 16px; border-radius: 5px;">🖨️ Print Compact Worksheet</button>
+    </div>
+
+    <div class="page">
+        <header>
+            <div>
+                <h1>Mission: Tangent & Normal Squad</h1>
+                <div style="font-size: 12px; color: #7f8c8d;">Differentiation (Indices & Lines)</div>
+            </div>
+            <div class="meta-info">
+                Group: <span class="input-line"></span><br>
+                Date: <span class="input-line"></span>
+            </div>
+        </header>
+
+        <div class="section-title">
+            <span>🔧 PART 1: THE INDEX "TUNE-UP"</span>
+            <span class="time-badge">15 Mins</span>
+        </div>
+        <div class="box">
+            <div class="warning-box">
+                <strong>⚠️ RULE:</strong> Rewrite fractions and roots as powers first. \( \frac{1}{x^n} = x^{-n} \) | \( \sqrt{x} = x^{0.5} \)
+            </div>
+            
+            <table style="font-size: 13px;">
+                <thead>
+                    <tr>
+                        <th style="width: 40%;">Function</th>
+                        <th>Rewrite as \( y = ax^n + bx^m \)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1. \( y = \frac{4}{x^2} \)</td><td>\( y = 4x^{-2} \)</td></tr>
+                    <tr><td>2. \( y = 3\sqrt{x} \)</td><td>\( y = \)</td></tr>
+                    <tr><td>3. \( y = \frac{1}{2x} + x^2 \)</td><td>\( y = \)</td></tr>
+                    <tr><td>4. \( y = \frac{6}{\sqrt{x}} - x \)</td><td>\( y = \)</td></tr>
+                    <tr><td>5. \( y = \frac{x^3 + 4}{x} \)</td><td>\( y = \)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-title">
+            <span>🚀 PART 2: THE GRADIENT HUNTER</span>
+            <span class="time-badge">25 Mins</span>
+        </div>
+        <div class="box">
+            <div class="grid-space">
+                <div style="border-right: 1px dashed #ccc; padding-right: 8px;">
+                    <strong>Prob A:</strong> Curve \( y = \frac{8}{x} + x \) at \( x = 2 \)<br>
+                    <span style="font-size:12px; color:#666;">(Rewrite: \( 8x^{-1} + x \))</span>
+                    
+                    <p style="margin-top:10px;">1. \( \frac{dy}{dx} \):</p>
+                    <div class="answer-space"></div>
+                    
+                    <p>2. Tangent Grad (\( m_T \)) at \( x=2 \):</p>
+                    <div class="answer-space"></div>
+                    
+                    <p>3. Normal Grad (\( m_N = -1/m_T \)):</p>
+                    <div class="answer-space"></div>
+                </div>
+
+                <div style="padding-left: 8px;">
+                    <strong>Prob B:</strong> Curve \( y = 2\sqrt{x} - 3 \) at \( x = 9 \)
+                    
+                    <p style="margin-top:25px;">1. \( \frac{dy}{dx} \):</p>
+                    <div class="answer-space"></div>
+                    
+                    <p>2. Tangent Grad (\( m_T \)) at \( x=9 \):</p>
+                    <div class="answer-space"></div>
+                    
+                    <p>3. Normal Grad (\( m_N \)):</p>
+                    <div class="answer-space"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page">
+        <header>
+            <h1>Mission Phase 2</h1>
+            <div class="meta-info">Page 2/2</div>
+        </header>
+
+        <div class="section-title">
+            <span>🏔️ PART 3: THE FINAL MISSION</span>
+            <span class="time-badge">40 Mins</span>
+        </div>
+        <div class="box">
+            <p style="margin-bottom: 10px;"><strong>Formula:</strong> \( y - y_1 = m(x - x_1) \)</p>
+
+            <div style="margin-bottom: 20px;">
+                <strong>Scenario 1: Tangent Ramp.</strong> Curve \( y = \sqrt{x} + \frac{1}{x} \) at \( x = 1 \).
+                
+                <div class="grid-space">
+                    <div>
+                        <p>1. Coords: If \( x = 1 \), \( y_1 = \)?</p>
+                        <div class="answer-space"></div>
+                    </div>
+                    <div>
+                        <p>2. Slope: \( \frac{dy}{dx} \) at \( x=1 \)?</p>
+                        <div class="answer-space"></div>
+                    </div>
+                </div>
+                
+                <p>3. Line Equation (Rearrange to \( ax+by+c=0 \)):</p>
+                <div class="answer-space"></div>
+                <div class="answer-space" style="border-bottom: 2px solid #333;"></div>
+            </div>
+
+            <div>
+                <strong>Scenario 2: Normal Anchor.</strong> Normal to \( y = x^2 - \frac{8}{x} \) at \( (2, 0) \).
+                
+                <p>1. Differentiate \( y = x^2 - 8x^{-1} \):</p>
+                <div class="answer-space"></div>
+                
+                <div class="grid-space">
+                    <div>
+                        <p>2. Tangent \( m_T \) at \( x=2 \):</p>
+                        <div class="answer-space"></div>
+                    </div>
+                    <div>
+                        <p>3. Normal \( m_N \):</p>
+                        <div class="answer-space"></div>
+                    </div>
+                </div>
+                
+                <p>4. Equation of Normal passing through \( (2,0) \):</p>
+                <div class="answer-space"></div>
+                <div class="answer-space" style="border-bottom: 2px solid #333;"></div>
+            </div>
+        </div>
+
+        <div class="checkpoint">
+            <h4 style="margin: 0 0 5px 0; color: #27ae60;">🏁 CHECKPOINT: AI VERIFICATION</h4>
+            <p><strong>Prompt:</strong> <em>"Find the equation of the normal to \( y = x^2 - \frac{8}{x} \) at \( x=2 \)."</em></p>
+            <div style="margin-top: 5px;">
+                <label><input type="checkbox"> Matches AI</label> &nbsp;&nbsp;
+                <label><input type="checkbox"> Error in: [ ] Indices [ ] Signs</label>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
