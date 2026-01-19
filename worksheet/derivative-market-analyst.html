@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worksheet: The Calculus of Trends (With Intervals)</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #555;
+            -webkit-print-color-adjust: exact;
+        }
+        .page {
+            width: 210mm;
+            height: 296mm;
+            padding: 15mm;
+            margin: 10mm auto;
+            background: white;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+        }
+        @media print {
+            body { background: none; }
+            .page { margin: 0; width: 100%; height: 100%; page-break-after: always; border: none; }
+            .no-print { display: none; }
+            .btn-generate { display: none; }
+        }
+
+        /* Branding */
+        header {
+            border-bottom: 3px solid #2980b9;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        h1 { margin: 0; font-size: 22px; color: #2c3e50; text-transform: uppercase; letter-spacing: 1px; }
+        .subtitle { font-size: 14px; color: #7f8c8d; margin-top: 5px; }
+        .meta-info { text-align: right; font-size: 13px; }
+        .input-line { display: inline-block; border-bottom: 1px solid #333; width: 140px; margin-left: 5px; }
+
+        /* RME Context Box */
+        .context-box {
+            background-color: #eaf2f8;
+            border-left: 4px solid #2980b9;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        /* Sections */
+        .section-title {
+            background-color: #34495e;
+            color: white;
+            padding: 6px 12px;
+            font-weight: bold;
+            font-size: 15px;
+            margin-top: 15px;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        /* Tasks */
+        .task-box {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            margin-top: 8px;
+            border-radius: 4px;
+            position: relative;
+        }
+        .ai-prompt {
+            background-color: #f4f6f7;
+            border: 1px dashed #7f8c8d;
+            padding: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            color: #d35400;
+            margin: 10px 0;
+        }
+
+        /* Generator Button */
+        .btn-generate {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+            margin-top: -5px;
+        }
+        .btn-generate:hover { background-color: #219150; }
+
+        /* Math & Writing */
+        .answer-space {
+            border-bottom: 1px dotted #999;
+            height: 25px;
+            margin: 5px 0 15px 0;
+            width: 100%;
+        }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        p { margin: 5px 0; font-size: 14px; }
+
+        /* Footer */
+        .critical-thinking {
+            border: 2px solid #e67e22;
+            padding: 10px;
+            margin-top: 15px;
+            background-color: #fdf2e9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print" style="text-align: center; padding: 15px;">
+        <button onclick="window.print()" style="padding: 10px 20px; background: #2980b9; color: white; border: none; cursor: pointer; font-size: 16px; border-radius: 5px;">🖨️ Print Worksheet (A4)</button>
+    </div>
+
+    <div class="page">
+        <header>
+            <div>
+                <h1>The Market Analyst</h1>
+                <div class="subtitle">Topic: Increasing/Decreasing Functions (8.1)</div>
+            </div>
+            <div class="meta-info">
+                Analyst Name: <span class="input-line"></span><br>
+                Date: <span class="input-line"></span>
+            </div>
+        </header>
+
+        <div class="context-box">
+            <strong>📊 Scenario:</strong> You are analyzing the stock price of a new Tech Startup. 
+            An "Increasing Function" means the company is <strong>Growing</strong> (Profit).
+            A "Decreasing Function" means the company is <strong>Losing Value</strong> (Loss).
+        </div>
+
+        <div class="section-title">
+            <span>PART 1: THE GROWTH PHASE (8.1)</span>
+        </div>
+
+        <div class="task-box">
+            <button class="btn-generate" onclick="generateFunction()">🔄 Generate New Scenario</button>
+            <p><strong>The Model:</strong> The stock price \( P(t) \) (in dollars) at month \( t \) is:</p>
+            
+            <div style="text-align: center; margin: 15px 0;">
+                <span id="math-container">\[ P(t) = 2t^3 - 9t^2 + 12t + 5 \quad \text{for } 0 \le t \le 4 \]</span>
+            </div>
+
+            <div class="ai-prompt">
+                <strong>🤖 AI Assistant Task:</strong>
+                Prompt your AI: <em id="ai-text">"Plot the graph of y = 2x^3 - 9x^2 + 12x + 5 from x=0 to 4. Just describe the shape: when does it go up and when does it go down?"</em>
+            </div>
+            <p>1. According to the AI (or your visual check), between which months was the stock price <strong>dropping</strong>?</p>
+            <div class="answer-space"></div>
+
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+
+            <p><strong>👮 Mathematical Proof (The "Audit"):</strong></p>
+            <p>Investors don't trust pictures; they trust Calculus. The function is decreasing when \( P'(t) < 0 \).</p>
+            
+            <p>2. Find the derivative \( P'(t) \):</p>
+            <div class="answer-space"></div>
+
+            <p>3. Set up the inequality \( P'(t) < 0 \) and solve for \( t \) (factorize the quadratic):</p>
+            <div class="answer-space"></div>
+            <div class="answer-space"></div>
+            
+            <p>4. <strong>Conclusion:</strong> The company lost value between Month _____ and Month _____.</p>
+        </div>
+
+        <div class="section-title">
+            <span>PART 2: THE "STAGNANT" MARKET</span>
+        </div>
+        <div class="task-box">
+            <p>Sometimes markets don't move. Consider the function \( y = x^3 \).</p>
+            <p>1. Find \( \frac{dy}{dx} \): <span class="input-line"></span></p>
+            <p>2. Is this function <strong>always</strong> increasing? Calculate \( \frac{dy}{dx} \) when \( x = -2 \) and \( x = 2 \).</p>
+            <div class="answer-space"></div>
+            <p>3. <strong>Critical Thinking:</strong> At \( x=0 \), the gradient is 0. Does this mean the function stops increasing? Explain.</p>
+            <div class="answer-space"></div>
+        </div>
+    </div>
+
+    <div class="page">
+        <header>
+            <h1>The Turning Points</h1>
+            <div class="subtitle">Topic: Stationary Points (8.2)</div>
+        </header>
+
+        <div class="context-box">
+            <strong>🛑 Scenario:</strong> In business, the most important moments are the <strong>Turning Points</strong>.
+            <ul>
+                <li><strong>Local Maximum:</strong> Peak Profit (Sell here!)</li>
+                <li><strong>Local Minimum:</strong> Lowest Cost (Buy here!)</li>
+            </ul>
+            Mathematically, these are <strong>Stationary Points</strong> where \( f'(x) = 0 \).
+        </div>
+
+        <div class="section-title">
+            <span>PART 3: FINDING THE PEAK</span>
+        </div>
+
+        <div class="task-box">
+            <p><strong>The Function:</strong> \( y = x^3 - 3x^2 - 9x + 10 \)</p>
+            
+            <div class="grid-2">
+                <div>
+                    <p><strong>Step 1: Locate them.</strong></p>
+                    <p>Find \( \frac{dy}{dx} \) and solve \( \frac{dy}{dx} = 0 \).</p>
+                    <div class="answer-space"></div>
+                    <div class="answer-space"></div>
+                    <p>Stationary points are at \( x = \) ____ and \( x = \) ____.</p>
+                </div>
+                <div>
+                    <p><strong>Step 2: Classify them (Nature).</strong></p>
+                    <p>Find the Second Derivative \( \frac{d^2y}{dx^2} \).</p>
+                    <div class="answer-space"></div>
+                    <p>Test your \( x \) values:</p>
+                    <div class="answer-space"></div>
+                </div>
+            </div>
+            
+            <p><strong>Conclusion:</strong></p>
+            <p>The Maximum point is at \( (\_\_\_, \_\_\_) \) because \( f''(x) \) was (Positive/Negative).</p>
+            <p>The Minimum point is at \( (\_\_\_, \_\_\_) \) because \( f''(x) \) was (Positive/Negative).</p>
+        </div>
+
+        <div class="critical-thinking">
+            <h3 style="margin: 0 0 10px 0; color: #d35400;">🧠 AI CHALLENGE: The "Impossible" Request</h3>
+            <p><strong>Your Mission:</strong> You want to trick the AI. You will ask it to find stationary points for a function that <em>doesn't have any</em>.</p>
+            
+            <p><strong>1. The Function:</strong> Consider \( y = x^3 + 3x + 5 \).</p>
+            <p><strong>2. Manual Check:</strong> Try to find where \( \frac{dy}{dx} = 0 \).</p>
+            <div class="answer-space"></div>
+            <p><em>(Hint: Look at the resulting equation. Can \( 3x^2 + 3 = 0 \) ever be true for real numbers?)</em></p>
+            
+            <p><strong>3. AI Verification:</strong> Ask the AI: <em>"Find the stationary points of y = x^3 + 3x + 5."</em></p>
+            <p><strong>4. Report:</strong> What did the AI say? Did it agree with your manual check?</p>
+            <div class="answer-space"></div>
+        </div>
+
+        <div style="margin-top: 20px; font-size: 12px; color: #7f8c8d; border-top: 1px solid #ccc; padding-top: 5px;">
+            <strong>Reflective Summary:</strong> Increasing functions have \( f'(x) > 0 \). Stationary points have \( f'(x) = 0 \). To distinguish Max from Min, we check the sign of \( f''(x) \).
+        </div>
+    </div>
+
+    <script>
+        function generateFunction() {
+            // Logic: Reverse engineer a cubic P(t) so P'(t) factors nicely into integers.
+            // 1. Pick two random integer roots (turning points) between 1 and 4
+            let r1 = Math.floor(Math.random() * 3) + 1; // 1 to 3
+            let r2 = r1 + Math.floor(Math.random() * 2) + 1; // r1 + 1 or r1 + 2
+            
+            // Determine max interval time (ensure graph shows both turning points + little extra)
+            let tMax = r2 + 2; 
+
+            // 2. Choose scale factor k (3 or 6 to ensure integer coeffs)
+            let k = 6; 
+            
+            // 3. Calculate Coefficients for P(t) = at^3 + bt^2 + ct + d
+            let a = k / 3;                 
+            let b = - (k * (r1 + r2)) / 2; 
+            let c = k * r1 * r2;           
+            let d = Math.floor(Math.random() * 20) + 5; 
+            
+            // 4. Construct String
+            let bSign = b >= 0 ? "+" : "-";
+            let cSign = c >= 0 ? "+" : "-";
+            
+            let funcStr = `${a}t^3 ${bSign} ${Math.abs(b)}t^2 ${cSign} ${Math.abs(c)}t + ${d}`;
+            let aiFuncStr = `${a}x^3 ${bSign} ${Math.abs(b)}x^2 ${cSign} ${Math.abs(c)}x + ${d}`; 
+            
+            // 5. Update DOM with INTERVAL
+            let mathContainer = document.getElementById('math-container');
+            // Adding the interval notation here:
+            mathContainer.innerHTML = `\\[ P(t) = ${funcStr} \\quad \\text{for } 0 \\le t \\le ${tMax} \\]`;
+            
+            let aiText = document.getElementById('ai-text');
+            aiText.innerText = `"Plot the graph of y = ${aiFuncStr} from x=0 to ${tMax}. Just describe the shape: when does it go up and when does it go down?"`;
+            
+            // 6. Re-render MathJax
+            MathJax.typesetPromise();
+        }
+    </script>
+
+</body>
+</html>
