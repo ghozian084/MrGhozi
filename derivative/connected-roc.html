@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connected Rates of Change (Fixed)</title>
+    
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0984e3;
+            --accent: #00b894;
+            --highlight: #e17055;
+            --bg: #dfe6e9;
+            --card: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #2d3436;
+        }
+
+        /* NAVIGATION */
+        .nav-bar {
+            background: white; width: 100%; padding: 15px; display: flex; justify-content: center; gap: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .nav-btn {
+            padding: 10px 20px; border: 2px solid var(--primary); background: transparent; color: var(--primary); border-radius: 25px; cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+        .nav-btn.active, .nav-btn:hover { background: var(--primary); color: white; }
+
+        /* CONTENT */
+        .container { width: 95%; max-width: 900px; margin: 25px 0 50px 0; }
+        .section { display: none; background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); animation: fadeIn 0.4s; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; color: var(--primary); margin-top: 0; }
+        
+        /* VISUALIZATION BOXES */
+        .vis-container {
+            display: flex; justify-content: space-around; align-items: center; margin: 20px 0; background: #f1f2f6; padding: 20px; border-radius: 10px;
+        }
+        
+        /* CIRCLE ANIMATION */
+        .circle-box {
+            width: 300px; height: 300px; border: 1px solid #ccc; background: white; display: flex; align-items: center; justify-content: center; position: relative;
+        }
+        .circle {
+            border-radius: 50%; background: rgba(9, 132, 227, 0.2); border: 2px solid var(--primary);
+            transition: width 0.1s, height 0.1s;
+        }
+        .radius-line {
+            position: absolute; height: 2px; background: var(--highlight); top: 50%; left: 50%; transform-origin: left;
+        }
+
+        /* INPUTS */
+        .math-input {
+            padding: 8px; border: 2px solid #b2bec3; border-radius: 5px; width: 80px; text-align: center; font-size: 1.1rem;
+        }
+        .math-input:focus { border-color: var(--primary); outline: none; }
+        .correct { background: #dff9fb; border-color: var(--accent); }
+        .wrong { background: #ffcccc; border-color: #e17055; }
+        
+        .btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1rem; margin-top:10px; }
+        .btn:hover { opacity: 0.9; }
+
+        /* FORMULA BOXES */
+        .formula-box {
+            background: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin: 15px 0; font-family: 'Courier New', monospace;
+        }
+        
+        .variable-highlight { color: var(--highlight); font-weight: bold; }
+        .rate-highlight { color: var(--accent); font-weight: bold; }
+
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <button class="nav-btn active" onclick="showSection(1)">1. Concept (10m)</button>
+        <button class="nav-btn" onclick="showSection(2)">2. Visual Example (10m)</button>
+        <button class="nav-btn" onclick="showSection(3)">3. Guided Practice (10m)</button>
+        <button class="nav-btn" onclick="showSection(4)">4. Exam Drill (10m)</button>
+    </div>
+
+    <div class="container">
+
+        <!-- SECTION 1: CONCEPT -->
+        <div id="sec-1" class="section active">
+            <h2>1. The Concept: The Chain Rule in Time</h2>
+            <p>In "Connected Rates of Change" problems, two variables (like Area and Radius) are linked by a formula, but <strong>both are changing over time</strong>.</p>
+            
+            <div class="vis-container">
+                <div style="text-align:center;">
+                    <h3>The Golden Rule</h3>
+                    <p style="font-size: 1.5rem;">$$ \frac{dA}{dt} = \frac{dA}{dr} \times \frac{dr}{dt} $$</p>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:20px; text-align:center;">
+                <div style="background:#e3f2fd; padding:15px; border-radius:8px;">
+                    <strong>1. The Rate you Want</strong><br>
+                    $\frac{dA}{dt}$<br>
+                    (How fast Area changes)
+                </div>
+                <div style="background:#e8f5e9; padding:15px; border-radius:8px;">
+                    <strong>2. The Connection</strong><br>
+                    $\frac{dA}{dr}$<br>
+                    (Differentiate the formula $A=\pi r^2$)
+                </div>
+                <div style="background:#fbe9e7; padding:15px; border-radius:8px;">
+                    <strong>3. The Rate you Know</strong><br>
+                    $\frac{dr}{dt}$<br>
+                    (Given in question)
+                </div>
+            </div>
+            
+            <p style="margin-top:20px;"><strong>Key Strategy:</strong> Always write down what you <em>Know</em>, what you <em>Want</em>, and the <em>Formula</em> that connects the variables.</p>
+        </div>
+
+        <!-- SECTION 2: VISUAL EXAMPLE -->
+        <div id="sec-2" class="section">
+            <h2>2. Visualizing the Problem</h2>
+            <p><strong>Problem:</strong> A circle's radius increases at <span class="rate-highlight">0.1 cm/s</span>. How fast is the Area growing?</p>
+            
+            <div class="vis-container">
+                <div class="circle-box">
+                    <div id="animCircle" class="circle" style="width:50px; height:50px;"></div>
+                    <div id="animRadius" class="radius-line" style="width:25px;"></div>
+                </div>
+                <div style="width: 40%;">
+                    <p><strong>Time ($t$):</strong> <span id="val-t">0</span>s</p>
+                    <p><strong>Radius ($r$):</strong> <span id="val-r" class="variable-highlight">2.00</span> cm</p>
+                    <p><strong>Area ($A$):</strong> <span id="val-A">12.57</span> cm²</p>
+                    <hr>
+                    <p>Calculated Rate $\frac{dA}{dt}$:</p>
+                    <p>$$ 2\pi r \times 0.1 $$</p>
+                    <p>= <span id="val-dAdt" class="rate-highlight">1.26</span> cm²/s</p>
+                </div>
+            </div>
+
+            <div style="text-align:center;">
+                <button class="btn" onclick="toggleAnimation()">Play / Pause Animation</button>
+                <input type="range" id="simSlider" min="0" max="10" step="0.1" value="0" style="width:200px; margin-left:20px;" oninput="manualSlide()">
+            </div>
+            <p style="font-size:0.9rem; color:#666; text-align:center;">Notice: As the circle gets bigger ($r$ increases), the Area grows <em>faster</em> even though $dr/dt$ is constant.</p>
+        </div>
+
+        <!-- SECTION 3: GUIDED PRACTICE -->
+        <div id="sec-3" class="section">
+            <h2>3. Step-by-Step Solver</h2>
+            <p>Let's solve the specific problem from the image.</p>
+            
+            <div class="formula-box">
+                <strong>Question:</strong> Find the rate of increase of $A$ when <span class="variable-highlight">$r = 4$</span>, given $\frac{dr}{dt} = 0.1$.
+            </div>
+
+            <!-- Step 1 -->
+            <div style="margin-bottom:20px;">
+                <strong>Step 1: Differentiate the Area Formula $A = \pi r^2$ with respect to $r$.</strong><br>
+                $\frac{dA}{dr} =$ <input type="text" id="inp-diff" class="math-input" placeholder="e.g. 2pi r"> 
+                <span id="fb-1" style="font-size:0.9rem; margin-left:10px;"></span>
+            </div>
+
+            <!-- Step 2 -->
+            <div style="margin-bottom:20px;">
+                <strong>Step 2: Apply Chain Rule Formula.</strong><br>
+                $\frac{dA}{dt} = (\frac{dA}{dr}) \times (\frac{dr}{dt})$<br>
+                $\frac{dA}{dt} = (\dots) \times 0.1$
+            </div>
+
+            <!-- Step 3 -->
+            <div style="margin-bottom:20px;">
+                <strong>Step 3: Substitute $r = 4$.</strong><br>
+                $\frac{dA}{dt} = 2\pi(4) \times 0.1$ <br>
+                $\frac{dA}{dt} =$ <input type="number" id="inp-final" class="math-input" placeholder="decimal"> $\pi$ 
+                <span id="fb-3" style="font-size:0.9rem; margin-left:10px;"></span>
+            </div>
+
+            <button class="btn" onclick="checkGuided()">Check Answer</button>
+        </div>
+
+        <!-- SECTION 4: EXAM DRILL (FIXED RENDERING) -->
+        <div id="sec-4" class="section">
+            <h2>4. Exam Drill & Randomizer</h2>
+            <p>Test your understanding. Calculate the rate of change of Area.</p>
+
+            <!-- Container for the dynamic question -->
+            <div id="drill-question-container" class="formula-box" style="text-align:center;">
+                <!-- Content will be injected by JS -->
+            </div>
+
+            <div style="text-align:center; margin-bottom:20px;">
+                <p><strong>Your Answer (in terms of $\pi$):</strong></p>
+                <input type="number" id="drill-ans" class="math-input" style="width:100px;"> $\pi$ cm²/s
+                <div id="drill-fb" style="margin-top:10px; font-weight:bold; height:20px;"></div>
+            </div>
+
+            <div style="text-align:center;">
+                <button class="btn" onclick="checkDrill()">Submit</button>
+                <button class="btn" style="background:#636e72;" onclick="genDrill()">New Random Problem</button>
+            </div>
+            
+            <div id="drill-solution" style="display:none; margin-top:20px; background:#e0f7fa; padding:15px; border-radius:5px; color:#006064;">
+                <!-- Solution injected here -->
+            </div>
+        </div>
+
+    </div>
+
+<script>
+    /* --- NAVIGATION --- */
+    function showSection(n) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(`sec-${n}`).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.nav-btn')[n-1].classList.add('active');
+    }
+
+    /* --- SLIDE 2: ANIMATION LOGIC --- */
+    let animId = null;
+    let time = 0;
+    const startR = 2; // initial radius in sim units
+    const growthRate = 0.1; // sim units per second
+    
+    function updateVisuals(t) {
+        let currentR = startR + (growthRate * t);
+        
+        const pxScale = 30;
+        let diamPx = currentR * 2 * pxScale;
+        
+        const circle = document.getElementById('animCircle');
+        const line = document.getElementById('animRadius');
+        
+        circle.style.width = diamPx + 'px';
+        circle.style.height = diamPx + 'px';
+        line.style.width = (currentR * pxScale) + 'px';
+
+        let A = Math.PI * currentR * currentR;
+        let dAdt = 2 * Math.PI * currentR * growthRate;
+
+        document.getElementById('val-t').innerText = t.toFixed(1);
+        document.getElementById('val-r').innerText = currentR.toFixed(2);
+        document.getElementById('val-A').innerText = A.toFixed(2);
+        document.getElementById('val-dAdt').innerText = dAdt.toFixed(2);
+    }
+
+    function toggleAnimation() {
+        if(animId) {
+            clearInterval(animId);
+            animId = null;
+        } else {
+            animId = setInterval(() => {
+                time += 0.1;
+                if(time > 10) time = 0; // Loop
+                document.getElementById('simSlider').value = time;
+                updateVisuals(time);
+            }, 100); 
+        }
+    }
+
+    function manualSlide() {
+        if(animId) { clearInterval(animId); animId = null; }
+        time = parseFloat(document.getElementById('simSlider').value);
+        updateVisuals(time);
+    }
+
+    /* --- SLIDE 3: GUIDED PRACTICE --- */
+    function checkGuided() {
+        const dInput = document.getElementById('inp-diff').value.toLowerCase().replace(/\s/g, '');
+        const validDerivs = ['2pir', '2*pi*r', '2πr'];
+        
+        const fb1 = document.getElementById('fb-1');
+        if(validDerivs.some(v => dInput.includes(v) || v.includes(dInput) && dInput.length > 3)) {
+            document.getElementById('inp-diff').classList.add('correct');
+            fb1.innerHTML = "Correct! ($2\\pi r$)";
+            fb1.style.color = "green";
+        } else {
+            document.getElementById('inp-diff').classList.add('wrong');
+            fb1.innerHTML = "Hint: Power rule on $\\pi r^2$";
+            fb1.style.color = "red";
+        }
+
+        const valInput = parseFloat(document.getElementById('inp-final').value);
+        const fb3 = document.getElementById('fb-3');
+        
+        if(valInput === 0.8) {
+            document.getElementById('inp-final').classList.add('correct');
+            fb3.innerHTML = "Correct! The rate is $0.8\\pi$";
+            fb3.style.color = "green";
+        } else {
+            document.getElementById('inp-final').classList.add('wrong');
+            fb3.innerHTML = "Check calc: $2 \\times 4 \\times 0.1$";
+            fb3.style.color = "red";
+        }
+        MathJax.typesetPromise();
+    }
+
+    /* --- SLIDE 4: RANDOM DRILL (FIXED) --- */
+    let drillData = { r: 4, rate: 0.1 };
+
+    function genDrill() {
+        // Randomize
+        const r = Math.floor(Math.random() * 9) + 2; // 2 to 10
+        const rate = (Math.floor(Math.random() * 5) + 1) / 10; // 0.1 to 0.5
+        
+        drillData = { r: r, rate: rate };
+        
+        // 1. Construct HTML String with LaTeX
+        const questionHtml = `
+            <p style="font-size:1.2rem;">Given: $\\frac{dr}{dt} = \\mathbf{${rate}}$ cm/s</p>
+            <p style="font-size:1.2rem;">Find $\\frac{dA}{dt}$ when $r = \\mathbf{${r}}$ cm.</p>
+        `;
+
+        // 2. Inject into container
+        document.getElementById('drill-question-container').innerHTML = questionHtml;
+        
+        // 3. Force MathJax to re-render the specific section
+        MathJax.typesetPromise([document.getElementById('drill-question-container')]);
+        
+        // Reset UI
+        document.getElementById('drill-ans').value = "";
+        document.getElementById('drill-ans').classList.remove('correct', 'wrong');
+        document.getElementById('drill-fb').innerText = "";
+        document.getElementById('drill-solution').style.display = "none";
+    }
+
+    function checkDrill() {
+        const correctCoeff = 2 * drillData.r * drillData.rate;
+        const userCoeff = parseFloat(document.getElementById('drill-ans').value);
+        
+        if(Math.abs(userCoeff - correctCoeff) < 0.001) {
+            document.getElementById('drill-fb').innerText = "Correct! Excellent work.";
+            document.getElementById('drill-fb').style.color = "#00b894";
+            document.getElementById('drill-ans').classList.add('correct');
+        } else {
+            document.getElementById('drill-fb').innerText = "Incorrect. See solution below.";
+            document.getElementById('drill-fb').style.color = "#d63031";
+            document.getElementById('drill-ans').classList.add('wrong');
+            
+            // Show Solution with Dynamic Rendering
+            const solBox = document.getElementById('drill-solution');
+            solBox.style.display = "block";
+            
+            const solHtml = `
+                <strong>Solution:</strong><br>
+                1. $\\frac{dA}{dt} = 2\\pi r \\times \\frac{dr}{dt}$<br>
+                2. Substitute: $2\\pi (${drillData.r}) \\times ${drillData.rate}$<br>
+                3. Calculate: $${2*drillData.r}\\pi \\times ${drillData.rate}$<br>
+                4. Final: <strong>${correctCoeff.toFixed(2)}\\pi</strong>
+            `;
+            solBox.innerHTML = solHtml;
+            
+            // Force Render Solution Box
+            MathJax.typesetPromise([solBox]);
+        }
+    }
+
+    // Initialize
+    updateVisuals(0);
+    genDrill(); // Generate first question on load
+
+</script>
+</body>
+</html>
