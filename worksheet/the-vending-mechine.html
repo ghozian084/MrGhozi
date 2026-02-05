@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worksheet: Vending Machine Audit</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @page { size: A4; margin: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #555;
+            -webkit-print-color-adjust: exact;
+            margin: 0;
+            padding: 0;
+        }
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm;
+            margin: 10mm auto;
+            background: white;
+            box-sizing: border-box;
+            position: relative;
+        }
+        @media print {
+            body { background: none; }
+            .page { margin: 0; width: 100%; height: 100%; page-break-after: always; border: none; }
+            .no-print { display: none; }
+        }
+
+        /* Header */
+        header { border-bottom: 3px solid #e67e22; padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
+        h1 { margin: 0; font-size: 22px; color: #d35400; text-transform: uppercase; }
+        .subtitle { font-size: 14px; color: #7f8c8d; }
+        .input-line { border-bottom: 1px solid #333; width: 100%; display: block; margin-top: 5px; }
+        .inline-input { border-bottom: 1px solid #333; width: 120px; display: inline-block; margin-left: 5px; }
+
+        /* Sections */
+        .section-title {
+            background-color: #d35400;
+            color: white;
+            padding: 6px 12px;
+            font-weight: bold;
+            font-size: 15px;
+            margin-top: 15px;
+            border-radius: 3px;
+        }
+
+        /* Boxes & Inputs */
+        .task-box { border: 1px solid #bdc3c7; padding: 12px; margin-top: 8px; border-radius: 4px; background-color: #fff; }
+        .formula-box { background-color: #fff3e0; border-left: 4px solid #e67e22; padding: 10px; margin: 10px 0; font-size: 13px; color: #d35400; }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        
+        .answer-space { border-bottom: 1px dotted #999; height: 25px; margin: 5px 0 10px 0; width: 100%; }
+        textarea { width: 100%; height: 80px; border: 1px solid #ccc; font-family: inherit; margin-top: 5px; resize: none; }
+        
+        /* Diagram Container */
+        .diagram-container {
+            width: 100%;
+            height: 160px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px 0;
+            border: 1px dashed #e0e0e0;
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print" style="text-align: center; padding: 15px;">
+        <button onclick="window.print()" style="padding: 10px 20px; background: #e67e22; color: white; border: none; cursor: pointer; border-radius: 4px; font-size: 16px;">🖨️ Print Audit Report</button>
+    </div>
+
+    <div class="page">
+        <header>
+            <div style="width: 60%;">
+                <h1>Performance Task: Vending Machine Audit</h1>
+                <div class="subtitle">Optimization & Efficiency Report</div>
+            </div>
+            <div style="width: 35%; text-align: right; font-size: 12px;">
+                <strong>Auditor Name:</strong> <span class="input-line"></span><br>
+                <strong>Date:</strong> <span class="input-line"></span>
+            </div>
+        </header>
+
+        <div class="task-box">
+            <strong>1. Machine Identification:</strong>
+            <div class="answer-space" style="margin-bottom: 0;"></div>
+            <div style="font-size: 11px; color: #666;">(e.g., Cafeteria Red Machine, Hallway 2B Snack Dispenser)</div>
+        </div>
+
+        <div class="section-title">2. Primary Data Collection (External)</div>
+        <div class="task-box">
+            <div class="formula-box">
+                <strong>Goal:</strong> Measure the external dimensions to calculate Total Volume occupied.
+            </div>
+            <div class="grid-3">
+                <div>
+                    <label>Height (\(H\)) cm:</label>
+                    <div class="answer-space"></div>
+                </div>
+                <div>
+                    <label>Width (\(W\)) cm:</label>
+                    <div class="answer-space"></div>
+                </div>
+                <div>
+                    <label>Depth (\(D\)) cm:</label>
+                    <div class="answer-space"></div>
+                </div>
+            </div>
+            
+            <div class="diagram-container">
+                <svg width="200" height="150" viewBox="0 0 200 150">
+                    <rect x="50" y="30" width="60" height="100" fill="#fce4ec" stroke="#d35400" stroke-width="2"/>
+                    <path d="M 110 30 L 140 10 L 140 110 L 110 130 Z" fill="#ffe0b2" stroke="#d35400" stroke-width="2"/>
+                    <path d="M 50 30 L 80 10 L 140 10" fill="#ffe0b2" stroke="#d35400" stroke-width="2"/>
+                    <text x="35" y="80" font-size="12" fill="#d35400">H</text>
+                    <text x="80" y="145" font-size="12" fill="#d35400">W</text>
+                    <text x="145" y="80" font-size="12" fill="#d35400">D</text>
+                </svg>
+                
+            </div>
+
+            <p><strong>Calculated Total Volume (\(V = H \times W \times D\)):</strong></p>
+            <div class="answer-space"> \( V = \) </div>
+        </div>
+
+        <div class="section-title">3. Spatial Placement Analysis</div>
+        <div class="task-box">
+            <div class="formula-box">
+                <strong>Safety Check:</strong> Does the 'Service Clearance' (when door is open) allow for safe traffic flow in the hallway?
+            </div>
+            
+            <p><strong>Justification of Placement:</strong></p>
+            <p style="font-size: 12px; color: #666;">Describe the hallway width vs. the machine depth with door open. Is it blocking traffic?</p>
+            <textarea placeholder="Line 1: __________________________________________________&#10;Line 2: __________________________________________________"></textarea>
+        </div>
+<br>
+<br>
+<br>
+<br>
+        <div class="section-title">4. Optimization Strategy</div>
+        <div class="task-box">
+            <p><strong>The Challenge:</strong> How would you redesign the internal shelf spacing or the machine depth to increase capacity without making the machine bigger?</p>
+            
+            <p><strong>Proposal:</strong></p>
+            <textarea placeholder="Line 1: __________________________________________________&#10;Line 2: __________________________________________________&#10;Line 3: __________________________________________________"></textarea>
+        </div>
+
+        <div class="section-title">5. The Efficiency Verdict</div>
+        <div class="task-box" style="background-color: #fff3e0; border-color: #d35400;">
+            <p><strong>Is this machine optimized for its location?</strong></p>
+            <div style="margin: 10px 0;">
+                <label><input type="checkbox"> YES (Optimal)</label> &nbsp;&nbsp;&nbsp;
+                <label><input type="checkbox"> NO (Needs Redesign)</label>
+            </div>
+
+            <p><strong>Key Recommendation:</strong></p>
+            <div class="answer-space"></div>
+            <div class="answer-space"></div>
+        </div>
+
+    </div>
+
+</body>
+</html>
