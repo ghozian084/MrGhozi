@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worksheet: Staircase Safety Audit</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @page { size: A4; margin: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #555;
+            -webkit-print-color-adjust: exact;
+            margin: 0;
+            padding: 0;
+        }
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm;
+            margin: 10mm auto;
+            background: white;
+            box-sizing: border-box;
+            position: relative;
+        }
+        @media print {
+            body { background: none; }
+            .page { margin: 0; width: 100%; height: 100%; page-break-after: always; border: none; }
+            .no-print { display: none; }
+        }
+
+        /* Header */
+        header { border-bottom: 3px solid #2c3e50; padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
+        h1 { margin: 0; font-size: 22px; color: #2c3e50; text-transform: uppercase; }
+        .subtitle { font-size: 14px; color: #7f8c8d; }
+        .input-line { border-bottom: 1px solid #333; width: 100%; display: block; margin-top: 5px; }
+        .inline-input { border-bottom: 1px solid #333; width: 150px; display: inline-block; margin-left: 5px; }
+
+        /* Sections */
+        .section-title {
+            background-color: #2980b9;
+            color: white;
+            padding: 6px 12px;
+            font-weight: bold;
+            font-size: 15px;
+            margin-top: 15px;
+            border-radius: 3px;
+        }
+
+        /* Boxes & Inputs */
+        .task-box { border: 1px solid #bdc3c7; padding: 12px; margin-top: 8px; border-radius: 4px; background-color: #fff; }
+        .formula-box { background-color: #eaf2f8; border-left: 4px solid #2980b9; padding: 10px; margin: 10px 0; font-size: 13px; color: #2c3e50; }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        
+        .answer-space { border-bottom: 1px dotted #999; height: 25px; margin: 5px 0 10px 0; width: 100%; }
+        textarea { width: 100%; height: 60px; border: 1px solid #ccc; font-family: inherit; margin-top: 5px; }
+        
+        /* Diagram Container */
+        .diagram-container {
+            width: 100%;
+            height: 160px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px 0;
+            border: 1px dashed #e0e0e0;
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print" style="text-align: center; padding: 15px;">
+        <button onclick="window.print()" style="padding: 10px 20px; background: #27ae60; color: white; border: none; cursor: pointer; border-radius: 4px; font-size: 16px;">🖨️ Print Staircase Audit</button>
+    </div>
+
+    <div class="page">
+        <header>
+            <div style="width: 60%;">
+                <h1>Performance Task: Staircase Audit</h1>
+                <div class="subtitle">Engineering & Safety Compliance Report</div>
+            </div>
+            <div style="width: 35%; text-align: right; font-size: 12px;">
+                <strong>Team Name:</strong> <span class="input-line"></span><br>
+                <strong>Date:</strong> <span class="input-line"></span>
+            </div>
+        </header>
+
+        <div class="task-box">
+            <strong>1. Location of Inspection:</strong>
+            <div class="answer-space" style="margin-bottom: 0;"></div>
+            <div style="font-size: 11px; color: #666;">(e.g., West Wing Boys' Stairs, Library Entrance)</div>
+        </div>
+
+        <div class="section-title">2. Primary Data Collection (On-Site)</div>
+        <div class="task-box">
+            <p>Measure one standard step in the middle of the flight to the nearest millimeter.</p>
+            <div class="grid-3">
+                <div>
+                    <label>Rise (\(h\)) in cm:</label>
+                    <div class="answer-space"></div>
+                </div>
+                <div>
+                    <label>Run (\(d\)) in cm:</label>
+                    <div class="answer-space"></div>
+                </div>
+                <div>
+                    <label>Total Steps:</label>
+                    <div class="answer-space"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">3. Ergonomic Analysis (Blondel's Formula)</div>
+        <div class="task-box">
+            <div class="formula-box">
+                <strong>Formula:</strong> \( 2h + d = K \) <br>
+                <em>Target: Ideal stride length (K) is between 62 cm and 64 cm.</em>
+            </div>
+            
+            <p><strong>Step A: Show your calculation for K:</strong></p>
+            <div class="answer-space" style="height: 40px;"></div>
+            
+            <p><strong>Step B: Result:</strong> \( K = \) <span class="inline-input"></span> cm</p>
+        </div>
+
+        <div class="section-title">4. Trigonometric Pitch Analysis</div>
+        <div class="task-box">
+            <div class="formula-box">
+                <strong>Pitch Angle (\(\theta\)):</strong> \( \theta = \tan^{-1}(\frac{\text{Rise}}{\text{Run}}) \) <br>
+                <em>Target: Safe public stairs are typically between 30° and 37°.</em>
+            </div>
+
+            <div class="diagram-container">
+                <svg width="300" height="150" viewBox="0 0 300 150">
+                    <path d="M 50 120 L 250 120 L 250 50 Z" fill="#eafaf1" stroke="#2c3e50" stroke-width="2"/>
+                    <path d="M 250 110 L 240 110 L 240 120" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+                    <text x="150" y="140" text-anchor="middle" font-size="14">Run (d)</text>
+                    <text x="260" y="90" font-size="14">Rise (h)</text>
+                    <path d="M 90 120 A 40 40 0 0 1 85 108" fill="none" stroke="#d35400" stroke-width="2"/>
+                    <text x="100" y="115" font-size="16" fill="#d35400" font-weight="bold">θ</text>
+                    <text x="130" y="70" transform="rotate(-19, 130, 70)" font-size="12" fill="#7f8c8d">Stair Pitch</text>
+                </svg>
+                 
+
+            </div>
+<br>
+<br>
+<br>
+            <p><strong>Step A: Show calculation for \(\theta\):</strong></p>
+            <div class="answer-space" style="height: 40px;"></div>
+            
+            <p><strong>Step B: Result:</strong> \(\theta = \) <span class="inline-input"></span> degrees</p>
+        </div>
+
+        <div class="section-title">5. The Final Audit Verdict</div>
+        <div class="task-box" style="background-color: #fdf2e9; border-color: #e67e22;">
+            <p><strong>Is this staircase compliant with safety standards?</strong></p>
+            <div style="margin: 10px 0;">
+                <label><input type="checkbox"> YES (Pass)</label> &nbsp;&nbsp;&nbsp;
+                <label><input type="checkbox"> NO (Fail)</label>
+            </div>
+
+            <p><strong>Detailed Justification:</strong></p>
+            <p style="font-size: 12px; font-style: italic;">Cite your K-value (is it 62-64?) and Angle (is it 30-37°?) in your argument.</p>
+            <div class="answer-space"></div>
+            <div class="answer-space"></div>
+            <div class="answer-space"></div>
+
+            <p><strong>Recommendations for Improvement:</strong></p>
+            <div class="answer-space"></div>
+            <div class="answer-space"></div>
+        </div>
+
+    </div>
+
+</body>
+</html>
