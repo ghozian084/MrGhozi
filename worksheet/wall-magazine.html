@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worksheet: Wall Magazine Audit</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @page { size: A4; margin: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #555;
+            -webkit-print-color-adjust: exact;
+            margin: 0;
+            padding: 0;
+        }
+        .page {
+            width: 210mm;
+            min-height: 297mm; /* Grows as needed, doesn't cut off */
+            padding: 20mm;
+            margin: 10mm auto;
+            background: white;
+            box-sizing: border-box;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        @media print {
+            body { background: none; }
+            .page { margin: 0; width: 100%; height: auto; box-shadow: none; }
+            .no-print { display: none; }
+            /* Avoid breaking inside a task box */
+            .task-box { page-break-inside: avoid; }
+        }
+
+        /* Header */
+        header { border-bottom: 3px solid #2980b9; padding-bottom: 10px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; }
+        h1 { margin: 0; font-size: 24px; color: #154360; text-transform: uppercase; letter-spacing: 1px; }
+        .subtitle { font-size: 14px; color: #7f8c8d; margin-top: 5px; }
+        .input-line { border-bottom: 1px solid #333; width: 100%; display: block; margin-top: 5px; }
+
+        /* Sections */
+        .section-title {
+            background-color: #2980b9;
+            color: white;
+            padding: 8px 15px;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 25px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Boxes & Inputs */
+        .task-box { border: 1px solid #bdc3c7; padding: 20px; margin-top: 10px; border-radius: 4px; background-color: #fff; }
+        .formula-box { background-color: #ebf5fb; border-left: 5px solid #2980b9; padding: 15px; margin: 15px 0; font-size: 14px; color: #154360; }
+        
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        
+        .answer-space { border-bottom: 1px dotted #999; height: 30px; margin: 5px 0 15px 0; width: 100%; }
+        
+        /* Lined Textarea */
+        textarea { 
+            width: 100%; 
+            border: 1px solid #bdc3c7; 
+            font-family: inherit; 
+            margin-top: 10px; 
+            resize: vertical; 
+            padding: 8px; 
+            line-height: 30px;
+            background-image: repeating-linear-gradient(white, white 29px, #ebf5fb 30px);
+        }
+        
+        /* Diagram Container */
+        .diagram-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            padding: 10px;
+            border: 2px dashed #aed6f1;
+            background: #fdfdfd;
+        }
+
+        /* Sketch Grid */
+        .sketch-grid {
+            width: 100%;
+            height: 300px;
+            border: 2px solid #333;
+            background-size: 20px 20px;
+            background-image: linear-gradient(to right, #e0e0e0 1px, transparent 1px),
+                              linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
+            position: relative;
+        }
+        .grid-label { position: absolute; bottom: 5px; right: 5px; font-size: 10px; color: #999; }
+    </style>
+</head>
+<body>
+
+    <div class="no-print" style="text-align: center; padding: 15px;">
+        <button onclick="window.print()" style="padding: 12px 25px; background: #2980b9; color: white; border: none; cursor: pointer; border-radius: 4px; font-size: 16px; font-weight: bold;">🖨️ Print Audit Worksheet</button>
+    </div>
+
+    <div class="page">
+        <header>
+            <div style="width: 60%;">
+                <h1>Wall Magazine Audit</h1>
+                <div class="subtitle">Layout Optimization & Visual Balance Report</div>
+            </div>
+            <div style="width: 35%; text-align: right; font-size: 12px;">
+                <strong>Design Team:</strong> <span class="input-line"></span><br>
+                <strong>Date:</strong> <span class="input-line"></span>
+            </div>
+        </header>
+
+        <div class="section-title">1. Site Survey & Dimensions</div>
+        <div class="task-box">
+            <p><strong>Location of Board:</strong> (e.g., Main Lobby, Science Hall)</p>
+            <div class="answer-space"></div>
+
+            <p style="margin-top: 20px;"><strong>Measured Dimensions:</strong></p>
+            <div class="grid-3">
+                <div>
+                    <label>Length (\(L\)):</label>
+                    <div class="answer-space"></div>
+                </div>
+                <div>
+                    <label>Width (\(W\)):</label>
+                    <div class="answer-space"></div>
+                </div>
+                <div>
+                    <label>Total Area (\(A\)):</label>
+                    <div class="answer-space"></div>
+                </div>
+            </div>
+
+            <div class="diagram-container">
+                <svg width="400" height="200" viewBox="0 0 400 200">
+                    <rect x="50" y="20" width="300" height="160" fill="#ebf5fb" stroke="#2e86c1" stroke-width="3"/>
+                    <rect x="60" y="30" width="280" height="140" fill="#fff" stroke="#aed6f1" stroke-width="1" stroke-dasharray="4"/>
+                    
+                    <rect x="70" y="40" width="30" height="42" fill="#d6eaf8" stroke="#2980b9" stroke-width="1"/>
+                    <text x="85" y="65" font-size="8" text-anchor="middle" fill="#2980b9">A4</text>
+                    
+                    <rect x="110" y="40" width="30" height="42" fill="#d6eaf8" stroke="#2980b9" stroke-width="1"/>
+                    <rect x="70" y="90" width="30" height="42" fill="#d6eaf8" stroke="#2980b9" stroke-width="1"/>
+
+                    <text x="200" y="15" font-size="12" text-anchor="middle" fill="#2980b9" font-weight="bold">Length (L)</text>
+                    <text x="35" y="100" font-size="12" text-anchor="middle" fill="#2980b9" font-weight="bold" transform="rotate(-90, 35, 100)">Width (W)</text>
+                    
+                    <circle cx="200" cy="100" r="3" fill="#e74c3c"/>
+                    <text x="205" y="105" font-size="10" fill="#e74c3c">Center</text>
+                </svg>
+            </div>
+        </div>
+
+        <div class="section-title">2. Capacity Calculation</div>
+        <div class="task-box">
+            <div class="formula-box">
+                <strong>Reference Areas:</strong><br>
+                A4 Paper \(\approx 624 \text{ cm}^2\) <br>
+                A3 Paper \(\approx 1248 \text{ cm}^2\)
+            </div>
+
+            <p><strong>A. Theoretical Maximum:</strong> Mathematically, how many A4 sheets fit in the area?</p>
+            <div style="font-size: 12px; color: #666;">Calculation: Total Board Area ÷ 624</div>
+            <div class="answer-space"></div>
+
+            <p><strong>B. Practical Layout (Grid Method):</strong></p>
+            <p style="font-size: 12px; color: #666;">Considering 2cm margins between papers, how many rows and columns actually fit?</p>
+            <textarea style="height: 120px;" placeholder="Show your row/column calculation here..."></textarea>
+        </div>
+
+        <div class="section-title">3. Aesthetic Analysis</div>
+        <div class="task-box">
+            <p><strong>A. The Golden Ratio Check:</strong></p>
+            <p style="font-size: 13px;">Divide Length by Width. Is the result close to <strong>1.618</strong>? (This shape is considered naturally pleasing to the human eye).</p>
+            <div class="answer-space">Ratio Result = </div>
+            
+            <p><strong>B. Balance & Symmetry:</strong></p>
+            <p style="font-size: 13px;">How will you arrange the content to avoid it looking cluttered? Discuss "White Space".</p>
+            <textarea style="height: 100px;" placeholder="Explain your visual strategy..."></textarea>
+        </div>
+
+        <div class="section-title">4. Proposed Layout Blueprint</div>
+        <div class="task-box">
+            <p style="margin-bottom: 5px;"><strong>Instruction:</strong> Sketch your final layout on the grid below. Label the title area, A4 slots, and decoration zones.</p>
+            <div class="sketch-grid">
+                <div class="grid-label">1 Square = approx 10cm</div>
+            </div>
+             
+        </div>
+
+        <div class="section-title">5. Final Optimization Verdict</div>
+        <div class="task-box" style="background-color: #ebf5fb; border-color: #2980b9;">
+            <p><strong>Utility Suggestion:</strong></p>
+            <p style="font-size: 13px;">What physical changes (cork density, glass cover, lighting) would improve this board?</p>
+            <textarea style="height: 80px;" placeholder="Recommendations..."></textarea>
+            
+            <div style="margin-top: 20px; text-align: center; border-top: 1px solid #bdc3c7; padding-top: 15px;">
+                <strong>Audit Status:</strong><br><br>
+                <label><input type="checkbox"> <strong>APPROVED</strong> for Production</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label><input type="checkbox"> <strong>REVISE</strong> Layout</label>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
