@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worksheet: Recycling Unit Audit</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @page { size: A4; margin: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #555;
+            -webkit-print-color-adjust: exact;
+            margin: 0;
+            padding: 0;
+        }
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm;
+            margin: 10mm auto;
+            background: white;
+            box-sizing: border-box;
+            position: relative;
+        }
+        @media print {
+            body { background: none; }
+            .page { margin: 0; width: 100%; height: 100%; page-break-after: always; border: none; }
+            .no-print { display: none; }
+        }
+
+        /* Header */
+        header { border-bottom: 3px solid #27ae60; padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
+        h1 { margin: 0; font-size: 22px; color: #1e8449; text-transform: uppercase; }
+        .subtitle { font-size: 14px; color: #7f8c8d; }
+        .input-line { border-bottom: 1px solid #333; width: 100%; display: block; margin-top: 5px; }
+        .inline-input { border-bottom: 1px solid #333; width: 100px; display: inline-block; margin-left: 5px; }
+
+        /* Sections */
+        .section-title {
+            background-color: #27ae60;
+            color: white;
+            padding: 6px 12px;
+            font-weight: bold;
+            font-size: 15px;
+            margin-top: 15px;
+            border-radius: 3px;
+        }
+
+        /* Boxes & Inputs */
+        .task-box { border: 1px solid #bdc3c7; padding: 12px; margin-top: 8px; border-radius: 4px; background-color: #fff; }
+        .formula-box { background-color: #eafaf1; border-left: 4px solid #27ae60; padding: 10px; margin: 10px 0; font-size: 13px; color: #1e8449; }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        
+        .answer-space { border-bottom: 1px dotted #999; height: 25px; margin: 5px 0 10px 0; width: 100%; }
+        textarea { width: 100%; height: 80px; border: 1px solid #ccc; font-family: inherit; margin-top: 5px; resize: none; }
+        
+        /* Diagram Container */
+        .diagram-container {
+            width: 100%;
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px 0;
+            border: 1px dashed #e0e0e0;
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print" style="text-align: center; padding: 15px;">
+        <button onclick="window.print()" style="padding: 10px 20px; background: #27ae60; color: white; border: none; cursor: pointer; border-radius: 4px; font-size: 16px;">🖨️ Print Audit Report</button>
+    </div>
+
+    <div class="page">
+        <header>
+            <div style="width: 60%;">
+                <h1>Performance Task: Recycling Unit</h1>
+                <div class="subtitle">Geometric Analysis & Architectural Audit</div>
+            </div>
+            <div style="width: 35%; text-align: right; font-size: 12px;">
+                <strong>Engineering Team:</strong> <span class="input-line"></span><br>
+                <strong>Date:</strong> <span class="input-line"></span>
+            </div>
+        </header>
+
+        <div class="task-box">
+            <strong>1. Unit Location & Description:</strong>
+            <div class="answer-space" style="margin-bottom: 0;"></div>
+            <div style="font-size: 11px; color: #666;">(e.g., Courtyard Green Bin, Cafeteria Dual-Stream Unit)</div>
+        </div>
+
+        <div class="section-title">2. Geometric Decomposition</div>
+        <div class="task-box">
+            <div class="formula-box">
+                <strong>Strategy:</strong> Decompose the bin into two solids: 
+                1. <strong>Rectangular Prism</strong> (Base) 
+                2. <strong>Triangular Prism</strong> (Roof/Lid).
+            </div>
+
+            <div class="diagram-container">
+                <svg width="300" height="170" viewBox="0 0 300 170">
+                    <defs>
+                        <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#666" />
+                        </marker>
+                    </defs>
+
+                    <!-- Hidden/Internal Edges -->
+                    <path d="M 100 80 L 100 140 M 100 80 L 210 80" stroke="#ccc" stroke-dasharray="3" fill="none"/>
+                    
+                    <!-- Base (Cuboid) -->
+                    <path d="M 70 100 L 180 100 L 180 160 L 70 160 Z" fill="#eafaf1" stroke="#27ae60" stroke-width="1.5"/>
+                    <path d="M 180 100 L 210 80 L 210 140 L 180 160" fill="#d5f5e3" stroke="#27ae60" stroke-width="1.5"/>
+                    
+                    <!-- Roof (Triangular Prism) -->
+                    <path d="M 70 100 L 125 60 L 180 100" fill="#a9dfbf" stroke="#1e8449" stroke-width="1.5"/>
+                    <path d="M 125 60 L 155 40 L 210 80 L 180 100" fill="#82d1a0" stroke="#1e8449" stroke-width="1.5"/>
+                    <line x1="125" y1="60" x2="155" y2="40" stroke="#1e8449" stroke-width="1.5" />
+
+                    <!-- Dimension Markers -->
+                    <!-- Width -->
+                    <line x1="70" y1="168" x2="180" y2="168" stroke="#666" stroke-width="1" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+                    <text x="125" y="166" font-size="10" text-anchor="middle" fill="#333">Width (w)</text>
+                    
+                    <!-- Base Height -->
+                    <line x1="62" y1="100" x2="62" y2="160" stroke="#666" stroke-width="1" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+                    <text x="60" y="135" font-size="10" text-anchor="end" fill="#333">h_base</text>
+
+                    <!-- Depth -->
+                    <line x1="188" y1="162" x2="218" y2="142" stroke="#666" stroke-width="1" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+                    <text x="210" y="160" font-size="10" fill="#333">Depth (d)</text>
+
+                    <!-- Roof Height -->
+                    <line x1="125" y1="60" x2="125" y2="100" stroke="#e74c3c" stroke-width="1" stroke-dasharray="2"/>
+                    <text x="128" y="85" font-size="10" fill="#e74c3c" font-weight="bold">h_roof</text>
+
+                    <!-- Angle Theta -->
+                    <path d="M 90 100 A 20 20 0 0 1 85 89" fill="none" stroke="#e74c3c" stroke-width="1.5"/>
+                    <text x="92" y="93" font-size="12" fill="#e74c3c">θ</text>
+                </svg>
+            </div>
+
+            <div class="grid-3">
+                <div><label>Base Height (\(h_b\)):</label><div class="answer-space"></div></div>
+                <div><label>Roof Height (\(h_r\)):</label><div class="answer-space"></div></div>
+                <div><label>Width (\(w\)) & Depth (\(d\)):</label><div class="answer-space"></div></div>
+            </div>
+        </div>
+
+        <div class="section-title">3. Mathematical Modeling</div>
+        <div class="task-box">
+            <p><strong>A. Volume Calculation:</strong> (Capacity)</p>
+            <p style="font-size:12px; color:#666;">\( V_{\text{total}} = (w \cdot d \cdot h_b) + (\frac{1}{2} \cdot w \cdot h_r \cdot d) \)</p>
+            <textarea style="height:250px;"placeholder="Show your work..."></textarea>
+             
+            <br>
+            <div class="answer-space"><strong>Total Volume = </strong> </div>
+<br>
+
+            <p style="margin-top:15px;"><strong>B. Roof Slope Analysis:</strong> (Rain Runoff)</p>
+            <p style="font-size:12px; color:#666;">Calculate the angle of elevation (\(\theta\)) using \( \tan \theta = \frac{\text{Rise}}{\text{Run}} \)</p>
+            <textarea placeholder="Show trig steps..."></textarea>
+           
+            <div class="answer-space"><strong>Angle \(\theta\) = </strong> </div>
+        </div>
+
+        <div class="section-title">4. Design Critique</div>
+        <div class="task-box">
+            <p><strong>Why is the top a triangular prism instead of a flat cuboid?</strong></p>
+            <p style="font-size: 12px; color: #666;">Consider environmental factors (rain/snow) and human behavior (stacking trash).</p>
+            <textarea placeholder="Line 1: __________________________________________________&#10;Line 2: __________________________________________________"></textarea>
+        </div>
+
+        <div class="section-title">5. Optimization Suggestion</div>
+        <div class="task-box" style="background-color: #f0fff4; border-color: #27ae60;">
+            <p><strong>Optimization Challenge:</strong></p>
+            <p>If you could change the internal volume ratio between 'Plastic' and 'Paper' sections based on school usage, how would you divide the width?</p>
+            <textarea placeholder="Proposal: __________________________________________________&#10;Justification: __________________________________________________"></textarea>
+            
+            <div style="margin-top: 10px; text-align: center;">
+                <strong>Current Design Verdict:</strong><br>
+                <label><input type="checkbox"> Efficient</label> &nbsp;&nbsp;&nbsp;
+                <label><input type="checkbox"> Needs Improvement</label>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
