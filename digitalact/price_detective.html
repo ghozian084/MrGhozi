@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Project 2: Price Detective</title>
+    <style>
+        :root {
+            --primary: #00b894;
+            --secondary: #55efc4;
+            --bg: #1e272e;
+            --card: #2f3640;
+            --text: #f5f6fa;
+            --accent: #fbc531;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; }
+        .progress-bar { width: 100%; height: 5px; background: #718093; position: fixed; top: 0; }
+        #progress-fill { height: 100%; background: var(--primary); width: 16.6%; transition: 0.3s; }
+        .slide-container { width: 90%; max-width: 900px; height: 80vh; margin-top: 40px; background: var(--card); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; overflow-y: auto; }
+        .slide { display: none; animation: fadeIn 0.5s; }
+        .active { display: block; }
+        h1 { color: var(--accent); }
+        h2 { color: var(--primary); border-left: 5px solid var(--accent); padding-left: 15px; }
+        .math-box { background: #1e272e; padding: 15px; border-radius: 10px; border: 1px dashed var(--primary); color: var(--secondary); font-family: monospace; font-size: 1.2rem; }
+        .nav-btns { position: absolute; bottom: 30px; right: 40px; }
+        button { background: var(--primary); border: none; padding: 12px 25px; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Template Styles */
+        .template { border: 2px solid var(--accent); padding: 20px; border-radius: 10px; background: #353b48; margin-top: 20px; }
+        .temp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .temp-box { background: #2f3640; border: 1px solid #718093; padding: 10px; font-size: 0.8rem; min-height: 100px; }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar"><div id="progress-fill"></div></div>
+
+<div class="slide-container">
+    
+    <!-- SLIDE 1: INTRO -->
+    <div class="slide active">
+        <h1>🔍 Project 2: The Price Detective</h1>
+        <p style="font-size: 1.3rem;">Can you find the hidden price of a single burger?</p>
+        <p>In this project, you will use <strong>Systems of Equations</strong> to solve real-world pricing mysteries from online stores.</p>
+        <div style="background: #353b48; padding: 20px; border-radius: 10px; margin-top: 20px;">
+            <strong>Objective:</strong> Find 2 bundles, create 2 equations, and solve for 2 variables.
+        </div>
+    </div>
+
+    <!-- SLIDE 2: STEP 1 -->
+    <div class="slide">
+        <h2>Step 1: The Digital Hunt</h2>
+        <p>Go to a food delivery app (GoFood/Grab) or online store (Shopee/Amazon).</p>
+        <ul>
+            <li>Find <strong>two different "Bundles"</strong> that contain the same items but in different quantities.</li>
+            <li><i>Example:</i><br>
+                Bundle A: 2 Pizzas + 1 Drink = $25<br>
+                Bundle B: 1 Pizza + 2 Drinks = $17
+            </li>
+            <li><strong>Action:</strong> Take screenshots of both bundles.</li>
+        </ul>
+    </div>
+
+    <!-- SLIDE 3: STEP 2 -->
+    <div class="slide">
+        <h2>Step 2: Algebraic Modeling</h2>
+        <p>Assign variables to your items and write the equations.</p>
+        <div class="math-box">
+            Let x = Price of Item 1 (Pizza)<br>
+            Let y = Price of Item 2 (Drink)<br><br>
+            Eq 1: 2x + 1y = 25<br>
+            Eq 2: 1x + 2y = 17
+        </div>
+        <p>Make sure your prices include the <strong>decimals</strong> (e.g., $24.99).</p>
+    </div>
+
+    <!-- SLIDE 4: STEP 3 -->
+    <div class="slide">
+        <h2>Step 3: Solving the Mystery</h2>
+        <p>Use the <strong>Elimination</strong> or <strong>Substitution</strong> method to find x and y.</p>
+        <ul>
+            <li>Show your step-by-step work.</li>
+            <li>If there is a discount (e.g., 10% off), represent it as a <strong>decimal</strong> (0.90) in your equation.</li>
+        </ul>
+        <div class="math-box">
+            (Solve for x and y here)
+        </div>
+    </div>
+
+    <!-- SLIDE 5: STEP 4 -->
+    <div class="slide">
+        <h2>Step 4: The Comparison</h2>
+        <p>Now, find the <strong>Individual Price</strong> of one item if bought alone (not in a bundle).</p>
+        <ul>
+            <li>Is the bundle actually cheaper?</li>
+            <li>Calculate the <strong>Percentage Saved</strong> using the formula:</li>
+        </ul>
+        <div class="math-box" style="font-size: 1rem;">
+            % Saved = [(Individual Price - Bundle Price) / Individual Price] x 100
+        </div>
+    </div>
+
+    <!-- SLIDE 6: TEMPLATE -->
+    <div class="slide">
+        <h2 style="border: none; text-align: center;">Final Report Blueprint</h2>
+        <div class="template">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--accent);">
+                <strong>ALGEBRA PRICE REPORT</strong>
+                <span>Detective: [Your Name]</span>
+            </div>
+            <div class="temp-grid">
+                <div class="temp-box">[Screenshots of Bundle A & B]</div>
+                <div class="temp-box">
+                    <strong>The Equations:</strong><br>
+                    1) __x + __y = ___<br>
+                    2) __x + __y = ___
+                </div>
+            </div>
+            <div class="temp-grid">
+                <div class="temp-box">
+                    <strong>The Solution:</strong><br>
+                    x = [Price of Item 1]<br>
+                    y = [Price of Item 2]
+                </div>
+                <div class="temp-box" style="background: var(--primary); color: white;">
+                    <strong>The Verdict:</strong><br>
+                    "The bundle saves you [X]% compared to buying separately. It is [a good / a bad] deal!"
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-btns">
+        <button id="prevBtn" style="background: #718093; margin-right: 10px;" onclick="changeSlide(-1)">Back</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next Step</button>
+    </div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const fill = document.getElementById('progress-fill');
+
+    function changeSlide(step) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide += step;
+        if (currentSlide < 0) currentSlide = 0;
+        if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+        slides[currentSlide].classList.add('active');
+        fill.style.width = ((currentSlide + 1) / slides.length * 100) + "%";
+    }
+</script>
+
+</body>
+</html>
