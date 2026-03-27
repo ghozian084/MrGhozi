@@ -146,6 +146,9 @@
         if (currentSlide >= slides.length) currentSlide = slides.length - 1;
         slides[currentSlide].classList.add('active');
         fill.style.width = ((currentSlide + 1) / slides.length * 100) + "%";
+        // Update Buttons
+        prevBtn.style.visibility = currentSlide === 0 ? "hidden" : "visible";
+        nextBtn.innerHTML = currentSlide === slides.length - 1 ? "Got it!" : "Next Step →";
     }
 </script>
 
