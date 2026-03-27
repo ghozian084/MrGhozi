@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Project 4: 3D Brand Architect</title>
+    <style>
+        :root {
+            --primary: #0984e3;
+            --secondary: #74b9ff;
+            --bg: #1e272e;
+            --card: #2d3436;
+            --text: #dfe6e9;
+            --accent: #fab1a0;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; }
+        .progress-bar { width: 100%; height: 5px; background: #636e72; position: fixed; top: 0; }
+        #progress-fill { height: 100%; background: var(--primary); width: 16.6%; transition: 0.3s; }
+        .slide-container { width: 90%; max-width: 900px; height: 80vh; margin-top: 40px; background: var(--card); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; overflow-y: auto; }
+        .slide { display: none; animation: slideIn 0.5s; }
+        .active { display: block; }
+        h1 { color: var(--primary); }
+        h2 { color: var(--accent); border-left: 5px solid var(--primary); padding-left: 15px; }
+        .math-box { background: #1e272e; padding: 15px; border-radius: 10px; border: 1px dashed var(--primary); color: var(--secondary); font-family: 'Courier New', monospace; font-size: 1.1rem; }
+        .nav-btns { position: absolute; bottom: 30px; right: 40px; }
+        button { background: var(--primary); border: none; padding: 12px 25px; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .template { border: 2px solid var(--primary); padding: 20px; border-radius: 10px; background: #353b48; margin-top: 20px; }
+        .temp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .temp-box { background: #2d3436; border: 1px solid #636e72; padding: 10px; font-size: 0.8rem; min-height: 80px; }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar"><div id="progress-fill"></div></div>
+
+<div class="slide-container">
+    
+    <!-- SLIDE 1: INTRO -->
+    <div class="slide active">
+        <h1>📦 Project 4: The 3D Brand Architect</h1>
+        <p style="font-size: 1.3rem; color: var(--secondary);">Geometry in the Palm of Your Hand.</p>
+        <p>Your task is to design a digital 3D package for a product and calculate the exact math needed to manufacture it.</p>
+        <div style="background: #353b48; padding: 20px; border-radius: 10px; margin-top: 20px; border-bottom: 4px solid var(--primary);">
+            <strong>Tools:</strong> Canva (3D Elements) or Tinkercad + Google Slides.
+        </div>
+    </div>
+
+    <!-- SLIDE 2: STEP 1 -->
+    <div class="slide">
+        <h2>Step 1: Product Concept</h2>
+        <p>Pick a product to design a box for (e.g., a new smartphone, a luxury perfume, or a futuristic snack).</p>
+        <ul>
+            <li>Decide on the shape: <strong>Rectangular Prism</strong> (box) or <strong>Cylinder</strong> (tube).</li>
+            <li><strong>Action:</strong> Use Canva or Tinkercad to create a 3D visual of your package.</li>
+        </ul>
+    </div>
+
+    <!-- SLIDE 3: STEP 2 -->
+    <div class="slide">
+        <h2>Step 2: Dimensions & Decimals</h2>
+        <p>Assign realistic dimensions (Length, Width, Height) or (Radius, Height).</p>
+        <p>Use <strong>Decimals</strong> for precision (e.g., 15.5 cm).</p>
+        <div class="math-box">
+            Example:<br>
+            Length (l) = 12.4 cm<br>
+            Width (w) = 6.2 cm<br>
+            Height (h) = 2.5 cm
+        </div>
+    </div>
+
+    <!-- SLIDE 4: STEP 3 -->
+    <div class="slide">
+        <h2>Step 3: Surface Area (The Shell)</h2>
+        <p>Calculate the total area of the "Net" (all sides combined). This tells you how much cardboard/material you need.</p>
+        <div class="math-box">
+            Formula (Box): 2(lw + lh + wh)<br><br>
+            Calculation:<br>
+            2( (12.4*6.2) + (12.4*2.5) + (6.2*2.5) ) = [___] cm²
+        </div>
+    </div>
+
+    <!-- SLIDE 5: STEP 4 -->
+    <div class="slide">
+        <h2>Step 4: Volume (The Capacity)</h2>
+        <p>Calculate how much space is inside the package.</p>
+        <div class="math-box">
+            Formula (Box): l x w x h<br>
+            Formula (Cylinder): π x r² x h<br><br>
+            Calculation: 12.4 x 6.2 x 2.5 = [___] cm³
+        </div>
+    </div>
+
+    <!-- SLIDE 6: STEP 5 -->
+    <div class="slide">
+        <h2>Step 5: The "Mini" Version (Scaling)</h2>
+        <p>Imagine you make a "Travel Size" version that is exactly <strong>1/2 the size</strong> ($0.5x$).</p>
+        <ul>
+            <li>What happens to the Volume? (Hint: It's not just 1/2!)</li>
+            <li>New Volume = Original Volume x ($0.5^3$).</li>
+        </ul>
+        <div class="math-box">
+            Volume scaling uses Powers of 3!
+        </div>
+    </div>
+
+    <!-- SLIDE 7: TEMPLATE -->
+    <div class="slide">
+        <h2 style="border: none; text-align: center;">Project 4 Report Blueprint</h2>
+        <div class="template">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--primary);">
+                <strong>PACKAGING SPECS</strong>
+                <span>Designer: [Your Name]</span>
+            </div>
+            <div class="temp-grid">
+                <div class="temp-box">[3D Design Image / Screenshot]</div>
+                <div class="temp-box">
+                    <strong>Dimensions:</strong><br>
+                    L: [__] cm | W: [__] cm | H: [__] cm<br><br>
+                    <strong>Surface Area:</strong><br>
+                    [Result] cm² (Material needed)
+                </div>
+            </div>
+            <div class="temp-grid">
+                <div class="temp-box">
+                    <strong>Volume:</strong><br>
+                    [Result] cm³ (Space inside)
+                </div>
+                <div class="temp-box" style="background: var(--primary); color: white;">
+                    <strong>Design Logic:</strong><br>
+                    "I chose this shape because it [saves material / holds more]. My travel size version has a volume of [X] cm³."
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-btns">
+        <button id="prevBtn" style="background: #636e72; margin-right: 10px;" onclick="changeSlide(-1)">Back</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next Step</button>
+    </div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const fill = document.getElementById('progress-fill');
+
+    function changeSlide(step) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide += step;
+        if (currentSlide < 0) currentSlide = 0;
+        if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+        slides[currentSlide].classList.add('active');
+        fill.style.width = ((currentSlide + 1) / slides.length * 100) + "%";
+    }
+</script>
+
+</body>
+</html>
