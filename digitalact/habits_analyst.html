@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Project 5: Digital Habits Analyst</title>
+    <style>
+        :root {
+            --primary: #00cec9;
+            --secondary: #81ecec;
+            --bg: #2d3436;
+            --card: #636e72;
+            --text: #f5f6fa;
+            --accent: #a29bfe;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; }
+        .progress-bar { width: 100%; height: 5px; background: #b2bec3; position: fixed; top: 0; }
+        #progress-fill { height: 100%; background: var(--primary); width: 20%; transition: 0.3s; }
+        .slide-container { width: 90%; max-width: 900px; height: 80vh; margin-top: 40px; background: var(--card); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; overflow-y: auto; }
+        .slide { display: none; animation: fadeIn 0.5s; }
+        .active { display: block; }
+        h1 { color: var(--primary); text-shadow: 2px 2px #2d3436; }
+        h2 { color: var(--secondary); border-left: 5px solid var(--primary); padding-left: 15px; }
+        .math-box { background: #2d3436; padding: 15px; border-radius: 10px; border: 1px dashed var(--primary); color: var(--secondary); font-family: 'Courier New', monospace; font-size: 1.1rem; }
+        .nav-btns { position: absolute; bottom: 30px; right: 40px; }
+        button { background: var(--primary); border: none; padding: 12px 25px; color: #2d3436; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .template { border: 2px solid var(--primary); padding: 20px; border-radius: 10px; background: #2d3436; margin-top: 20px; }
+        .temp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .temp-box { background: #636e72; border: 1px solid #b2bec3; padding: 10px; font-size: 0.8rem; min-height: 80px; }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar"><div id="progress-fill"></div></div>
+
+<div class="slide-container">
+    
+    <!-- SLIDE 1: INTRO -->
+    <div class="slide active">
+        <h1>📊 Project 5: The Digital Habits Analyst</h1>
+        <p style="font-size: 1.3rem; color: var(--secondary);">Turn your phone usage into Data Science.</p>
+        <p>In this final project, you will analyze your own Screen Time data to find patterns in your digital life using Statistics.</p>
+        <div style="background: #2d3436; padding: 20px; border-radius: 10px; margin-top: 20px; border-top: 4px solid var(--accent);">
+            <strong>Objective:</strong> Collect 7 days of data, calculate the Mean, Median, Mode, and create a Chart.
+        </div>
+    </div>
+
+    <!-- SLIDE 2: STEP 1 -->
+    <div class="slide">
+        <h2>Step 1: Data Harvesting</h2>
+        <p>Go to your phone settings (Screen Time on iPhone or Digital Wellbeing on Android).</p>
+        <ul>
+            <li><strong>Action:</strong> Take a screenshot of your usage for the <strong>last 7 days</strong>.</li>
+            <li>List the total minutes/hours used each day (e.g., Mon: 4h 20m, Tue: 3h 15m, etc.).</li>
+            <li>Convert everything into <strong>Minutes</strong> for easier math.</li>
+        </ul>
+        <div class="math-box">Example: 4h 20m = (4 x 60) + 20 = 260 Minutes.</div>
+    </div>
+
+    <!-- SLIDE 3: STEP 2 -->
+    <div class="slide">
+        <h2>Step 2: The Central Tendency</h2>
+        <p>Calculate the 3 Ms of Statistics:</p>
+        <ul>
+            <li><strong>Mean (Average):</strong> Total Minutes ÷ 7 Days.</li>
+            <li><strong>Median (Middle):</strong> Sort your 7 days from smallest to largest. Pick the middle one.</li>
+            <li><strong>Mode:</strong> The app category you used most frequently (e.g., Social, Games, Education).</li>
+        </ul>
+        <div class="math-box">
+            Data: 120, 150, 150, 180, 200, 210, 300<br>
+            Median = 180 Minutes.
+        </div>
+    </div>
+
+    <!-- SLIDE 4: STEP 3 -->
+    <div class="slide">
+        <h2>Step 3: The Range (Dispersion)</h2>
+        <p>How much does your usage fluctuate?</p>
+        <p><strong>Formula:</strong> Highest Value - Lowest Value = Range.</p>
+        <div class="math-box">
+            Range = 300 mins - 120 mins = 180 Minutes.
+        </div>
+        <p>A large range means your habits are inconsistent. A small range means your habits are very stable.</p>
+    </div>
+
+    <!-- SLIDE 5: STEP 4 -->
+    <div class="slide">
+        <h2>Step 4: Data Visualization</h2>
+        <p>Create a <strong>Bar Chart</strong> or <strong>Pie Chart</strong> using Google Sheets or Canva.</p>
+        <ul>
+            <li>X-Axis: Days of the week.</li>
+            <li>Y-Axis: Minutes used.</li>
+            <li>Make it colorful! Visuals help people understand data instantly.</li>
+        </ul>
+    </div>
+
+    <!-- SLIDE 6: TEMPLATE -->
+    <div class="slide">
+        <h2 style="border: none; text-align: center;">Project 5 Report Blueprint</h2>
+        <div class="template">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--primary);">
+                <strong>DIGITAL WELLNESS DASHBOARD</strong>
+                <span>Analyst: [Your Name]</span>
+            </div>
+            <div class="temp-grid">
+                <div class="temp-box">[Bar Chart Screenshot]</div>
+                <div class="temp-box">
+                    <strong>Statistics Table:</strong><br>
+                    Mean: [__] mins<br>
+                    Median: [__] mins<br>
+                    Range: [__] mins
+                </div>
+            </div>
+            <div class="temp-grid">
+                <div class="temp-box">
+                    <strong>Top Category (Mode):</strong><br>
+                    [e.g., Social Media - 45%]
+                </div>
+                <div class="temp-box" style="background: var(--accent); color: #2d3436;">
+                    <strong>The Insight:</strong><br>
+                    "My average usage is [X] hours. I spend [X]% more time on weekends than weekdays. My goal for next week is..."
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-btns">
+        <button id="prevBtn" style="background: #b2bec3; margin-right: 10px;" onclick="changeSlide(-1)">Back</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next Step</button>
+    </div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const fill = document.getElementById('progress-fill');
+
+    function changeSlide(step) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide += step;
+        if (currentSlide < 0) currentSlide = 0;
+        if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+        slides[currentSlide].classList.add('active');
+        fill.style.width = ((currentSlide + 1) / slides.length * 100) + "%";
+    }
+</script>
+
+</body>
+</html>
