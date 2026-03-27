@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 6: Viral Trend Forecaster Guide</title>
+    
+    <!-- 1. THE MATH ENGINE (MATHJAX) -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #ff7675; /* Viral Coral */
+            --secondary: #74b9ff; /* Tech Blue */
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --accent: #55efc4; /* Algorithm Green */
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+
+        /* Slide Container */
+        .slide-container { 
+            width: 95%; 
+            max-width: 1000px; 
+            height: 85vh;
+            margin-top: 40px;
+            background: var(--card); 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6); 
+            border: 1px solid #334155;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide { display: none; height: 100%; overflow-y: auto; }
+        .active { display: block; animation: fadeIn 0.5s; }
+
+        h1 { color: var(--primary); font-size: 2.2rem; margin-bottom: 10px; }
+        h2 { color: var(--secondary); border-left: 5px solid var(--primary); padding-left: 15px; }
+        
+        .math-box {
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px dashed var(--primary);
+            color: var(--secondary);
+            font-size: 1.4rem;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Detailed Blueprint Styles */
+        .blueprint-container {
+            border: 3px solid var(--primary);
+            padding: 25px;
+            border-radius: 15px;
+            background: #111827;
+            margin-top: 10px;
+        }
+        .bp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .bp-card { background: #1e293b; border-radius: 10px; padding: 15px; border-left: 4px solid var(--accent); }
+        .bp-visual { background: #0f172a; height: 180px; border: 2px dashed #475569; border-radius: 10px; display:flex; align-items:center; justify-content:center; color: #64748b; font-weight:bold; text-align:center; }
+
+        /* Navigation */
+        .nav-btns { position: absolute; bottom: 30px; right: 40px; display: flex; gap: 10px; }
+        button { background: var(--primary); border: none; padding: 12px 25px; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        button:hover { background: #ff5252; transform: translateY(-2px); }
+        button.secondary { background: #475569; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="slide-container">
+    
+    <!-- SLIDE 1: INTRO -->
+    <div class="slide active">
+        <h1>📈 Project 6: The Viral Trend Forecaster</h1>
+        <p style="font-size: 1.3rem; color: var(--secondary);">How do videos reach 10 Million views?</p>
+        <p>You are a <b>Social Media Data Consultant</b>. You will use Algebra, Powers, and Roots to predict the "Viral Curve" of a new trend.</p>
+        <div class="math-box">
+            $$\text{Reach} = \text{Initial} \times (\text{Rate})^{\text{Time}}$$
+        </div>
+        <p>In this project, you will prove that small changes in the <b>Rate</b> create massive changes in <b>Success</b>.</p>
+    </div>
+
+    <!-- SLIDE 2: STEP 1 (POWERS) -->
+    <div class="slide">
+        <h2>Step 1: Forecasting with Powers ($x^n$)</h2>
+        <p>Pick an <b>Initial Seed</b> (number of friends) and a <b>Growth Rate</b> (how many people each viewer shares with).</p>
+        <p>Example: 50 friends and a 3x sharing rate over 5 days:</p>
+        <div class="math-box">
+            $$50 \times 3^5 = 50 \times 243 = 12,150 \text{ Views}$$
+        </div>
+        <ul>
+            <li><b>Action:</b> Calculate your Day 7 reach for your final report.</li>
+        </ul>
+    </div>
+
+    <!-- SLIDE 3: STEP 2 (ROOTS) -->
+    <div class="slide">
+        <h2>Step 2: Working Backward with Roots ($\sqrt[n]{x}$)</h2>
+        <p>If you want to hit <b>1,000,000 views</b> in exactly <b>3 days</b>, what must the daily growth rate be?</p>
+        <div class="math-box">
+            $$\sqrt[3]{1,000,000} = 100$$
+        </div>
+        <p><b>Conclusion:</b> To hit a Million in 3 days, every viewer must share the post with 100 people.</p>
+    </div>
+
+    <!-- SLIDE 4: STEP 3 (FRACTIONS) -->
+    <div class="slide">
+        <h2>Step 3: Engagement Mix (Fractions)</h2>
+        <p>Calculate the "Interaction Ratio." If $\frac{2}{5}$ of viewers <b>Like</b> and $\frac{1}{10}$ <b>Comment</b>:</p>
+        <div class="math-box">
+            $$\frac{2}{5} + \frac{1}{10} = \frac{4}{10} + \frac{1}{10} = \frac{5}{10} = 50\%$$
+        </div>
+        <p><b>Action:</b> Create your own fractions for Likes and Shares and convert them to a decimal and percentage.</p>
+    </div>
+
+    <!-- SLIDE 5: THE FINAL REPORT BLUEPRINT -->
+    <div class="slide">
+        <h2 style="border: none; text-align: center; color: var(--primary);">Detailed Final Report Blueprint</h2>
+        <p style="text-align: center; font-size: 0.9rem; margin-top: -10px;">Create this layout in Canva or Google Slides</p>
+        
+        <div class="blueprint-container">
+            <div style="display: flex; justify-content: space-between; border-bottom: 2px solid var(--primary); padding-bottom: 5px;">
+                <strong style="font-size: 1.2rem; color: var(--primary);">VIRAL FORECAST: [Trend Name]</strong>
+                <span style="font-size: 0.8rem;">By: [Your Name]</span>
+            </div>
+            
+            <div class="bp-grid">
+                <!-- Left: Visual & Verdict -->
+                <div>
+                    <div class="bp-visual">INSERT VIRAL THUMBNAIL (CANVA)</div>
+                    <div class="bp-card" style="margin-top:15px; background: var(--primary); color: white; border-left: none;">
+                        <strong>ALGORITHM VERDICT:</strong><br>
+                        "Based on my math, this trend has a growth rate of [X]. It is mathematically [Viral / Stable / Dying]."
+                    </div>
+                </div>
+
+                <!-- Right: The Math Lab -->
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div class="bp-card">
+                        <strong>1. Powers (Day 7 Reach):</strong><br>
+                        $$Initial \cdot Rate^7 = [Result]$$
+                    </div>
+                    <div class="bp-card">
+                        <strong>2. Roots (Target Speed):</strong><br>
+                        Daily Rate = $$\sqrt[3]{Goal}$$
+                    </div>
+                    <div class="bp-card">
+                        <strong>3. Engagement Fractions:</strong><br>
+                        $$\frac{Like}{Total} + \frac{Share}{Total} = [X]\%$$
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 10px;">Requirement: Show your work for every calculation to get full credit.</p>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="nav-btns">
+        <button id="prevBtn" class="secondary" onclick="changeSlide(-1)">Back</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next Step →</button>
+    </div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const fill = document.getElementById('progress-fill');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+
+    function changeSlide(step) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide += step;
+
+        if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+        if (currentSlide < 0) currentSlide = 0;
+
+        slides[currentSlide].classList.add('active');
+        
+        // Update Buttons
+        prevBtn.style.visibility = currentSlide === 0 ? "hidden" : "visible";
+        nextBtn.innerHTML = currentSlide === slides.length - 1 ? "Finish Guide" : "Next Step →";
+
+        // FORCE RELOAD MATH SYMBOLS
+        if (window.MathJax) {
+            MathJax.typesetPromise();
+        }
+    }
+
+    // Initialize
+    prevBtn.style.visibility = "hidden";
+</script>
+
+</body>
+</html>
