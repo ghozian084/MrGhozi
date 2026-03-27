@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example Research: Reading Habits</title>
+    <style>
+        :root { --primary: #0f172a; --secondary: #3b82f6; --accent: #10b981; --bg: #f1f5f9; --text: #334155; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        
+        .slide { display: none; width: 85%; height: 85%; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); position: relative; border-top: 10px solid var(--secondary); }
+        .active { display: block; animation: slideIn 0.4s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+
+        h1 { color: var(--primary); font-size: 2.2rem; margin-bottom: 10px; }
+        h2 { color: var(--secondary); border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; }
+        
+        .nav-buttons { position: absolute; bottom: 30px; right: 40px; }
+        button { padding: 12px 24px; cursor: pointer; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; margin-left: 10px; transition: 0.2s; }
+        button:hover { background: var(--secondary); }
+
+        /* Data Representation Styles */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
+        .stats-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .stats-table th, .stats-table td { padding: 12px; border: 1px solid #e2e8f0; text-align: left; }
+        .stats-table th { background: #f8fafc; }
+
+        .stem-leaf { font-family: 'Courier New', monospace; background: #f8fafc; padding: 20px; border-radius: 10px; border-left: 5px solid var(--secondary); font-size: 1.5rem; line-height: 1.2; }
+        .chart-container { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; text-align: center; }
+        .math-box { background: #fffbeb; border: 1px solid #fef3c7; padding: 15px; border-radius: 10px; font-style: italic; color: #92400e; }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 1: INTRO -->
+<div class="slide active">
+    <h1>Research: Literature vs. Digital Reading</h1>
+    <p><strong>Researcher:</strong> Statistical Exemplar Group</p>
+    <div class="grid">
+        <div>
+            <h2>Hypothesis</h2>
+            <p>We predict that students who own more physical books (Discrete) will have a higher daily reading duration (Continuous), but with high variation (Standard Deviation).</p>
+        </div>
+        <div class="math-box">
+            <p><strong>Cambridge P1 Topics Covered:</strong><br>
+            - Representation of Data (1.1 - 1.5)<br>
+            - Measures of Central Tendency (2.1 - 2.3)<br>
+            - Measures of Variation (3.1 - 3.3)</p>
+        </div>
+    </div>
+    <div class="nav-buttons"><button onclick="move(1)">Start Presentation &raquo;</button></div>
+</div>
+
+<!-- SLIDE 2: DATA CLASSIFICATION -->
+<div class="slide">
+    <h1>1. Data Classification (Topic 1.1)</h1>
+    <div class="grid">
+        <div class="chart-container">
+            <h3>Variable A: Books Owned</h3>
+            <p><strong>Type:</strong> Discrete</p>
+            <p><strong>Reason:</strong> You cannot own 12.4 books. Values are restricted to whole integers (counts).</p>
+        </div>
+        <div class="chart-container">
+            <h3>Variable B: Reading Time</h3>
+            <p><strong>Type:</strong> Continuous</p>
+            <p><strong>Reason:</strong> Time can be measured to any degree of accuracy (e.g., 42.56 minutes).</p>
+        </div>
+    </div>
+    <div class="nav-buttons"><button onclick="move(-1)">&laquo; Back</button><button onclick="move(1)">Next &raquo;</button></div>
+</div>
+
+<!-- SLIDE 3: STEM AND LEAF -->
+<div class="slide">
+    <h1>2. Discrete Representation (Topic 1.2)</h1>
+    <h2>Back-to-Back Stem-and-Leaf: Books Owned</h2>
+    <div class="stem-leaf">
+        &nbsp;&nbsp;&nbsp;Group A | Stem | Group B <br>
+        -----------|------|-----------<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8 5 2 |  0   | 4 7 9<br>
+        &nbsp;&nbsp;&nbsp;8 5 2 0 |  1   | 0 1 5 8<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5 2 2 |  2   | 2 5 9<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5 0 |  3   | 1 4<br>
+    </div>
+    <p><strong>Key:</strong> 1 | 5 means 15 Books. <br>This allows us to see the <strong>shape</strong> of the distribution while keeping every original data point.</p>
+    <div class="nav-buttons"><button onclick="move(-1)">&laquo; Back</button><button onclick="move(1)">Next &raquo;</button></div>
+</div>
+
+<!-- SLIDE 4: HISTOGRAM -->
+<div class="slide">
+    <h1>3. Continuous Representation (Topic 1.3)</h1>
+    <h2>Histogram: Unequal Class Widths</h2>
+    <div class="grid">
+        <div class="chart-container">
+            <!-- SVG Histogram Example -->
+            <svg width="300" height="200" viewBox="0 0 300 200">
+                <!-- Bars (Unequal widths) -->
+                <rect x="10" y="100" width="40" height="100" fill="#3b82f6" stroke="white" /> <!-- 0-20 -->
+                <rect x="50" y="40" width="80" height="160" fill="#3b82f6" stroke="white" />  <!-- 20-60 -->
+                <rect x="130" y="140" width="120" height="60" fill="#3b82f6" stroke="white" /> <!-- 60-120 -->
+                <!-- Axis -->
+                <line x1="10" y1="200" x2="280" y2="200" stroke="black" stroke-width="2"/>
+                <line x1="10" y1="200" x2="10" y2="20" stroke="black" stroke-width="2"/>
+            </svg>
+            <p><small>X-axis: Time (min) | Y-axis: Frequency Density</small></p>
+        </div>
+        <div>
+            <h3>Frequency Density Calculation</h3>
+            <p>For the interval 20 < t ≤ 60:</p>
+            <p>Frequency = 12 | Class Width = 40</p>
+            <p><strong>FD = 12 / 40 = 0.3</strong></p>
+            <p><em>Crucial: The area of the bar represents the frequency, not the height.</em></p>
+        </div>
+    </div>
+    <div class="nav-buttons"><button onclick="move(-1)">&laquo; Back</button><button onclick="move(1)">Next &raquo;</button></div>
+</div>
+
+<!-- SLIDE 5: CUMULATIVE FREQUENCY -->
+<div class="slide">
+    <h1>4. CF Graph & Percentiles (Topic 1.4/3.2)</h1>
+    <div class="grid">
+        <div class="chart-container">
+            <svg width="300" height="200" viewBox="0 0 300 200">
+                <path d="M 10 200 Q 150 180 150 100 T 290 20" fill="none" stroke="#10b981" stroke-width="3"/>
+                <line x1="10" y1="100" x2="150" y2="100" stroke="red" stroke-dasharray="4"/>
+                <line x1="150" y1="100" x2="150" y2="200" stroke="red" stroke-dasharray="4"/>
+            </svg>
+            <p><small>Red line shows Median (Q2) estimation</small></p>
+        </div>
+        <div>
+            <h3>Quartile Estimates</h3>
+            <ul>
+                <li><strong>Lower Quartile (Q1):</strong> 22 mins</li>
+                <li><strong>Median (Q2):</strong> 45 mins</li>
+                <li><strong>Upper Quartile (Q3):</strong> 68 mins</li>
+                <li><strong>IQR:</strong> 68 - 22 = 46 mins</li>
+            </ul>
+        </div>
+    </div>
+    <div class="nav-buttons"><button onclick="move(-1)">&laquo; Back</button><button onclick="move(1)">Next &raquo;</button></div>
+</div>
+
+<!-- SLIDE 6: CENTRAL TENDENCY & VARIATION -->
+<div class="slide">
+    <h1>5. Summary Statistics (Topic 2 & 3)</h1>
+    <table class="stats-table">
+        <tr><th>Statistic</th><th>Physical Books (Discrete)</th><th>Read Time (Continuous)</th></tr>
+        <tr><td>Mean (x̄)</td><td>25.1 books</td><td>47.2 mins</td></tr>
+        <tr><td>Standard Deviation (σ)</td><td>4.21</td><td>31.40</td></tr>
+        <tr><td>Variance (σ²)</td><td>17.72</td><td>985.96</td></tr>
+    </table>
+    <div class="math-box" style="margin-top:20px;">
+        <strong>Manual Calculation Proof for σ:</strong><br>
+        Using formula: √[ (Σx² / n) - (x̄)² ] <br>
+        For books: √[ (13200 / 20) - (25.1)² ] = √[ 660 - 630.01 ] = √29.99 = <strong>5.47</strong>
+    </div>
+    <div class="nav-buttons"><button onclick="move(-1)">&laquo; Back</button><button onclick="move(1)">Next &raquo;</button></div>
+</div>
+
+<!-- SLIDE 7: CONCLUSION -->
+<div class="slide">
+    <h1>6. Research Conclusion</h1>
+    <div class="content">
+        <p>Our research found a <strong>moderate positive correlation</strong> between books owned and reading time. However, the <strong>Standard Deviation</strong> for reading time was very high (31.4), indicating that "Time Spent" is highly inconsistent among students compared to "Books Owned."</p>
+        <p><strong>Skewness:</strong> The reading time data showed a <strong>positive skew</strong>, as a small number of students read for over 120 minutes, pulling the mean higher than the median.</p>
+        <p><em>Project complete for Cambridge P1 Chapter 1-3.</em></p>
+    </div>
+    <div class="nav-buttons"><button onclick="move(-1)">&laquo; Back</button><button onclick="location.reload()">Restart</button></div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+
+    function move(n) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide += n;
+        slides[currentSlide].classList.add('active');
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "ArrowRight" && currentSlide < slides.length - 1) move(1);
+        if (e.key === "ArrowLeft" && currentSlide > 0) move(-1);
+    });
+</script>
+
+</body>
+</html>
