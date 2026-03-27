@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics Research Presentation</title>
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .slide { display: none; width: 80%; height: 80%; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; }
+        .active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        h1 { color: var(--primary); font-size: 2.5rem; border-bottom: 3px solid var(--primary); display: inline-block; }
+        .content { margin-top: 30px; font-size: 1.2rem; }
+        .nav-buttons { position: absolute; bottom: 30px; right: 40px; }
+        button { padding: 10px 20px; cursor: pointer; background: var(--primary); color: white; border: none; border-radius: 5px; margin-left: 10px; transition: 0.3s; }
+        button:hover { background: #1d4ed8; }
+        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .box { background: #eff6ff; padding: 15px; border-radius: 8px; border: 1px solid #bfdbfe; }
+        img { max-width: 100%; height: auto; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide active">
+    <h1>Research: [Topic Name]</h1>
+    <div class="content">
+        <p><strong>Group Members:</strong> [Names]</p>
+        <p><strong>Research Question:</strong> [e.g., Does screen time affect the number of tabs open?]</p>
+        <p><em>Cambridge P1 Statistics Project</em></p>
+    </div>
+    <div class="nav-buttons"><button onclick="move(1)">Next &raquo;</button></div>
+</div>
+
+<!-- SLIDE 2: DATA CLASSIFICATION -->
+<div class="slide">
+    <h1>1. Data Types (Topic 1.1)</h1>
+    <div class="data-grid">
+        <div class="box">
+            <h3>Discrete Variable</h3>
+            <p><strong>Variable:</strong> [e.g., Number of Tabs]</p>
+            <p><strong>Reasoning:</strong> [e.g., It consists of whole integers; you cannot have 4.5 tabs.]</p>
+        </div>
+        <div class="box">
+            <h3>Continuous Variable</h3>
+            <p><strong>Variable:</strong> [e.g., Screen Time]</p>
+            <p><strong>Reasoning:</strong> [e.g., It can take any value within a range and is measured in time.]</p>
+        </div>
+    </div>
+    <div class="nav-buttons"><button onclick="move(-1)">&laquo; Back</button><button onclick="move(1)">Next &raquo;</button></div>
+</div>
+
+<!-- SLIDE 3: STEM-AND-LEAF -->
+<div class="slide">
+    <h1>2. Representation: Discrete (Topic 1.2)</h1>
+    <div class="content">
+        <p><strong>Back-to-Back Stem-and-Leaf Diagram</strong></p>
+        <pre style="background: #eee; padding: 20px; font-size: 1.5rem;">
+        [Group A] | Stem | [Group B]
+        ----------|------|----------
+                  |   0  | 4 5 5 
+                9 |   1  | 0 2 2 
+        </pre>
+        <p>Key: 1 | 2 means 12 [units]</p>
+    </div>
+    <div class="nav-buttons"><button onclick="move(-1)">&laquo; Back</button><button onclick="move(1)">Next &raquo;</button></div>
+</div>
+
+<!-- SLIDE 4: HISTOGRAM -->
+<div class="slide">
+    <h1>3. Representation: Continuous (Topic 1.3)</h1>
+    <div class="content">
+        <p>Histogram with <strong>Unequal Class Widths</strong>.</p>
+        <div style="height: 300px; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center;">
+            [Insert Screenshot of Histogram Here]
+        </div>
+        <p>Note: Frequency Density = Frequency / Class Width</p>
+    </div>
+    <div class="nav-buttons"><button onclick="move(-1)">&laquo; Back</button><button onclick="move(1)">Next &raquo;</button></div>
+</div>
+
+<!-- SLIDE 5: MEASURES OF CENTRAL TENDENCY -->
+<div class="slide">
+    <h1>4. Central Tendency (Topic 2)</h1>
+    <table style="width:100%; text-align: left; margin-top: 20px; border-collapse: collapse;">
+        <tr style="background: #2563eb; color: white;"><th>Measure</th><th>Discrete</th><th>Continuous</th></tr>
+        <tr><td>Mean (x̄)</td><td>[Value]</td><td>[Value]</td></tr>
+        <tr><td>Median</td><td>[Value]</td><td>[Value]</td></tr>
+        <tr><td>Mode</td><td>[Value]</td><td>[Modal Class]</td></tr>
+    </table>
+    <div class="nav-buttons"><button onclick="move(-1)">&laquo; Back</button><button onclick="move(1)">Next &raquo;</button></div>
+</div>
+
+<!-- SLIDE 6: VARIATION -->
+<div class="slide">
+    <h1>5. Measures of Variation (Topic 3)</h1>
+    <div class="data-grid">
+        <div class="box">
+            <p><strong>Interquartile Range:</strong> [Q3 - Q1]</p>
+            <p><strong>Variance (σ²):</strong> [Value]</p>
+            <p><strong>Standard Deviation (σ):</strong> [Value]</p>
+        </div>
+        <div class="box">
+            <h3>Manual Proof (σ)</h3>
+            <p>Formula: √(Σx²/n - (x̄)²)</p>
+            <p>Working: [Insert Manual Calculation Steps]</p>
+        </div>
+    </div>
+    <div class="nav-buttons"><button onclick="move(-1)">&laquo; Back</button><button onclick="move(1)">Next &raquo;</button></div>
+</div>
+
+<!-- SLIDE 7: CONCLUSION -->
+<div class="slide">
+    <h1>6. Research Findings</h1>
+    <div class="content">
+        <p><strong>Skewness:</strong> The data was [Positively/Negatively/Symmetrically] skewed because...</p>
+        <p><strong>Final Insight:</strong> [What did you learn about student life from this research?]</p>
+    </div>
+    <div class="nav-buttons"><button onclick="move(-1)">&laquo; Back</button></div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    function move(n) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide += n;
+        slides[currentSlide].classList.add('active');
+    }
+</script>
+
+</body>
+</html>
