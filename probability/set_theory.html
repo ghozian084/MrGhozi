@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Theory Interactive Pro</title>
+    
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #2980b9;
+            --secondary: #8e44ad;
+            --success: #27ae60;
+            --error: #e74c3c;
+            --bg: #f4f6f7;
+            --shade: #3498db;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #2c3e50;
+        }
+
+        /* NAVIGATION */
+        .nav-bar {
+            background: white; width: 100%; padding: 15px; display: flex; justify-content: center; gap: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); flex-wrap: wrap;
+        }
+        .nav-btn {
+            padding: 8px 18px; border: 2px solid var(--primary); background: transparent; color: var(--primary); border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+        .nav-btn.active, .nav-btn:hover { background: var(--primary); color: white; }
+
+        .container { width: 95%; max-width: 900px; margin: 25px 0 50px 0; }
+        .section { display: none; background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); animation: fadeIn 0.4s; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; color: var(--primary); margin-top: 0; }
+        .btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1rem; margin: 5px; transition: 0.2s; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* VENN GRAPHICS */
+        .venn-container { display: flex; justify-content: center; margin: 20px 0; position: relative; }
+        svg { max-width: 100%; height: auto; background: white; border-radius: 8px; }
+        .venn-text { font-size: 1.2rem; font-weight: bold; pointer-events: none; }
+        .element-text { font-size: 1.1rem; pointer-events: none; fill: #333; }
+
+        /* ANIMATION ASSETS (Slide 1) */
+        .anim-el {
+            position: absolute; width: 32px; height: 32px; background: #f1c40f; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-weight: bold;
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            top: 40px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 5;
+        }
+
+        /* DRAG AND DROP */
+        .dnd-zone {
+            min-height: 60px; background: #fdfdfd; border: 2px dashed #ccc; border-radius: 10px; padding: 15px; 
+            display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;
+        }
+        .token {
+            background: var(--primary); color: white; width: 38px; height: 38px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: grab; font-size: 1rem; user-select: none; z-index: 20; position: relative;
+        }
+        .token:active { cursor: grabbing; }
+
+        .abs-zone {
+            position: absolute; border: 2px dashed transparent; border-radius: 10px;
+            display: flex; flex-wrap: wrap; align-content: flex-start; justify-content: center; gap: 4px; padding: 5px; z-index: 10; transition: 0.2s;
+        }
+        .abs-zone.drag-over { background: rgba(46, 204, 113, 0.2); border-color: var(--success); }
+
+        /* INPUTS */
+        .math-input { padding: 5px; border: 2px solid #bdc3c7; border-radius: 5px; width: 55px; text-align: center; font-size: 1.2rem; font-weight:bold; }
+        .correct { background: #dff9fb !important; border-color: var(--success); color: var(--success); }
+        .wrong { background: #ffcccc !important; border-color: var(--error); color: var(--error); }
+        .feedback { font-weight: bold; margin-top: 10px; min-height: 25px; text-align: center; font-size: 1.1rem; }
+
+        /* SHADING COLORS */
+        .region { fill: transparent; transition: fill 0.3s; }
+        .shaded { fill: var(--shade); opacity: 0.5; }
+
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <button class="nav-btn active" onclick="showSection(1)">1. Basics</button>
+        <button class="nav-btn" onclick="showSection(2)">2. Shading Lab</button>
+        <button class="nav-btn" onclick="showSection(3)">3. Relationships</button>
+        <button class="nav-btn" onclick="showSection(4)">4. Sorting Lab</button>
+        <button class="nav-btn" onclick="showSection(5)">5. Easy Exercise</button>
+        <button class="nav-btn" onclick="showSection(6)">6. Medium Exercise</button>
+    </div>
+
+    <div class="container">
+
+        <!-- SECTION 1: BASICS -->
+        <div id="sec-1" class="section active">
+            <h2>1. Basics: Sorting elements</h2>
+            <p><strong>Set A</strong> = Even numbers, <strong>Set B</strong> = Multiples of 3. Pool: {1, 2, 3, 4, 5, 6}.</p>
+            <div class="venn-container" style="width: 500px; height: 350px; margin: 0 auto;">
+                <svg viewBox="0 0 500 350" width="500" height="350">
+                    <rect x="10" y="50" width="480" height="280" fill="none" stroke="#333" stroke-width="2"/>
+                    <circle cx="200" cy="200" r="100" fill="rgba(41, 128, 185, 0.05)" stroke="#2980b9" stroke-width="3"/>
+                    <circle cx="300" cy="200" r="100" fill="rgba(142, 68, 173, 0.05)" stroke="#8e44ad" stroke-width="3"/>
+                    <text x="120" y="90" class="venn-text" fill="#2980b9">Set A</text>
+                    <text x="310" y="90" class="venn-text" fill="#8e44ad">Set B</text>
+                </svg>
+                <div class="anim-el" id="ae-1" style="left: 100px;">1</div>
+                <div class="anim-el" id="ae-2" style="left: 150px;">2</div>
+                <div class="anim-el" id="ae-3" style="left: 200px;">3</div>
+                <div class="anim-el" id="ae-4" style="left: 250px;">4</div>
+                <div class="anim-el" id="ae-5" style="left: 300px;">5</div>
+                <div class="anim-el" id="ae-6" style="left: 350px;">6</div>
+            </div>
+            <div style="text-align:center;">
+                <button class="btn" onclick="playBasicAnim()">Start Animation</button>
+                <button class="btn" style="background:#7f8c8d" onclick="resetBasicAnim()">Reset</button>
+            </div>
+        </div>
+
+        <!-- SECTION 2: SHADING LAB -->
+        <div id="sec-2" class="section">
+            <h2>2. Interactive Shading</h2>
+            <p>Click the buttons to highlight specific regions.</p>
+            <div class="venn-container">
+                <svg viewBox="0 0 500 300" width="500" height="300">
+                    <path id="reg-neither" class="region" d="M 10 10 H 490 V 290 H 10 Z M 200 50 A 100 100 0 1 1 200 250 A 100 100 0 1 1 200 50 M 300 50 A 100 100 0 1 1 300 250 A 100 100 0 1 1 300 50" fill-rule="evenodd" />
+                    <path id="reg-a-only" class="region" d="M 250 63.4 A 100 100 0 1 0 250 236.6 A 100 100 0 0 1 250 63.4" />
+                    <path id="reg-b-only" class="region" d="M 250 63.4 A 100 100 0 0 1 250 236.6 A 100 100 0 1 0 250 63.4" />
+                    <path id="reg-both" class="region" d="M 250 63.4 A 100 100 0 0 1 250 236.6 A 100 100 0 0 1 250 63.4" />
+                    <rect x="10" y="10" width="480" height="280" fill="none" stroke="#333" stroke-width="2"/>
+                    <circle cx="200" cy="150" r="100" fill="none" stroke="#2980b9" stroke-width="2"/>
+                    <circle cx="300" cy="150" r="100" fill="none" stroke="#8e44ad" stroke-width="2"/>
+                    <text x="130" y="40" class="venn-text">A</text>
+                    <text x="350" y="40" class="venn-text">B</text>
+                </svg>
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
+                <button class="btn" onclick="shading('union')">$A \cup B$</button>
+                <button class="btn" onclick="shading('inter')">$A \cap B$</button>
+                <button class="btn" onclick="shading('compA')">$A'$</button>
+                <button class="btn" onclick="shading('compB')">$B'$</button>
+                <button class="btn" onclick="shading('neither')">$(A \cup B)'$</button>
+                <button class="btn" style="background:#7f8c8d" onclick="shading('clear')">Clear</button>
+            </div>
+        </div>
+
+        <!-- SECTION 3: RELATIONSHIPS -->
+        <div id="sec-3" class="section">
+            <h2>3. Subsets and Disjoint Sets</h2>
+            <div class="venn-container" style="background:#fdfdfd; border:1px solid #ddd; border-radius:10px;">
+                <svg viewBox="0 0 500 250" width="500">
+                    <circle id="rel-cir-b" cx="300" cy="125" r="80" fill="rgba(142, 68, 173, 0.1)" stroke="#8e44ad" stroke-width="3" style="transition: all 0.8s ease;"/>
+                    <circle id="rel-cir-a" cx="200" cy="125" r="80" fill="rgba(41, 128, 185, 0.1)" stroke="#2980b9" stroke-width="3" style="transition: all 0.8s ease;"/>
+                    <text id="rel-txt-a" x="140" y="50" class="venn-text" fill="#2980b9">A</text>
+                    <text id="rel-txt-b" x="340" y="50" class="venn-text" fill="#8e44ad">B</text>
+                </svg>
+            </div>
+            <div style="text-align:center;">
+                <button class="btn" onclick="animRel('disjoint')">Disjoint</button>
+                <button class="btn" onclick="animRel('subset')">Subset ($A \subset B$)</button>
+                <button class="btn" onclick="animRel('intersect')">Intersecting</button>
+            </div>
+        </div>
+
+        <!-- SECTION 4: SORTING LAB (COMPLETELY FIXED) -->
+        <div id="sec-4" class="section">
+            <h2>4. Sorting Lab</h2>
+            <p>A = {Prime: 2, 3, 5, 7}, B = {Odd: 1, 3, 5, 7, 9}. Sort numbers 1-10 into the correct region.</p>
+            
+            <div class="dnd-zone" id="lab-pool" ondrop="dropAny(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
+            
+            <div class="venn-container" style="width: 500px; height: 350px; margin: 0 auto; position: relative; background: #fff; border: 1px solid #ccc; border-radius: 8px;">
+                
+                <!-- Background = Outside Drop Zone (Z-index 2) -->
+                <div id="lab-out" class="abs-zone" ondrop="dropAny(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" style="left:0; top:0; width:100%; height:100%; z-index:2; padding: 10px; box-sizing: border-box; align-content: flex-end; justify-content: center;"></div>
+
+                <!-- The Visual Drawing (Z-index 1, behind tokens but visible) -->
+                <svg viewBox="0 0 500 350" width="500" height="350" style="position: absolute; top:0; left:0; z-index:1; pointer-events: none;">
+                    <circle cx="200" cy="180" r="110" fill="rgba(41, 128, 185, 0.1)" stroke="#2980b9" stroke-width="2"/>
+                    <circle cx="300" cy="180" r="110" fill="rgba(142, 68, 173, 0.1)" stroke="#8e44ad" stroke-width="2"/>
+                    <text x="100" y="60" class="venn-text" fill="#2980b9">A (Prime)</text>
+                    <text x="330" y="60" class="venn-text" fill="#8e44ad">B (Odd)</text>
+                </svg>
+
+                <!-- Specific Drop Zones (Z-index 3, on top of outside) -->
+                <div id="lab-a" class="abs-zone" ondrop="dropAny(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" style="left:110px; top:120px; width:70px; height:120px; z-index:3;"></div>
+                
+                <div id="lab-int" class="abs-zone" ondrop="dropAny(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" style="left:210px; top:120px; width:80px; height:120px; z-index:3;"></div>
+                
+                <div id="lab-b" class="abs-zone" ondrop="dropAny(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" style="left:320px; top:120px; width:70px; height:120px; z-index:3;"></div>
+            </div>
+
+            <div id="lab-fb" class="feedback"></div>
+            <div style="text-align:center;">
+                <button class="btn" onclick="checkSortingLab()">Verify Sorting</button>
+                <button class="btn" style="background:#7f8c8d" onclick="initLab()">Reset Tokens</button>
+            </div>
+        </div>
+
+        <!-- SECTION 5: EASY EXERCISE -->
+        <div id="sec-5" class="section">
+            <h2>5. Easy Exercise</h2>
+            <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap;">
+                <svg viewBox="0 0 300 200" width="300" style="background:#fff; border:1px solid #ccc; border-radius:8px;">
+                    <circle cx="110" cy="100" r="60" fill="none" stroke="#2980b9" stroke-width="2"/>
+                    <circle cx="190" cy="100" r="60" fill="none" stroke="#8e44ad" stroke-width="2"/>
+                    <text x="80" y="105" class="element-text">1</text>
+                    <text x="145" y="105" class="element-text">2</text>
+                    <text x="210" y="90" class="element-text">3</text>
+                    <text x="30" y="180" class="element-text">4</text>
+                    <text x="50" y="40" class="venn-text">A</text><text x="240" y="40" class="venn-text">B</text>
+                </svg>
+                <div style="min-width:250px;">
+                    <p>Identify elements for:</p>
+                    <h3 id="ez-q-text" style="color:var(--primary); margin: 5px 0;">$A \cap B = \{$</h3>
+                    <div class="dnd-zone" id="ez-target" ondrop="dropAny(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" style="border-color:var(--primary); min-height:60px; margin-bottom: 5px;"></div>
+                    <p style="margin: 0; font-size:1.2rem; font-weight:bold;">$\}$</p>
+                </div>
+            </div>
+            <p style="margin-top: 15px; margin-bottom:5px;"><strong>Drag numbers from here:</strong></p>
+            <div class="dnd-zone" id="ez-pool" ondrop="dropAny(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" style="background:#eee; min-height:40px;"></div>
+            <div id="ez-fb" class="feedback"></div>
+            <div style="text-align:center;">
+                <button class="btn" onclick="checkEz()">Submit Answer</button>
+                <button class="btn btn-alt" onclick="genEz()">Next Question</button>
+            </div>
+        </div>
+
+        <!-- SECTION 6: MEDIUM EXERCISE -->
+        <div id="sec-6" class="section">
+            <h2>6. Medium: Word Problem</h2>
+            <p>Class of 30: 18 Soccer (S), 15 Basketball (B), 5 Neither. Find the values.</p>
+            <div class="venn-container" style="width: 500px; height: 350px; margin: 0 auto; background: white; border: 1px solid #eee;">
+                <svg viewBox="0 0 500 350" width="500" height="350" style="position:absolute; top:0; left:0;">
+                    <rect x="10" y="10" width="480" height="330" fill="none" stroke="#333" stroke-width="2"/>
+                    <circle cx="190" cy="175" r="110" fill="rgba(41, 128, 185, 0.05)" stroke="#2980b9" stroke-width="2"/>
+                    <circle cx="310" cy="175" r="110" fill="rgba(142, 68, 173, 0.05)" stroke="#8e44ad" stroke-width="2"/>
+                    <text x="100" y="60" class="venn-text" fill="#2980b9">S</text><text x="380" y="60" class="venn-text" fill="#8e44ad">B</text>
+                </svg>
+                <div style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:5;">
+                    <input type="number" id="m-s" class="math-input" style="position:absolute; top:155px; left:110px;">
+                    <input type="number" id="m-both" class="math-input" style="position:absolute; top:155px; left:223px;">
+                    <input type="number" id="m-b" class="math-input" style="position:absolute; top:155px; left:340px;">
+                    <input type="number" id="m-out" class="math-input" style="position:absolute; top:280px; left:40px;">
+                </div>
+            </div>
+            <div id="m-fb" class="feedback"></div>
+            <div style="text-align:center;"><button class="btn" onclick="checkMedium()">Verify Results</button></div>
+        </div>
+    </div>
+
+<script>
+    function showSection(n) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(`sec-${n}`).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.nav-btn')[n-1].classList.add('active');
+    }
+
+    /* --- DRAG DROP LOGIC --- */
+    function allowDrop(ev) { 
+        ev.preventDefault(); 
+        ev.currentTarget.classList.add('drag-over'); 
+    }
+    function dragLeave(ev) {
+        ev.currentTarget.classList.remove('drag-over');
+    }
+    function drag(ev) { 
+        ev.dataTransfer.setData("text", ev.target.id); 
+    }
+    function dropAny(ev) {
+        ev.preventDefault();
+        ev.stopPropagation(); // Prevents dropping in parent zones!
+        ev.currentTarget.classList.remove('drag-over');
+        const id = ev.dataTransfer.getData("text");
+        const el = document.getElementById(id);
+        if(el) {
+            ev.currentTarget.appendChild(el);
+        }
+    }
+
+    /* --- SLIDE 1: BASIC ANIMATION --- */
+    function playBasicAnim() {
+        document.getElementById('ae-1').style.transform = "translate(180px, 240px)"; 
+        document.getElementById('ae-2').style.transform = "translate(-20px, 160px)"; 
+        document.getElementById('ae-3').style.transform = "translate(150px, 160px)"; 
+        document.getElementById('ae-4').style.transform = "translate(-110px, 200px)"; 
+        document.getElementById('ae-5').style.transform = "translate(-220px, 240px)"; 
+        document.getElementById('ae-6').style.transform = "translate(-100px, 170px)"; 
+    }
+    function resetBasicAnim() { document.querySelectorAll('.anim-el').forEach(el => el.style.transform = "none"); }
+
+    /* --- SLIDE 2: SHADING --- */
+    function shading(op) {
+        const regions = ['reg-a-only', 'reg-b-only', 'reg-both', 'reg-neither'];
+        regions.forEach(r => document.getElementById(r).classList.remove('shaded'));
+        
+        if(op === 'clear') return;
+        if(op === 'inter') { document.getElementById('reg-both').classList.add('shaded'); }
+        else if(op === 'union') { ['reg-a-only', 'reg-b-only', 'reg-both'].forEach(r=>document.getElementById(r).classList.add('shaded')); }
+        else if(op === 'compA') { ['reg-b-only', 'reg-neither'].forEach(r=>document.getElementById(r).classList.add('shaded')); }
+        else if(op === 'compB') { ['reg-a-only', 'reg-neither'].forEach(r=>document.getElementById(r).classList.add('shaded')); }
+        else if(op === 'neither') { document.getElementById('reg-neither').classList.add('shaded'); }
+    }
+
+    /* --- SLIDE 3: RELATIONSHIPS --- */
+    function animRel(type) {
+        const a = document.getElementById('rel-cir-a'), b = document.getElementById('rel-cir-b');
+        if(type==='disjoint'){ a.setAttribute('cx','140'); b.setAttribute('cx','360'); a.setAttribute('r','80'); b.setAttribute('r','80'); }
+        else if(type==='subset'){ a.setAttribute('cx','300'); b.setAttribute('cx','300'); a.setAttribute('r','50'); b.setAttribute('r','100'); }
+        else { a.setAttribute('cx','200'); b.setAttribute('cx','300'); a.setAttribute('r','80'); b.setAttribute('r','80'); }
+    }
+
+    /* --- SLIDE 4: SORTING LAB --- */
+    function initLab() {
+        const p = document.getElementById('lab-pool'); p.innerHTML = '';
+        for(let i=1; i<=10; i++) {
+            let t = document.createElement('div'); t.className='token'; t.draggable=true; t.id='lt'+i; t.innerText=i; t.ondragstart=drag; p.appendChild(t);
+        }
+        document.getElementById('lab-fb').innerText = "";
+    }
+    
+    function checkSortingLab() {
+        // Safe numerical sorting
+        const getRegion = id => {
+            let children = Array.from(document.getElementById(id).children);
+            return children.map(c => parseInt(c.innerText)).sort((a,b) => a - b).join(',');
+        };
+
+        const a = getRegion('lab-a');
+        const b = getRegion('lab-b');
+        const i = getRegion('lab-int');
+        const o = getRegion('lab-out');
+        const pool = getRegion('lab-pool');
+
+        if (pool !== "") {
+            document.getElementById('lab-fb').innerHTML = "<span style='color:red'>Please drag ALL numbers into the diagram!</span>";
+            return;
+        }
+
+        // Expected: A Only=2 | Int=3,5,7 | B Only=1,9 | Out=4,6,8,10
+        if(a === "2" && b === "1,9" && i === "3,5,7" && o === "4,6,8,10") {
+            document.getElementById('lab-fb').innerHTML = "<span style='color:green'>Correct! Beautifully sorted.</span>";
+        } else {
+            let msg = "<span style='color:red'>Not quite. </span>";
+            if (a !== "2") msg += "Check Set A (Primes that are NOT odd). ";
+            else if (i !== "3,5,7") msg += "Check Intersection (Primes that ARE odd). ";
+            else if (b !== "1,9") msg += "Check Set B (Odds that are NOT prime). ";
+            else msg += "Check the Outside region (Neither prime nor odd).";
+            
+            document.getElementById('lab-fb').innerHTML = msg;
+        }
+    }
+
+    /* --- SLIDE 5: EASY EXERCISE --- */
+    const questions = [
+        {q: "$A \\cap B = \\{$", a: "2"}, 
+        {q: "$A \\cup B = \\{$", a: "1,2,3"}, 
+        {q: "$A' = \\{$", a: "3,4"},
+        {q: "$B' = \\{$", a: "1,4"}
+    ];
+    let curIdx = 0;
+    
+    function genEz() {
+        curIdx = Math.floor(Math.random()*questions.length);
+        document.getElementById('ez-q-text').innerHTML = questions[curIdx].q;
+        document.getElementById('ez-fb').innerHTML = ""; 
+        
+        const p = document.getElementById('ez-pool'); p.innerHTML = '';
+        const t = document.getElementById('ez-target'); t.innerHTML = '';
+        for(let i=1; i<=4; i++) {
+            let n = document.createElement('div'); n.className='token'; n.draggable=true; n.id='eztoken'+i; n.innerText=i; n.ondragstart=drag; p.appendChild(n);
+        }
+        MathJax.typesetPromise();
+    }
+    
+    function checkEz() {
+        let children = Array.from(document.getElementById('ez-target').children);
+        let u = children.map(c => parseInt(c.innerText)).sort((a,b) => a - b).join(',');
+        let e = questions[curIdx].a; 
+
+        if (u === e) {
+            document.getElementById('ez-fb').innerHTML = "<span style='color:green'>Correct! Well done.</span>";
+        } else {
+            document.getElementById('ez-fb').innerHTML = "<span style='color:red'>Incorrect. Please check the diagram again.</span>";
+        }
+    }
+
+    /* --- SLIDE 6: MEDIUM --- */
+    function checkMedium() {
+        const s = parseInt(document.getElementById('m-s').value);
+        const both = parseInt(document.getElementById('m-both').value);
+        const b = parseInt(document.getElementById('m-b').value);
+        const out = parseInt(document.getElementById('m-out').value);
+
+        if(s===10 && both===8 && b===7 && out===5) {
+            document.getElementById('m-fb').innerHTML = "<span style='color:green'>Correct! 10 + 8 + 7 + 5 = 30.</span>";
+            document.querySelectorAll('#sec-6 input').forEach(i=>i.classList.add('correct'));
+        } else { 
+            document.getElementById('m-fb').innerHTML = "<span style='color:red'>Hint: Start with Neither(5), then calculate Intersect.</span>"; 
+            document.querySelectorAll('#sec-6 input').forEach(i=>i.classList.remove('correct'));
+        }
+    }
+
+    // Initialize On Load
+    window.onload = () => { 
+        initLab(); 
+        genEz(); 
+    };
+</script>
+</body>
+</html>
